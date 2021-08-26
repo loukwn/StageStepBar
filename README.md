@@ -19,6 +19,29 @@ Best way to test how this library is configured is to check out:
 
 ## Installation
 
+Add Jitpack distribution to the end of the repositories in your root `build.gradle` file.
+
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+Add the relevant dependency to the list of dependencies in your module's `build.gradle` file
+
+```groovy
+dependencies {
+    // Add only this one if you want to include the View version
+    implementation 'com.loukwn:stagestepbar:<latest-version>'
+
+    // Add only this one if you want to include the Compose version
+    implementation 'com.loukwn:stagestepbar-compose:<latest-version>'
+}
+```
+
 ## Usage
 
 ### Usage as a View
@@ -88,7 +111,7 @@ fun Example() {
 
 ```
 
-The full [configuration model]() is pretty much the same between the Compose and the View version. However there are differences (mostly due to things that Compose makes easier):
+The full [configuration model](./stagestepbar-compose/src/main/kotlin/com/loukwn/stagestepbar_compose/data/Config.kt) is pretty much the same between the Compose and the View version. However there are differences (mostly due to things that Compose makes easier):
 - Instead of specifying an `Int` in pixels for the sizes of thumbs and/or tracks, in the Compose version that is passed in `Dp`.
 - Instead of just specifying a duration value for the animation, in the Compose version one can pass instead an `AnimationSpec<Float>` effectively taking advantage of other kinds of animations like `spring()` etc.
 - Instead of passing a `Drawable`, in Compose one will need to pass an `ImageBitmap` (because of what the Canvas in this case expects).
