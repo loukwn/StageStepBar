@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/closeBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            app:tint="?attr/colorOnSurface"
+            android:src="@drawable/ic_close_24"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="8dp"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginEnd="8dp"
+            android:text="StageStepBar View Example" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.loukwn.stagestepbar.StageStepBar
+        android:id="@+id/stageStepBar"
+        android:layout_width="@dimen/stageStepBarLargeDimension"
+        android:layout_height="@dimen/stageStepBarSmallDimension"
+        app:ssb_stageStepConfig="5,5,5"
+        app:ssb_animationDuration="500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <ScrollView
+        android:id="@+id/scrollContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="32dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stageStepBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/stepsInStagesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Steps in Stages config"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/stepsInStagesTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:helperText="Comma separated list of integers"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stepsInStagesTitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/stepsInStagesTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/currentStateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Current State"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stepsInStagesTextInputLayout" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/nullStateCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Make it null?"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/currentStateStageTextInputLayout" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".5" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/currentStateStageTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Stage"
+                app:layout_constraintEnd_toEndOf="@id/guideline50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/currentStateTitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/currentStateStageTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/currentStateStepTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Step"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline50"
+                app:layout_constraintTop_toBottomOf="@id/currentStateTitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/currentStateStepTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/animateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Animate?"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/currentStateStageTextInputLayout" />
+
+            <androidx.appcompat.widget.AppCompatToggleButton
+                android:id="@+id/animateToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:checked="true"
+                android:textOff="No"
+                android:textOn="Yes"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/animationDurationTextInputLayout"
+                app:layout_constraintEnd_toEndOf="@id/guideline50"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/animationDurationTextInputLayout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/animationDurationTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Anim. Duration"
+                app:helperText="Value in ms."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline50"
+                app:layout_constraintTop_toBottomOf="@id/animateTitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/animationDurationInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/orientationDirectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Orientation/Direction"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/animationDurationTextInputLayout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/orientationTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Orientation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/orientationDirectionTitle">
+
+                <AutoCompleteTextView
+                    android:id="@+id/orientationDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/horizDirectionTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Horizontal Direction"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/orientationTextInputLayout">
+
+                <AutoCompleteTextView
+                    android:id="@+id/horizDirectionDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/verticalDirectionTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Vertical Direction"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horizDirectionTextInputLayout">
+
+                <AutoCompleteTextView
+                    android:id="@+id/verticalDirectionDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/filledTrackTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Filled Track"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/verticalDirectionTextInputLayout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filledTrackTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Drawable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filledTrackTitle">
+
+                <AutoCompleteTextView
+                    android:id="@+id/filledTrackDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="Color of default"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@id/filledTrackDefaultColorView"
+                app:layout_constraintEnd_toStartOf="@id/filledTrackDefaultColorView"
+                app:layout_constraintTop_toTopOf="@id/filledTrackDefaultColorView" />
+
+            <View
+                android:id="@+id/filledTrackDefaultColorView"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filledTrackTextInputLayout" />
+
+            <TextView
+                android:id="@+id/unfilledTrackTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Unfilled Track"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filledTrackDefaultColorView" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/unfilledTrackTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Drawable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledTrackTitle">
+
+                <AutoCompleteTextView
+                    android:id="@+id/unfilledTrackDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="Color of default"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@id/unfilledTrackDefaultColorView"
+                app:layout_constraintEnd_toStartOf="@id/unfilledTrackDefaultColorView"
+                app:layout_constraintTop_toTopOf="@id/unfilledTrackDefaultColorView" />
+
+            <View
+                android:id="@+id/unfilledTrackDefaultColorView"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledTrackTextInputLayout" />
+
+            <TextView
+                android:id="@+id/filledThumbTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Filled Thumb"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledTrackDefaultColorView" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filledThumbTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Drawable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filledThumbTitle">
+
+                <AutoCompleteTextView
+                    android:id="@+id/filledThumbDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="Color of default"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@id/filledThumbDefaultColorView"
+                app:layout_constraintEnd_toStartOf="@id/filledThumbDefaultColorView"
+                app:layout_constraintTop_toTopOf="@id/filledThumbDefaultColorView" />
+
+            <View
+                android:id="@+id/filledThumbDefaultColorView"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filledThumbTextInputLayout" />
+
+            <TextView
+                android:id="@+id/unfilledThumbTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Unfilled Thumb"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filledThumbDefaultColorView" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/unfilledThumbTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Drawable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledThumbTitle">
+
+                <AutoCompleteTextView
+                    android:id="@+id/unfilledThumbDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="Color of default"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@id/unfilledThumbDefaultColorView"
+                app:layout_constraintEnd_toStartOf="@id/unfilledThumbDefaultColorView"
+                app:layout_constraintTop_toTopOf="@id/unfilledThumbDefaultColorView" />
+
+            <View
+                android:id="@+id/unfilledThumbDefaultColorView"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledThumbTextInputLayout" />
+
+            <TextView
+                android:id="@+id/thumbSizeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Thumb Size"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledThumbDefaultColorView" />
+
+            <TextView
+                android:id="@+id/thumbSizeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20dp"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@id/thumbSizeTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/thumbSizeTitle" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/thumbSizeSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:max="100"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/thumbSizeTitle" />
+
+            <TextView
+                android:id="@+id/filledTrackSizeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Cross Axis Filled Track Size"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/thumbSizeSeekBar" />
+
+            <TextView
+                android:id="@+id/filledTrackSizeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20dp"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@id/filledTrackSizeTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/filledTrackSizeTitle" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/filledTrackSizeSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:max="100"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filledTrackSizeTitle" />
+
+            <TextView
+                android:id="@+id/unfilledTrackSizeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Cross Axis Unfilled Track Size"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filledTrackSizeSeekBar" />
+
+            <TextView
+                android:id="@+id/unfilledTrackSizeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20dp"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@id/unfilledTrackSizeTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/unfilledTrackSizeTitle" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/unfilledTrackSizeSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:max="100"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledTrackSizeTitle" />
+
+            <TextView
+                android:id="@+id/showThumbsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Show Thumbs?"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledTrackSizeSeekBar" />
+
+            <androidx.appcompat.widget.AppCompatToggleButton
+                android:id="@+id/showThumbsToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:checked="true"
+                android:textOff="No"
+                android:textOn="Yes"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/showThumbsTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/showThumbsTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <View
+        android:id="@+id/mainSeparator"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/mainSeparatorSize"
+        android:background="?attr/colorOnSurface"
+        app:layout_constraintTop_toTopOf="@id/scrollContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="stageStepBarSmallDimension">100dp</dimen>
+    <dimen name="stageStepBarLargeDimension">300dp</dimen>
+    <dimen name="mainSeparatorSize">1.5dp</dimen>
+</resources>
