@@ -36,10 +36,10 @@ Add the relevant dependency to the list of dependencies in your module's `build.
 ```groovy
 dependencies {
     // Add only this one if you want to include the View version
-    implementation 'com.loukwn:stagestepbar:<latest-version>'
+    implementation 'com.loukwn:stagestepbar:v0.0.1'
 
     // Add only this one if you want to include the Compose version
-    implementation 'com.loukwn:stagestepbar-compose:<latest-version>'
+    implementation 'com.loukwn:stagestepbar-compose:v0.0.1'
 }
 ```
 
