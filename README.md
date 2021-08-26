@@ -9,6 +9,14 @@ A staged progressbar that you can use if you want finer control of the steps in 
 - Direction and Orientation of the bar
 - Animation speed (or even type in Compose)
 
+## Showcase
+
+Best way to test how this library is configured is to check out:
+- [example](./example) module if you are interested in the View library.
+- [example-compose](./example-compose) module if you are interested in the Compose library.
+
+<img src="./art/showcase.gif" width="350" />
+
 ## Installation
 
 ## Usage
@@ -27,7 +35,7 @@ A staged progressbar that you can use if you want finer control of the steps in 
      />
 ```
 
-#### In View:
+#### In Code:
 ```kotlin
 val stageStepBar = findViewById<StageStepBar>(R.id.stageStepBar)
 stageStepBar.setStageStepConfig(listOf(6,2,7))
