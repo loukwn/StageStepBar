@@ -9,11 +9,13 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.annotation.Keep
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.loukwn.stagestepbar.util.ConfigBuilder
 import com.loukwn.stagestepbar.util.StageStepBarLifecycleObserver
 
+@Keep
 class StageStepBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
