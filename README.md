@@ -1,6 +1,6 @@
 # StageStepBar
 
-<!-- ![License](https://img.shields.io/github/license/loukwn/StageStepBar?style=flat-square) -->
+![License](https://img.shields.io/github/license/loukwn/StageStepBar?style=flat-square)
 [![](https://jitpack.io/v/loukwn/StageStepBar.svg?style=flat-square)](https://jitpack.io/#loukwn/StageStepBar)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Ready-green?style=flat-square)
 
