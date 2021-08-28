@@ -1,7 +1,6 @@
 # StageStepBar
 
 ![License](https://img.shields.io/github/license/loukwn/StageStepBar?style=flat-square)
-[![](https://jitpack.io/v/loukwn/StageStepBar.svg?style=flat-square)](https://jitpack.io/#loukwn/StageStepBar)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Ready-green?style=flat-square)
 
 A staged progressbar that you can use if you want finer control of the steps in between its stages. You can customize:
@@ -20,6 +19,8 @@ Best way to test how this library is configured is to check out:
 
 ## Installation
 
+[![](https://jitpack.io/v/loukwn/StageStepBar.svg?style=flat-square)](https://jitpack.io/#loukwn/StageStepBar)
+
 Add Jitpack distribution to the end of the repositories in your root `build.gradle` file.
 
 ```groovy
@@ -36,10 +37,10 @@ Add the relevant dependency to the list of dependencies in your module's `build.
 ```groovy
 dependencies {
     // Add only this one if you want to include the View version
-    implementation 'com.loukwn:stagestepbar:v0.0.1'
+    implementation 'com.github.loukwn.StageStepBar:stagestepbar:<version>'
 
     // Add only this one if you want to include the Compose version
-    implementation 'com.loukwn:stagestepbar-compose:v0.0.1'
+    implementation 'com.github.loukwn.StageStepBar:stagestepbar-compose:<version>'
 }
 ```
 
