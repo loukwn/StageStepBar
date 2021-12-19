@@ -168,10 +168,13 @@ private fun drawUnfilledTrack(
         }
         is DrawnComponent.UserProvided -> {
             val imageBitmap = config.unfilledTrack.imageBitmap
+            val colorFilter = config.unfilledTrack.colorFilter
+
             drawScope.drawImage(
                 image = imageBitmap,
                 dstOffset = IntOffset(left.toInt(), top.toInt()),
                 dstSize = IntSize((right - left).toInt(), (bottom - top).toInt()),
+                colorFilter = colorFilter,
             )
         }
     }
@@ -235,10 +238,13 @@ private fun drawFilledTrack(
             }
             is DrawnComponent.UserProvided -> {
                 val imageBitmap = config.filledTrack.imageBitmap
+                val colorFilter = config.filledTrack.colorFilter
+
                 drawScope.drawImage(
                     image = imageBitmap,
                     dstOffset = IntOffset(left.toInt(), top.toInt()),
                     dstSize = IntSize((right - left).toInt(), (bottom - top).toInt()),
+                    colorFilter = colorFilter,
                 )
             }
         }
@@ -307,6 +313,7 @@ private fun drawThumbs(
             }
             is DrawnComponent.UserProvided -> {
                 val imageBitmap = drawnComponent.imageBitmap
+                val colorFilter = drawnComponent.colorFilter
 
                 val left: Int
                 val top: Int
@@ -331,7 +338,8 @@ private fun drawThumbs(
                 drawScope.drawImage(
                     image = imageBitmap,
                     dstOffset = IntOffset(left, top),
-                    dstSize = IntSize(right - left, bottom - top)
+                    dstSize = IntSize(right - left, bottom - top),
+                    colorFilter = colorFilter,
                 )
             }
         }

@@ -115,7 +115,7 @@ fun Example() {
 The full [configuration model](./stagestepbar-compose/src/main/kotlin/com/loukwn/stagestepbar_compose/data/Config.kt) is pretty much the same between the Compose and the View version. However there are differences (mostly due to things that Compose makes easier):
 - Instead of specifying an `Int` in pixels for the sizes of thumbs and/or tracks, in the Compose version that is passed in `Dp`.
 - Instead of just specifying a duration value for the animation, in the Compose version one can pass instead an `AnimationSpec<Float>` effectively taking advantage of other kinds of animations like `spring()` etc.
-- Instead of passing a `Drawable`, in Compose one will need to pass an `ImageBitmap` (because of what the Canvas in this case expects).
+- Instead of passing a `Drawable`, in Compose one will need to pass an `ImageBitmap` (because of what the Canvas in this case expects). There is also an option to pass a [ColorFilter](https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/ColorFilter) so that things like tinting can be done.
 
 These differences aside, the behavior between the two versions should be pretty much identical.
 
