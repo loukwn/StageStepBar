@@ -25,7 +25,7 @@ enum class VerticalDirection {
 sealed class DrawnComponent {
     data class UserProvided(
         val imageBitmap: ImageBitmap,
-        val colorFilter: ColorFilter,
+        val colorFilter: ColorFilter? = null,
     ) : DrawnComponent()
 
     data class Default(
