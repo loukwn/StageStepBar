@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.loukwn.stagestepbar.util.ConfigBuilder
 import com.loukwn.stagestepbar.util.StageStepBarLifecycleObserver
+import java.lang.IllegalArgumentException
+import kotlin.math.round
 
 @Keep
 class StageStepBar @JvmOverloads constructor(
@@ -21,8 +23,6 @@ class StageStepBar @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : View(context, attrs, defStyleAttr), StageStepBarLifecycleObserver.Listener {
-
-    private val configBuilder: ConfigBuilder = ConfigBuilder()
 
     private var filledTrackPaint: Paint = Paint().apply {
         style = Paint.Style.FILL
@@ -73,7 +73,7 @@ class StageStepBar @JvmOverloads constructor(
     private fun parseAttributes(attrs: AttributeSet) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.StageStepBar)
         try {
-            config = configBuilder.getFromAttributes(
+            config = ConfigBuilder().getFromAttributes(
                 context = context,
                 attrArray = a,
                 oldConfig = config
@@ -118,7 +118,15 @@ class StageStepBar @JvmOverloads constructor(
      */
     fun setStageStepConfig(stepsPerStages: List<Int>) {
         if (config.stageStepConfig != stepsPerStages) {
-            config = configBuilder.getWithNewStageStepConfig(stepsPerStages, config)
+            config = when {
+                stepsPerStages.isEmpty() -> throw IllegalArgumentException(
+                    "The stageStepConfig should have at least one element."
+                )
+                stepsPerStages.any { it <= 0 } -> throw IllegalArgumentException(
+                    "The stageStepConfig should only include positive integers."
+                )
+                else -> config.copy(stageStepConfig = stepsPerStages)
+            }
             redraw()
         }
     }
@@ -126,7 +134,7 @@ class StageStepBar @JvmOverloads constructor(
     /**
      * This sets the current state of the progress bar.
      *
-     * @param currentState A nullable State object. If it is null it means that the StageStepBar is
+     * @param state A nullable State object. If it is null it means that the StageStepBar is
      * totally unfilled (not even first dot/stage is done). If it is not null then the appropriate
      * stage and step are filled.
      *
@@ -138,9 +146,12 @@ class StageStepBar @JvmOverloads constructor(
      * State(3, 2) will turn into State(3, 0)
      * State(12, 2) will turn into State(3, 0)
      */
-    fun setCurrentState(currentState: State?) {
-        if (config.currentState != currentState) {
-            config = configBuilder.getWithNewCurrentState(currentState, config)
+    fun setCurrentState(state: State?) {
+        if (config.currentState != state) {
+            if (state != null && (state.stage < 0 || state.step < 0)) {
+                throw IllegalArgumentException("The state should only contain positive integers.")
+            }
+            config = config.copy(currentState = state)
             redraw()
         }
     }
@@ -151,25 +162,29 @@ class StageStepBar @JvmOverloads constructor(
      */
     fun setAnimate(animate: Boolean) {
         if (config.shouldAnimate != animate) {
-            config = configBuilder.getWithAnimate(animate, config)
+            config = config.copy(shouldAnimate = animate)
         }
     }
 
     /**
      * Sets the animation duration of the StageStepBar. This does not cause a redraw.
+     *
+     * @param animationDuration The duration in ms.
      */
     fun setAnimationDuration(animationDuration: Long) {
         if (config.animationDuration != animationDuration) {
-            config = configBuilder.getWithAnimationDuration(animationDuration, config)
+            config = config.copy(animationDuration = animationDuration)
         }
     }
 
     /**
      * Sets whether the StageStepBar will be drawn in an horizontal or vertical manner.
+     *
+     * @param orientation Can be either Horizontal or Vertical.
      */
     fun setOrientation(orientation: Orientation) {
         if (config.orientation != orientation) {
-            config = configBuilder.getWithOrientation(orientation, config)
+            config = config.copy(orientation = orientation)
             redraw()
         }
     }
@@ -183,7 +198,7 @@ class StageStepBar @JvmOverloads constructor(
      */
     fun setHorizontalDirection(horizontalDirection: HorizontalDirection) {
         if (config.horizontalDirection != horizontalDirection) {
-            config = configBuilder.getWithHorizontalDirection(horizontalDirection, config)
+            config = config.copy(horizontalDirection = horizontalDirection)
             redraw()
         }
     }
@@ -196,7 +211,7 @@ class StageStepBar @JvmOverloads constructor(
      */
     fun setVerticalDirection(verticalDirection: VerticalDirection) {
         if (config.verticalDirection != verticalDirection) {
-            config = configBuilder.getWithVerticalDirection(verticalDirection, config)
+            config = config.copy(verticalDirection = verticalDirection)
             redraw()
         }
     }
@@ -207,12 +222,9 @@ class StageStepBar @JvmOverloads constructor(
      * @param filledTrackColor Color for the default shape.
      */
     fun setFilledTrackToNormalShape(@ColorInt filledTrackColor: Int) {
-        if (config.filledTrack is DrawnComponent.UserProvided ||
-            (config.filledTrack is DrawnComponent.Default &&
-                    (config.filledTrack as DrawnComponent.Default).color != filledTrackColor)
-        ) {
-
-            config = configBuilder.getWithFilledTrackAsDefaultShape(filledTrackColor, config)
+        val newDrawnComponent = DrawnComponent.Default(filledTrackColor)
+        if (config.filledTrack != newDrawnComponent) {
+            config = config.copy(filledTrack = newDrawnComponent)
             updatePaintColors()
             redraw()
         }
@@ -220,14 +232,14 @@ class StageStepBar @JvmOverloads constructor(
 
     /**
      * Sets the filled track to be a user specified drawable.
+     *
+     * @param filledTrackDrawable The drawable to set on the filled track.
+     * @param alpha Alpha for the drawable.
      */
-    fun setFilledTrackToCustomDrawable(filledTrackDrawable: Drawable) {
-        if (config.filledTrack is DrawnComponent.Default ||
-            (config.filledTrack is DrawnComponent.UserProvided &&
-                    (config.filledTrack as DrawnComponent.UserProvided).drawable != filledTrackDrawable)
-        ) {
-
-            config = configBuilder.getWithFilledTrackAsDrawable(filledTrackDrawable, config)
+    fun setFilledTrackToCustomDrawable(filledTrackDrawable: Drawable, alpha: Float = 1f) {
+        val newDrawnComponent = DrawnComponent.UserProvided(filledTrackDrawable, alpha)
+        if (config.filledTrack != newDrawnComponent) {
+            config = config.copy(filledTrack = newDrawnComponent)
             redraw()
         }
     }
@@ -238,12 +250,9 @@ class StageStepBar @JvmOverloads constructor(
      * @param unfilledTrackColor Color for the default shape.
      */
     fun setUnfilledTrackToNormalShape(@ColorInt unfilledTrackColor: Int) {
-        if (config.unfilledTrack is DrawnComponent.UserProvided ||
-            (config.unfilledTrack is DrawnComponent.Default &&
-                    (config.unfilledTrack as DrawnComponent.Default).color != unfilledTrackColor)
-        ) {
-
-            config = configBuilder.getWithUnfilledTrackAsDefaultShape(unfilledTrackColor, config)
+        val newDrawnComponent = DrawnComponent.Default(unfilledTrackColor)
+        if (config.unfilledTrack != newDrawnComponent) {
+            config = config.copy(unfilledTrack = newDrawnComponent)
             updatePaintColors()
             redraw()
         }
@@ -251,14 +260,14 @@ class StageStepBar @JvmOverloads constructor(
 
     /**
      * Sets the unfilled track to be a user specified drawable.
+     *
+     * @param unfilledTrackDrawable The drawable to set on the filled track.
+     * @param alpha Alpha for the drawable.
      */
-    fun setUnfilledTrackToCustomDrawable(unfilledTrackDrawable: Drawable) {
-        if (config.unfilledTrack is DrawnComponent.Default ||
-            (config.unfilledTrack is DrawnComponent.UserProvided &&
-                    (config.unfilledTrack as DrawnComponent.UserProvided).drawable != unfilledTrackDrawable)
-        ) {
-
-            config = configBuilder.getWithUnfilledTrackAsDrawable(unfilledTrackDrawable, config)
+    fun setUnfilledTrackToCustomDrawable(unfilledTrackDrawable: Drawable, alpha: Float = 1f) {
+        val newDrawnComponent = DrawnComponent.UserProvided(unfilledTrackDrawable, alpha)
+        if (config.unfilledTrack != newDrawnComponent) {
+            config = config.copy(unfilledTrack = newDrawnComponent)
             redraw()
         }
     }
@@ -269,12 +278,9 @@ class StageStepBar @JvmOverloads constructor(
      * @param filledThumbColor Color for the default shape.
      */
     fun setFilledThumbToNormalShape(@ColorInt filledThumbColor: Int) {
-        if (config.filledThumb is DrawnComponent.UserProvided ||
-            (config.filledThumb is DrawnComponent.Default &&
-                    (config.filledThumb as DrawnComponent.Default).color != filledThumbColor)
-        ) {
-
-            config = configBuilder.getWithFilledThumbAsDefaultShape(filledThumbColor, config)
+        val newDrawnComponent = DrawnComponent.Default(filledThumbColor)
+        if (config.filledThumb != newDrawnComponent) {
+            config = config.copy(filledThumb = newDrawnComponent)
             updatePaintColors()
             redraw()
         }
@@ -282,14 +288,14 @@ class StageStepBar @JvmOverloads constructor(
 
     /**
      * Sets the filled thumb to be a user specified drawable.
+     *
+     * @param filledThumbDrawable The drawable to set on the filled thumb.
+     * @param alpha Alpha for the drawable.
      */
-    fun setFilledThumbToCustomDrawable(filledThumbDrawable: Drawable) {
-        if (config.filledThumb is DrawnComponent.Default ||
-            (config.filledThumb is DrawnComponent.UserProvided &&
-                    (config.filledThumb as DrawnComponent.UserProvided).drawable != filledThumbDrawable)
-        ) {
-
-            config = configBuilder.getWithFilledThumbAsDrawable(filledThumbDrawable, config)
+    fun setFilledThumbToCustomDrawable(filledThumbDrawable: Drawable, alpha: Float = 1f) {
+        val newDrawnComponent = DrawnComponent.UserProvided(filledThumbDrawable, alpha)
+        if (config.filledThumb != newDrawnComponent) {
+            config = config.copy(filledThumb = newDrawnComponent)
             redraw()
         }
     }
@@ -300,27 +306,23 @@ class StageStepBar @JvmOverloads constructor(
      * @param unfilledThumbColor Color for the default shape
      */
     fun setUnfilledThumbToNormalShape(@ColorInt unfilledThumbColor: Int) {
-        if (config.unfilledThumb is DrawnComponent.UserProvided ||
-            (config.unfilledThumb is DrawnComponent.Default &&
-                    (config.unfilledThumb as DrawnComponent.Default).color != unfilledThumbColor)
-        ) {
-
-            config = configBuilder.getWithUnfilledThumbAsDefaultShape(unfilledThumbColor, config)
-            updatePaintColors()
+        val newDrawnComponent = DrawnComponent.Default(unfilledThumbColor)
+        if (config.unfilledThumb != newDrawnComponent) {
+            config = config.copy(unfilledThumb = newDrawnComponent)
             redraw()
         }
     }
 
     /**
      * Sets the unfilled thumb to be a user specified drawable.
+     *
+     * @param unfilledThumbDrawable The drawable to set on the filled thumb.
+     * @param alpha Alpha for the drawable.
      */
-    fun setUnfilledThumbToCustomDrawable(unfilledThumbDrawable: Drawable) {
-        if (config.unfilledThumb is DrawnComponent.Default ||
-            (config.unfilledThumb is DrawnComponent.UserProvided &&
-                    (config.unfilledThumb as DrawnComponent.UserProvided).drawable != unfilledThumbDrawable)
-        ) {
-
-            config = configBuilder.getWithUnfilledThumbAsDrawable(unfilledThumbDrawable, config)
+    fun setUnfilledThumbToCustomDrawable(unfilledThumbDrawable: Drawable, alpha: Float = 1f) {
+        val newDrawnComponent = DrawnComponent.UserProvided(unfilledThumbDrawable, alpha)
+        if (config.unfilledThumb != newDrawnComponent) {
+            config = config.copy(unfilledThumb = newDrawnComponent)
             redraw()
         }
     }
@@ -328,32 +330,38 @@ class StageStepBar @JvmOverloads constructor(
     /**
      * Sets the size of the thumb. This will actually set both its width and height to be this value.
      * Both the default shape and a user specified drawable will share this thumbSize.
+     *
+     * @param thumbSize The desired size in px.
      */
     fun setThumbSize(thumbSize: Int) {
         if (config.thumbSize != thumbSize) {
-            config = configBuilder.getWithThumbSize(thumbSize, config)
+            config = config.copy(thumbSize = thumbSize)
             redraw()
         }
     }
 
     /**
-     * Sets the size of the filled track on the cross axis of the StageStepBar orientation. E.g
-     * if the orientation is vertical then this will set the track width and vice versa.
+     * Sets the size of the filled track on the cross axis of the StageStepBar orientation.
+     * e.g If the orientation is vertical then this will set the track width and vice versa.
+     *
+     * @param size The desired size in px.
      */
-    fun setCrossAxisFilledTrackSize(crossAxisTrackSize: Int) {
-        if (config.crossAxisSizeFilledTrack != crossAxisTrackSize) {
-            config = configBuilder.getWithCrossAxisFilledTrackSize(crossAxisTrackSize, config)
+    fun setCrossAxisFilledTrackSize(size: Int) {
+        if (config.crossAxisSizeFilledTrack != size) {
+            config = config.copy(crossAxisSizeFilledTrack = size)
             redraw()
         }
     }
 
     /**
-     * Sets the size of the unfilled track on the cross axis of the StageStepBar orientation. E.g
-     * if the orientation is vertical then this will set the track width and vice versa.
+     * Sets the size of the unfilled track on the cross axis of the StageStepBar orientation.
+     * e.g if the orientation is vertical then this will set the track width and vice versa.
+     *
+     * @param size The desired size in px.
      */
-    fun setCrossAxisUnfilledTrackSize(crossAxisTrackSize: Int) {
-        if (config.crossAxisSizeUnfilledTrack != crossAxisTrackSize) {
-            config = configBuilder.getWithCrossAxisUnfilledTrackSize(crossAxisTrackSize, config)
+    fun setCrossAxisUnfilledTrackSize(size: Int) {
+        if (config.crossAxisSizeUnfilledTrack != size) {
+            config = config.copy(crossAxisSizeUnfilledTrack = size)
             redraw()
         }
     }
@@ -363,7 +371,7 @@ class StageStepBar @JvmOverloads constructor(
      */
     fun setThumbsVisible(visible: Boolean) {
         if (config.showThumbs != visible) {
-            config = configBuilder.getWithShowThumbs(visible, config)
+            config = config.copy(showThumbs = visible)
             redraw()
         }
     }
@@ -483,7 +491,10 @@ class StageStepBar @JvmOverloads constructor(
                 canvas.drawRect(unfilledTrackRect, unfilledTrackPaint)
             }
             is DrawnComponent.UserProvided -> {
-                val drawable = (config.unfilledTrack as DrawnComponent.UserProvided).drawable
+                val (drawable, alpha) = with(config.unfilledTrack as DrawnComponent.UserProvided) {
+                    drawable to round(255 * alpha).toInt()
+                }
+                drawable.alpha = alpha
                 drawable.setBounds(left, top, right, bottom)
                 drawable.draw(canvas)
             }
@@ -535,7 +546,10 @@ class StageStepBar @JvmOverloads constructor(
                     canvas.drawRect(filledTrackRect, filledTrackPaint)
                 }
                 is DrawnComponent.UserProvided -> {
-                    val drawable = (config.filledTrack as DrawnComponent.UserProvided).drawable
+                    val (drawable, alpha) = with(config.filledTrack as DrawnComponent.UserProvided) {
+                        drawable to round(255 * alpha).toInt()
+                    }
+                    drawable.alpha = alpha
                     drawable.setBounds(left, top, right, bottom)
                     drawable.draw(canvas)
                 }
@@ -593,6 +607,7 @@ class StageStepBar @JvmOverloads constructor(
                     }
                 }
                 is DrawnComponent.UserProvided -> {
+                    val alpha = round(255 * drawnComponent.alpha).toInt()
                     when (config.orientation) {
                         Orientation.Horizontal -> {
                             drawnComponent.drawable.setBounds(
@@ -601,6 +616,7 @@ class StageStepBar @JvmOverloads constructor(
                                 centerOfThisThumb + (config.thumbSize / 2f).toInt(),
                                 (canvas.height / 2f).toInt() + (config.thumbSize / 2f).toInt(),
                             )
+                            drawnComponent.drawable.alpha = alpha
                             drawnComponent.drawable.draw(canvas)
                         }
                         Orientation.Vertical -> {
@@ -610,6 +626,7 @@ class StageStepBar @JvmOverloads constructor(
                                 (canvas.width / 2f).toInt() + (config.thumbSize / 2f).toInt(),
                                 centerOfThisThumb + (config.thumbSize / 2f).toInt()
                             )
+                            drawnComponent.drawable.alpha = alpha
                             drawnComponent.drawable.draw(canvas)
                         }
                     }
@@ -679,6 +696,7 @@ class StageStepBar @JvmOverloads constructor(
     internal sealed class DrawnComponent {
         data class UserProvided(
             val drawable: Drawable,
+            val alpha: Float = 1f,
         ) : DrawnComponent()
 
         data class Default(

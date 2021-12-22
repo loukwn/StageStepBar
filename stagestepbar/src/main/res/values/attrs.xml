@@ -21,11 +21,15 @@
         <attr name="ssb_filledTrackColor" format="color" />
         <attr name="ssb_unfilledTrackColor" format="color" />
         <attr name="ssb_filledTrackDrawable" format="reference" />
+        <attr name="ssb_filledTrackDrawableAlpha" format="float" />
         <attr name="ssb_unfilledTrackDrawable" format="reference" />
+        <attr name="ssb_unfilledTrackDrawableAlpha" format="float" />
         <attr name="ssb_filledThumbColor" format="color" />
         <attr name="ssb_unfilledThumbColor" format="color" />
         <attr name="ssb_filledThumbDrawable" format="reference" />
+        <attr name="ssb_filledThumbDrawableAlpha" format="float" />
         <attr name="ssb_unfilledThumbDrawable" format="reference" />
+        <attr name="ssb_unfilledThumbDrawableAlpha" format="float" />
         <attr name="ssb_thumbSize" format="dimension" />
         <attr name="ssb_crossAxisFilledTrackSize" format="dimension" />
         <attr name="ssb_crossAxisUnfilledTrackSize" format="dimension" />

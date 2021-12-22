@@ -2,7 +2,6 @@ package com.loukwn.stagestepbar.util
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.drawable.Drawable
 import com.loukwn.stagestepbar.R
 import com.loukwn.stagestepbar.StageStepBar
 import java.lang.IllegalArgumentException
@@ -118,139 +117,12 @@ internal class ConfigBuilder {
         return newConfig
     }
 
-    fun getWithNewStageStepConfig(
-        stageStepConfig: List<Int>,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig {
-        return when {
-            stageStepConfig.isEmpty() -> throw IllegalArgumentException(
-                "The stageStepConfig should have at least one element."
-            )
-            stageStepConfig.any { it <= 0 } -> throw IllegalArgumentException(
-                "The stageStepConfig should only include positive integers."
-            )
-            else -> oldConfig.copy(stageStepConfig = stageStepConfig)
-        }
-    }
-
-    fun getWithNewCurrentState(
-        newState: StageStepBar.State?,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig {
-        if (newState != null && (newState.stage < 0 || newState.step < 0)) {
-            throw IllegalArgumentException("The state should only contain positive integers.")
-        }
-
-        return oldConfig.copy(currentState = newState)
-    }
-
-    fun getWithAnimate(
-        animate: Boolean,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(shouldAnimate = animate)
-
-    fun getWithAnimationDuration(
-        animationDuration: Long,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(animationDuration = animationDuration)
-
-    fun getWithOrientation(
-        orientation: StageStepBar.Orientation,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(orientation = orientation)
-
-    fun getWithHorizontalDirection(
-        horizontalDirection: StageStepBar.HorizontalDirection,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(horizontalDirection = horizontalDirection)
-
-    fun getWithVerticalDirection(
-        verticalDirection: StageStepBar.VerticalDirection,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(verticalDirection = verticalDirection)
-
-    fun getWithFilledThumbAsDrawable(
-        drawable: Drawable,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(filledThumb = StageStepBar.DrawnComponent.UserProvided(drawable))
-
-    fun getWithFilledThumbAsDefaultShape(
-        color: Int,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(filledThumb = StageStepBar.DrawnComponent.Default(color))
-
-    fun getWithUnfilledThumbAsDrawable(
-        drawable: Drawable,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(unfilledThumb = StageStepBar.DrawnComponent.UserProvided(drawable))
-
-    fun getWithUnfilledThumbAsDefaultShape(
-        color: Int,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(unfilledThumb = StageStepBar.DrawnComponent.Default(color))
-
-    fun getWithFilledTrackAsDrawable(
-        drawable: Drawable,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(filledTrack = StageStepBar.DrawnComponent.UserProvided(drawable))
-
-    fun getWithFilledTrackAsDefaultShape(
-        color: Int,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(filledTrack = StageStepBar.DrawnComponent.Default(color))
-
-    fun getWithUnfilledTrackAsDrawable(
-        drawable: Drawable,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(unfilledTrack = StageStepBar.DrawnComponent.UserProvided(drawable))
-
-    fun getWithUnfilledTrackAsDefaultShape(
-        color: Int,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(unfilledTrack = StageStepBar.DrawnComponent.Default(color))
-
-    fun getWithThumbSize(
-        size: Int,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(thumbSize = size)
-
-    fun getWithCrossAxisUnfilledTrackSize(
-        size: Int,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(crossAxisSizeUnfilledTrack = size)
-
-    fun getWithCrossAxisFilledTrackSize(
-        size: Int,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(crossAxisSizeFilledTrack = size)
-
-    fun getWithShowThumbs(
-        visible: Boolean,
-        oldConfig: StageStepBar.StageStepBarConfig
-    ): StageStepBar.StageStepBarConfig =
-        oldConfig.copy(showThumbs = visible)
-
     private fun getFilledTrackDrawnComponent(
         context: Context,
         attrArray: TypedArray
     ): StageStepBar.DrawnComponent {
         val drawable = attrArray.getDrawable(R.styleable.StageStepBar_ssb_filledTrackDrawable)
+        val alpha = attrArray.getFloat(R.styleable.StageStepBar_ssb_filledTrackDrawableAlpha, 1f)
         val color = attrArray.getColor(
             R.styleable.StageStepBar_ssb_filledTrackColor,
             ResourceProvider.provideColor(context, R.color.default_track_filled_color)
@@ -259,7 +131,7 @@ internal class ConfigBuilder {
         return if (drawable == null) {
             StageStepBar.DrawnComponent.Default(color)
         } else {
-            StageStepBar.DrawnComponent.UserProvided(drawable)
+            StageStepBar.DrawnComponent.UserProvided(drawable, alpha)
         }
     }
 
@@ -268,6 +140,7 @@ internal class ConfigBuilder {
         attrArray: TypedArray,
     ): StageStepBar.DrawnComponent {
         val drawable = attrArray.getDrawable(R.styleable.StageStepBar_ssb_unfilledTrackDrawable)
+        val alpha = attrArray.getFloat(R.styleable.StageStepBar_ssb_unfilledTrackDrawableAlpha, 1f)
         val color = attrArray.getColor(
             R.styleable.StageStepBar_ssb_unfilledTrackColor,
             ResourceProvider.provideColor(context, R.color.default_track_unfilled_color)
@@ -276,7 +149,7 @@ internal class ConfigBuilder {
         return if (drawable == null) {
             StageStepBar.DrawnComponent.Default(color)
         } else {
-            StageStepBar.DrawnComponent.UserProvided(drawable)
+            StageStepBar.DrawnComponent.UserProvided(drawable, alpha)
         }
     }
 
@@ -285,6 +158,7 @@ internal class ConfigBuilder {
         attrArray: TypedArray
     ): StageStepBar.DrawnComponent {
         val drawable = attrArray.getDrawable(R.styleable.StageStepBar_ssb_filledThumbDrawable)
+        val alpha = attrArray.getFloat(R.styleable.StageStepBar_ssb_filledThumbDrawableAlpha, 1f)
         val color = attrArray.getColor(
             R.styleable.StageStepBar_ssb_filledThumbColor,
             ResourceProvider.provideColor(context, R.color.default_thumb_filled_color)
@@ -293,7 +167,7 @@ internal class ConfigBuilder {
         return if (drawable == null) {
             StageStepBar.DrawnComponent.Default(color)
         } else {
-            StageStepBar.DrawnComponent.UserProvided(drawable)
+            StageStepBar.DrawnComponent.UserProvided(drawable, alpha)
         }
     }
 
@@ -302,6 +176,7 @@ internal class ConfigBuilder {
         attrArray: TypedArray
     ): StageStepBar.DrawnComponent {
         val drawable = attrArray.getDrawable(R.styleable.StageStepBar_ssb_unfilledThumbDrawable)
+        val alpha = attrArray.getFloat(R.styleable.StageStepBar_ssb_unfilledThumbDrawableAlpha, 1f)
         val color = attrArray.getColor(
             R.styleable.StageStepBar_ssb_unfilledThumbColor,
             ResourceProvider.provideColor(context, R.color.default_thumb_unfilled_color)
@@ -310,10 +185,10 @@ internal class ConfigBuilder {
         return if (drawable == null) {
             StageStepBar.DrawnComponent.Default(color)
         } else {
-            StageStepBar.DrawnComponent.UserProvided(drawable)
+            StageStepBar.DrawnComponent.UserProvided(drawable, alpha)
         }
     }
 }
 
-inline fun <reified T : Enum<T>> TypedArray.getEnum(index: Int, default: T) =
+private inline fun <reified T : Enum<T>> TypedArray.getEnum(index: Int, default: T) =
     getInt(index, -1).let { if (it >= 0) enumValues<T>()[it] else default }

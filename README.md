@@ -37,10 +37,10 @@ Add the relevant dependency to the list of dependencies in your module's `build.
 ```groovy
 dependencies {
     // Add only this one if you want to include the View version
-    implementation 'com.github.loukwn.StageStepBar:stagestepbar:<version>'
+    implementation 'com.github.loukwn.StageStepBar:stagestepbar:<latest-version>'
 
     // Add only this one if you want to include the Compose version
-    implementation 'com.github.loukwn.StageStepBar:stagestepbar-compose:<version>'
+    implementation 'com.github.loukwn.StageStepBar:stagestepbar-compose:<latest-version>'
 }
 ```
 
@@ -84,10 +84,14 @@ All XML attributes are optional (set to their defaults).
 | `ssb_unfilledTrackColor`|`#A9A9A9`| The color of the track when it is not filled. <br/><br/>**In code:** `setUnfilledTrackToNormalShape(@ColorInt Int)`|
 | `ssb_filledThumbColor`|`#000000`| The color of the thumbs when they are filled. <br/><br/>**In code:** `setFilledThumbToNormalShape(@ColorInt Int)`|
 | `ssb_unfilledThumbColor`|`#6F6F6F`| The color of the thumbs when they are not filled. <br/><br/>**In code:** `setUnfilledThumbToNormalShape(@ColorInt Int)`|
-| `ssb_filledTrackDrawable`| - | Sets a custom drawable to the filled track. <br/><br/>**In code:** `setFilledTrackToCustomDrawable(Drawable)`|
-| `ssb_unfilledTrackDrawable`| - | Sets a custom drawable to the unfilled track. <br/><br/>**In code:** `setUnfilledTrackToCustomDrawable(Drawable)`|
-| `ssb_filledThumbDrawable`| - | Sets a custom drawable to the filled thumbs. <br/><br/>**In code:** `setFilledThumbToCustomDrawable(Drawable)`|
-| `ssb_unfilledThumbDrawable`| - | Sets a custom drawable to the unfilled thumbs. <br/><br/>**In code:** `setUnfilledThumbToCustomDrawable(Drawable)`|
+| `ssb_filledTrackDrawable`| - | Sets a custom drawable to the filled track. <br/><br/>**In code:** `setFilledTrackToCustomDrawable(Drawable, Float)`|
+| `ssb_filledTrackDrawableAlpha`| `1f` | Sets the alpha of the custom filled track drawable. <br/><br/>**In code:** `setFilledTrackToCustomDrawable(Drawable, Float)`|
+| `ssb_unfilledTrackDrawable`| - | Sets a custom drawable to the unfilled track. <br/><br/>**In code:** `setUnfilledTrackToCustomDrawable(Drawable, Float)`|
+| `ssb_unfilledTrackDrawableAlpha`| `1f` | Sets the alpha of the custom unfilled track drawable. <br/><br/>**In code:** `setUnfilledTrackToCustomDrawable(Drawable, Float)`|
+| `ssb_filledThumbDrawable`| - | Sets a custom drawable to the filled thumbs. <br/><br/>**In code:** `setFilledThumbToCustomDrawable(Drawable, Float)`|
+| `ssb_filledThumbDrawableAlpha`| `1f` | Sets the alpha of the custom filled thumbs drawables. <br/><br/>**In code:** `setFilledThumbToCustomDrawable(Drawable, Float)`|
+| `ssb_unfilledThumbDrawable`| - | Sets a custom drawable to the unfilled thumbs. <br/><br/>**In code:** `setUnfilledThumbToCustomDrawable(Drawable, Float)`|
+| `ssb_unfilledThumbDrawableAlpha`| `1f` | Sets the alpha of the custom unfilled thumbs drawables. <br/><br/>**In code:** `setUnfilledThumbToCustomDrawable(Drawable, Float)`|
 | `ssb_thumbSize`| `20dp` | The size of the thumbs (both filled and unfilled). <br/><br/>**In code:** `setThumbSize(Int) Value is expected to be in pixels.`|
 | `ssb_crossAxisFilledTrackSize`| `6dp` | The height of the filled track if the bar is horizontal or its width if it is vertical. <br/><br/>**In code:** `setCrossAxisFilledTrackSize(Int) Value is expected to be in pixels.`|
 | `ssb_crossAxisUnfilledTrackSize`| `6dp` | The height of the unfilled track if the bar is horizontal or its width if it is vertical. <br/><br/>**In code:** `setCrossAxisUnfilledTrackSize(Int) Value is expected to be in pixels.`|
@@ -116,7 +120,7 @@ fun Example() {
 The full [configuration model](./stagestepbar-compose/src/main/kotlin/com/loukwn/stagestepbar_compose/data/Config.kt) is pretty much the same between the Compose and the View version. However there are differences (mostly due to things that Compose makes easier):
 - Instead of specifying an `Int` in pixels for the sizes of thumbs and/or tracks, in the Compose version that is passed in `Dp`.
 - Instead of just specifying a duration value for the animation, in the Compose version one can pass instead an `AnimationSpec<Float>` effectively taking advantage of other kinds of animations like `spring()` etc.
-- Instead of passing a `Drawable`, in Compose one will need to pass an `ImageBitmap` (because of what the Canvas in this case expects).
+- Instead of passing a `Drawable`, in Compose one will need to pass an `ImageBitmap` (because of what the Canvas in this case expects). There is also an option to pass a [ColorFilter](https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/ColorFilter) so that things like tinting can be done.
 
 These differences aside, the behavior between the two versions should be pretty much identical.
 
