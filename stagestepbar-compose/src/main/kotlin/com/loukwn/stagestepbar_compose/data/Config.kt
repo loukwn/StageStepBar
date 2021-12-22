@@ -5,6 +5,7 @@ package com.loukwn.stagestepbar_compose.data
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ enum class VerticalDirection {
 sealed class DrawnComponent {
     data class UserProvided(
         val imageBitmap: ImageBitmap,
+        val colorFilter: ColorFilter,
     ) : DrawnComponent()
 
     data class Default(
