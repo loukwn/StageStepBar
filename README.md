@@ -36,10 +36,10 @@ Add the relevant dependency to the list of dependencies in your module's `build.
 ```groovy
 dependencies {
     // Add only this one if you want to include the View version
-    implementation 'com.loukwn:stagestepbar:v0.0.1'
+    implementation 'com.loukwn:stagestepbar:<latest-version>'
 
     // Add only this one if you want to include the Compose version
-    implementation 'com.loukwn:stagestepbar-compose:v0.0.1'
+    implementation 'com.loukwn:stagestepbar-compose:<latest-version>'
 }
 ```
 
@@ -83,10 +83,14 @@ All XML attributes are optional (set to their defaults).
 | `ssb_unfilledTrackColor`|`#A9A9A9`| The color of the track when it is not filled. <br/><br/>**In code:** `setUnfilledTrackToNormalShape(@ColorInt Int)`|
 | `ssb_filledThumbColor`|`#000000`| The color of the thumbs when they are filled. <br/><br/>**In code:** `setFilledThumbToNormalShape(@ColorInt Int)`|
 | `ssb_unfilledThumbColor`|`#6F6F6F`| The color of the thumbs when they are not filled. <br/><br/>**In code:** `setUnfilledThumbToNormalShape(@ColorInt Int)`|
-| `ssb_filledTrackDrawable`| - | Sets a custom drawable to the filled track. <br/><br/>**In code:** `setFilledTrackToCustomDrawable(Drawable)`|
-| `ssb_unfilledTrackDrawable`| - | Sets a custom drawable to the unfilled track. <br/><br/>**In code:** `setUnfilledTrackToCustomDrawable(Drawable)`|
-| `ssb_filledThumbDrawable`| - | Sets a custom drawable to the filled thumbs. <br/><br/>**In code:** `setFilledThumbToCustomDrawable(Drawable)`|
-| `ssb_unfilledThumbDrawable`| - | Sets a custom drawable to the unfilled thumbs. <br/><br/>**In code:** `setUnfilledThumbToCustomDrawable(Drawable)`|
+| `ssb_filledTrackDrawable`| - | Sets a custom drawable to the filled track. <br/><br/>**In code:** `setFilledTrackToCustomDrawable(Drawable, Float)`|
+| `ssb_filledTrackDrawableAlpha`| `1f` | Sets the alpha of the custom filled track drawable. <br/><br/>**In code:** `setFilledTrackToCustomDrawable(Drawable, Float)`|
+| `ssb_unfilledTrackDrawable`| - | Sets a custom drawable to the unfilled track. <br/><br/>**In code:** `setUnfilledTrackToCustomDrawable(Drawable, Float)`|
+| `ssb_unfilledTrackDrawableAlpha`| `1f` | Sets the alpha of the custom unfilled track drawable. <br/><br/>**In code:** `setUnfilledTrackToCustomDrawable(Drawable, Float)`|
+| `ssb_filledThumbDrawable`| - | Sets a custom drawable to the filled thumbs. <br/><br/>**In code:** `setFilledThumbToCustomDrawable(Drawable, Float)`|
+| `ssb_filledThumbDrawableAlpha`| `1f` | Sets the alpha of the custom filled thumbs drawables. <br/><br/>**In code:** `setFilledThumbToCustomDrawable(Drawable, Float)`|
+| `ssb_unfilledThumbDrawable`| - | Sets a custom drawable to the unfilled thumbs. <br/><br/>**In code:** `setUnfilledThumbToCustomDrawable(Drawable, Float)`|
+| `ssb_unfilledThumbDrawableAlpha`| `1f` | Sets the alpha of the custom unfilled thumbs drawables. <br/><br/>**In code:** `setUnfilledThumbToCustomDrawable(Drawable, Float)`|
 | `ssb_thumbSize`| `20dp` | The size of the thumbs (both filled and unfilled). <br/><br/>**In code:** `setThumbSize(Int) Value is expected to be in pixels.`|
 | `ssb_crossAxisFilledTrackSize`| `6dp` | The height of the filled track if the bar is horizontal or its width if it is vertical. <br/><br/>**In code:** `setCrossAxisFilledTrackSize(Int) Value is expected to be in pixels.`|
 | `ssb_crossAxisUnfilledTrackSize`| `6dp` | The height of the unfilled track if the bar is horizontal or its width if it is vertical. <br/><br/>**In code:** `setCrossAxisUnfilledTrackSize(Int) Value is expected to be in pixels.`|
