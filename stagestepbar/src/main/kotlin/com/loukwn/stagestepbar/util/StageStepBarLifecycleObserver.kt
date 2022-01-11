@@ -7,27 +7,28 @@ import androidx.lifecycle.OnLifecycleEvent
 
 internal class StageStepBarLifecycleObserver: LifecycleObserver {
 
-    private var listener: Listener? = null
+    private var doOnStart: (() -> Unit)? = null
+    private var doOnStop: (() -> Unit)? = null
 
-    fun bindToLifecycleOwner(lifecycleOwner: LifecycleOwner, listener: Listener) {
+    fun bindToLifecycleOwner(
+        lifecycleOwner: LifecycleOwner,
+        doOnStart: () -> Unit,
+        doOnStop: () -> Unit,
+    ) {
         lifecycleOwner.lifecycle.addObserver(this)
-        this.listener = listener
+        this.doOnStart = doOnStart
+        this.doOnStop = doOnStop
     }
 
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
-        listener?.onLifecycleStart()
+        doOnStart?.invoke()
     }
 
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun stop() {
-        listener?.onLifecycleStop()
-    }
-
-    internal interface Listener {
-        fun onLifecycleStart()
-        fun onLifecycleStop()
+        doOnStop?.invoke()
     }
 }

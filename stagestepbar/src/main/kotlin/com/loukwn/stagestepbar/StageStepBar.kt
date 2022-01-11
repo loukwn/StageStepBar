@@ -22,7 +22,7 @@ class StageStepBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : View(context, attrs, defStyleAttr), StageStepBarLifecycleObserver.Listener {
+) : View(context, attrs, defStyleAttr) {
 
     private var filledTrackPaint: Paint = Paint().apply {
         style = Paint.Style.FILL
@@ -65,7 +65,8 @@ class StageStepBar @JvmOverloads constructor(
         (context as? LifecycleOwner)?.let {
             lifecycleObserver.bindToLifecycleOwner(
                 lifecycleOwner = it,
-                listener = this
+                doOnStart = ::onLifecycleStart,
+                doOnStop = ::onLifecycleStop,
             )
         }
     }
@@ -226,7 +227,9 @@ class StageStepBar @JvmOverloads constructor(
         if (config.filledTrack != newDrawnComponent) {
             config = config.copy(filledTrack = newDrawnComponent)
             updatePaintColors()
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -240,7 +243,9 @@ class StageStepBar @JvmOverloads constructor(
         val newDrawnComponent = DrawnComponent.UserProvided(filledTrackDrawable, alpha)
         if (config.filledTrack != newDrawnComponent) {
             config = config.copy(filledTrack = newDrawnComponent)
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -254,7 +259,9 @@ class StageStepBar @JvmOverloads constructor(
         if (config.unfilledTrack != newDrawnComponent) {
             config = config.copy(unfilledTrack = newDrawnComponent)
             updatePaintColors()
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -282,7 +289,9 @@ class StageStepBar @JvmOverloads constructor(
         if (config.filledThumb != newDrawnComponent) {
             config = config.copy(filledThumb = newDrawnComponent)
             updatePaintColors()
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -296,7 +305,9 @@ class StageStepBar @JvmOverloads constructor(
         val newDrawnComponent = DrawnComponent.UserProvided(filledThumbDrawable, alpha)
         if (config.filledThumb != newDrawnComponent) {
             config = config.copy(filledThumb = newDrawnComponent)
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -309,7 +320,9 @@ class StageStepBar @JvmOverloads constructor(
         val newDrawnComponent = DrawnComponent.Default(unfilledThumbColor)
         if (config.unfilledThumb != newDrawnComponent) {
             config = config.copy(unfilledThumb = newDrawnComponent)
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -323,7 +336,9 @@ class StageStepBar @JvmOverloads constructor(
         val newDrawnComponent = DrawnComponent.UserProvided(unfilledThumbDrawable, alpha)
         if (config.unfilledThumb != newDrawnComponent) {
             config = config.copy(unfilledThumb = newDrawnComponent)
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -349,7 +364,9 @@ class StageStepBar @JvmOverloads constructor(
     fun setCrossAxisFilledTrackSize(size: Int) {
         if (config.crossAxisSizeFilledTrack != size) {
             config = config.copy(crossAxisSizeFilledTrack = size)
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -362,7 +379,9 @@ class StageStepBar @JvmOverloads constructor(
     fun setCrossAxisUnfilledTrackSize(size: Int) {
         if (config.crossAxisSizeUnfilledTrack != size) {
             config = config.copy(crossAxisSizeUnfilledTrack = size)
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -372,11 +391,13 @@ class StageStepBar @JvmOverloads constructor(
     fun setThumbsVisible(visible: Boolean) {
         if (config.showThumbs != visible) {
             config = config.copy(showThumbs = visible)
-            redraw()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
-    override fun onLifecycleStart() {
+    private fun onLifecycleStart() {
         if (animatedProgress != currentProgress) {
             redraw()
         } else {
@@ -384,7 +405,7 @@ class StageStepBar @JvmOverloads constructor(
         }
     }
 
-    override fun onLifecycleStop() {
+    private fun onLifecycleStop() {
         progressAnimator?.cancel()
         progressAnimator = null
     }
@@ -432,12 +453,17 @@ class StageStepBar @JvmOverloads constructor(
         progressAnimator?.start()
     }
 
+    private fun isCurrentlyAnimating(): Boolean = animatedProgress != currentProgress
+
     private fun redraw() {
         currentProgress = calculateNewProgress()
 
         if (config.shouldAnimate) {
             animatedInvalidation()
         } else {
+            progressAnimator?.cancel()
+            progressAnimator = null
+
             animatedProgress = currentProgress
             invalidate()
         }
