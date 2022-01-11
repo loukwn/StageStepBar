@@ -52,7 +52,7 @@ afterEvaluate {
                 from(components.findByName("release"))
 
                 group = "com.loukwn"
-                version = "0.2.1"
+                version = "0.2.2"
             }
         }
     }
