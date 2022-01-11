@@ -24,6 +24,7 @@ class StageStepBar @JvmOverloads constructor(
 
     private var filledTrackPaint: Paint = Paint().apply {
         style = Paint.Style.FILL
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
     }
     private var unfilledTrackPaint: Paint = Paint().apply {
         style = Paint.Style.FILL
