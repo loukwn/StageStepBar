@@ -1,5 +1,7 @@
 package com.loukwn.stagestepbar
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
@@ -8,6 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.Keep
+import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.loukwn.stagestepbar.util.ConfigBuilder
@@ -24,7 +27,6 @@ class StageStepBar @JvmOverloads constructor(
 
     private var filledTrackPaint: Paint = Paint().apply {
         style = Paint.Style.FILL
-        xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
     }
     private var unfilledTrackPaint: Paint = Paint().apply {
         style = Paint.Style.FILL
@@ -50,6 +52,11 @@ class StageStepBar @JvmOverloads constructor(
     private val isRtl by lazy { resources.getBoolean(R.bool.isRTL) }
 
     private var progressAnimator: ValueAnimator? = null
+    private var isAnimating = false
+
+    private lateinit var bitmap: Bitmap
+    private lateinit var transparentCanvas: Canvas
+
     private val lifecycleObserver by lazy { StageStepBarLifecycleObserver() }
 
     private val clearPaint by lazy {
@@ -327,6 +334,7 @@ class StageStepBar @JvmOverloads constructor(
         val newDrawnComponent = DrawnComponent.Default(unfilledThumbColor)
         if (config.unfilledThumb != newDrawnComponent) {
             config = config.copy(unfilledThumb = newDrawnComponent)
+            updatePaintColors()
             if (!isCurrentlyAnimating()) {
                 redraw()
             }
@@ -440,7 +448,7 @@ class StageStepBar @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (animatedProgress != currentProgress) {
+        if (!isAnimating) {
             redraw()
         }
     }
@@ -470,12 +478,20 @@ class StageStepBar @JvmOverloads constructor(
                 animatedProgress = it.animatedValue as Float
                 invalidate()
             }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator?) {
+                    isAnimating = true
+                }
+                override fun onAnimationEnd(animation: Animator?) {
+                    isAnimating = false
+                }
+            })
             duration = config.animationDuration
         }
         progressAnimator?.start()
     }
 
-    private fun isCurrentlyAnimating(): Boolean = animatedProgress != currentProgress
+    private fun isCurrentlyAnimating(): Boolean = isAnimating
 
     private fun redraw() {
         currentProgress = calculateNewProgress()
@@ -485,6 +501,7 @@ class StageStepBar @JvmOverloads constructor(
         } else {
             progressAnimator?.cancel()
             progressAnimator = null
+            isAnimating = false
 
             animatedProgress = currentProgress
             invalidate()
@@ -501,20 +518,39 @@ class StageStepBar @JvmOverloads constructor(
                         config.horizontalDirection == HorizontalDirection.Auto &&
                         isRtl)
 
-        drawUnfilledTrack()
+        val canvasToUse = transparentCanvas
 
         if (numOfStages > 1) {
-            val progressBarEnd = drawFilledTrack(drawReverse)
+            val progressBarEnd = drawFilledTrack(
+                canvas = canvasToUse,
+                drawReverse = drawReverse
+            )
+            drawUnfilledTrack(
+                canvas = canvasToUse,
+                endOfFilledTrack = progressBarEnd,
+                drawReverse = drawReverse
+            )
 
             if (config.showThumbs) {
-                drawThumbs(progressBarEnd, drawReverse)
+                drawThumbs(
+                    canvas = canvasToUse,
+                    progressBarEnd = progressBarEnd,
+                    drawReverse = drawReverse
+                )
             }
+        } else {
+            drawUnfilledTrack(
+                canvas = canvasToUse,
+                endOfFilledTrack = (config.thumbSize / 2f).toInt(),
+                drawReverse = drawReverse
+            )
         }
 
+        // Draw the bitmap from the transparentCanvas to the canvas of the View.
         canvas.drawBitmap(bitmap, 0f, 0f, null)
     }
 
-    private fun drawUnfilledTrack() {
+    private fun drawUnfilledTrack(canvas: Canvas, endOfFilledTrack: Int, drawReverse: Boolean) {
         val left: Int
         val top: Int
         val right: Int
@@ -522,36 +558,54 @@ class StageStepBar @JvmOverloads constructor(
 
         when (config.orientation) {
             Orientation.Horizontal -> {
-                left = (config.thumbSize / 2f).toInt()
-                top = (transparentCanvas.height / 2f - config.crossAxisSizeUnfilledTrack / 2f).toInt()
-                right = (transparentCanvas.width - config.thumbSize / 2f).toInt()
-                bottom = (transparentCanvas.height / 2f + config.crossAxisSizeUnfilledTrack / 2f).toInt()
+                left = if (drawReverse) {
+                    (config.thumbSize / 2f).toInt()
+                } else {
+                    endOfFilledTrack
+                }
+                top = (canvas.height / 2f - config.crossAxisSizeUnfilledTrack / 2f).toInt()
+                right = if (drawReverse) {
+                    endOfFilledTrack
+                } else {
+                    (canvas.width - config.thumbSize / 2f).toInt()
+                }
+                bottom = (canvas.height / 2f + config.crossAxisSizeUnfilledTrack / 2f).toInt()
             }
             Orientation.Vertical -> {
-                left = (transparentCanvas.width / 2f - config.crossAxisSizeUnfilledTrack / 2f).toInt()
-                top = (config.thumbSize / 2f).toInt()
-                right = (transparentCanvas.width / 2f + config.crossAxisSizeUnfilledTrack / 2f).toInt()
-                bottom = (transparentCanvas.height - config.thumbSize / 2f).toInt()
+                left = (canvas.width / 2f - config.crossAxisSizeUnfilledTrack / 2f).toInt()
+                top = if (drawReverse) {
+                    (config.thumbSize / 2f).toInt()
+                } else {
+                    endOfFilledTrack
+                }
+                right = (canvas.width / 2f + config.crossAxisSizeUnfilledTrack / 2f).toInt()
+                bottom = if (drawReverse) {
+                    endOfFilledTrack
+                } else {
+                    (canvas.height - config.thumbSize / 2f).toInt()
+                }
             }
         }
 
         when (config.unfilledTrack) {
             is DrawnComponent.Default -> {
                 unfilledTrackRect.set(left, top, right, bottom)
-                transparentCanvas.drawRect(unfilledTrackRect, unfilledTrackPaint)
+                canvas.drawRect(unfilledTrackRect, clearPaint)
+                canvas.drawRect(unfilledTrackRect, unfilledTrackPaint)
             }
             is DrawnComponent.UserProvided -> {
                 val (drawable, alpha) = with(config.unfilledTrack as DrawnComponent.UserProvided) {
                     drawable to round(255 * alpha).toInt()
                 }
                 drawable.alpha = alpha
+                canvas.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), clearPaint)
                 drawable.setBounds(left, top, right, bottom)
-                drawable.draw(transparentCanvas)
+                drawable.draw(canvas)
             }
         }
     }
 
-    private fun drawFilledTrack(drawReverse: Boolean): Int {
+    private fun drawFilledTrack(canvas: Canvas, drawReverse: Boolean): Int {
         if (config.currentState != null) {
             var left: Int
             var top: Int
@@ -561,30 +615,30 @@ class StageStepBar @JvmOverloads constructor(
 
             when (config.orientation) {
                 Orientation.Horizontal -> {
-                    top = (transparentCanvas.height / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
-                    bottom = (transparentCanvas.height / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
+                    top = (canvas.height / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
+                    bottom = (canvas.height / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
                     left = (config.thumbSize / 2f).toInt()
                     right =
-                        ((transparentCanvas.width - config.thumbSize) * animatedProgress + config.thumbSize / 2f).toInt()
+                        ((canvas.width - config.thumbSize) * animatedProgress + config.thumbSize / 2f).toInt()
 
                     if (drawReverse) {
                         val temp = left
-                        left = transparentCanvas.width - right
-                        right = transparentCanvas.width - temp
+                        left = canvas.width - right
+                        right = canvas.width - temp
                     }
                     progressBarEnd = if (drawReverse) left else right
                 }
                 Orientation.Vertical -> {
-                    left = (transparentCanvas.width / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
-                    right = (transparentCanvas.width / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
+                    left = (canvas.width / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
+                    right = (canvas.width / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
                     top = (config.thumbSize / 2f).toInt()
                     bottom =
-                        ((transparentCanvas.height - config.thumbSize) * animatedProgress + config.thumbSize / 2f).toInt()
+                        ((canvas.height - config.thumbSize) * animatedProgress + config.thumbSize / 2f).toInt()
 
                     if (drawReverse) {
                         val temp = top
-                        top = transparentCanvas.height - bottom
-                        bottom = transparentCanvas.height - temp
+                        top = canvas.height - bottom
+                        bottom = canvas.height - temp
                     }
                     progressBarEnd = if (drawReverse) top else bottom
                 }
@@ -593,15 +647,17 @@ class StageStepBar @JvmOverloads constructor(
             when (config.filledTrack) {
                 is DrawnComponent.Default -> {
                     filledTrackRect.set(left, top, right, bottom)
-                    transparentCanvas.drawRect(filledTrackRect, filledTrackPaint)
+                    canvas.drawRect(filledTrackRect, clearPaint)
+                    canvas.drawRect(filledTrackRect, filledTrackPaint)
                 }
                 is DrawnComponent.UserProvided -> {
                     val (drawable, alpha) = with(config.filledTrack as DrawnComponent.UserProvided) {
                         drawable to round(255 * alpha).toInt()
                     }
                     drawable.alpha = alpha
+                    canvas.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), clearPaint)
                     drawable.setBounds(left, top, right, bottom)
-                    drawable.draw(transparentCanvas)
+                    drawable.draw(canvas)
                 }
             }
 
@@ -611,13 +667,13 @@ class StageStepBar @JvmOverloads constructor(
         return 0
     }
 
-    private fun drawThumbs(progressBarEnd: Int, drawReverse: Boolean) {
+    private fun drawThumbs(canvas: Canvas, progressBarEnd: Int, drawReverse: Boolean) {
         repeat(numOfStages) { stage ->
 
             val canvasLimit = if (config.orientation == Orientation.Horizontal) {
-                transparentCanvas.width
+                canvas.width
             } else {
-                transparentCanvas.height
+                canvas.height
             }
             var centerOfThisThumb =
                 (stage * (canvasLimit - config.thumbSize) / (numOfStages - 1).toFloat() + config.thumbSize / 2f).toInt()
@@ -640,31 +696,31 @@ class StageStepBar @JvmOverloads constructor(
                     when (config.orientation) {
                         Orientation.Horizontal -> {
                             if (!config.drawTracksBehindThumbs) {
-                                transparentCanvas.drawCircle(
+                                canvas.drawCircle(
                                     centerOfThisThumb.toFloat(),
-                                    transparentCanvas.height / 2f,
+                                    canvas.height / 2f,
                                     config.thumbSize / 2f,
                                     clearPaint
                                 )
                             }
-                            transparentCanvas.drawCircle(
+                            canvas.drawCircle(
                                 centerOfThisThumb.toFloat(),
-                                transparentCanvas.height / 2f,
+                                canvas.height / 2f,
                                 config.thumbSize / 2f,
                                 paint
                             )
                         }
                         Orientation.Vertical -> {
                             if (!config.drawTracksBehindThumbs) {
-                                transparentCanvas.drawCircle(
-                                    transparentCanvas.width / 2f,
+                                canvas.drawCircle(
+                                    canvas.width / 2f,
                                     centerOfThisThumb.toFloat(),
                                     config.thumbSize / 2f,
                                     clearPaint
                                 )
                             }
-                            transparentCanvas.drawCircle(
-                                transparentCanvas.width / 2f,
+                            canvas.drawCircle(
+                                canvas.width / 2f,
                                 centerOfThisThumb.toFloat(),
                                 config.thumbSize / 2f,
                                 paint
@@ -682,12 +738,12 @@ class StageStepBar @JvmOverloads constructor(
                     when (config.orientation) {
                         Orientation.Horizontal -> {
                             left = centerOfThisThumb - (config.thumbSize / 2f).toInt()
-                            top = (transparentCanvas.height / 2f).toInt() - (config.thumbSize / 2f).toInt()
+                            top = (canvas.height / 2f).toInt() - (config.thumbSize / 2f).toInt()
                             right = centerOfThisThumb + (config.thumbSize / 2f).toInt()
-                            bottom = (transparentCanvas.height / 2f).toInt() + (config.thumbSize / 2f).toInt()
+                            bottom = (canvas.height / 2f).toInt() + (config.thumbSize / 2f).toInt()
 
                             if (!config.drawTracksBehindThumbs) {
-                                transparentCanvas.drawRect(
+                                canvas.drawRect(
                                     left.toFloat(),
                                     top.toFloat(),
                                     right.toFloat(),
@@ -699,16 +755,16 @@ class StageStepBar @JvmOverloads constructor(
                                 left, top, right, bottom,
                             )
                             drawnComponent.drawable.alpha = alpha
-                            drawnComponent.drawable.draw(transparentCanvas)
+                            drawnComponent.drawable.draw(canvas)
                         }
                         Orientation.Vertical -> {
-                            left = (transparentCanvas.width / 2f).toInt() - (config.thumbSize / 2f).toInt()
+                            left = (canvas.width / 2f).toInt() - (config.thumbSize / 2f).toInt()
                             top = centerOfThisThumb - (config.thumbSize / 2f).toInt()
-                            right = (transparentCanvas.width / 2f).toInt() + (config.thumbSize / 2f).toInt()
+                            right = (canvas.width / 2f).toInt() + (config.thumbSize / 2f).toInt()
                             bottom = centerOfThisThumb + (config.thumbSize / 2f).toInt()
 
                             if (!config.drawTracksBehindThumbs) {
-                                transparentCanvas.drawRect(
+                                canvas.drawRect(
                                     left.toFloat(),
                                     top.toFloat(),
                                     right.toFloat(),
@@ -721,16 +777,13 @@ class StageStepBar @JvmOverloads constructor(
                                 left, top, right, bottom,
                             )
                             drawnComponent.drawable.alpha = alpha
-                            drawnComponent.drawable.draw(transparentCanvas)
+                            drawnComponent.drawable.draw(canvas)
                         }
                     }
                 }
             }
         }
     }
-
-    private lateinit var bitmap: Bitmap
-    private lateinit var transparentCanvas: Canvas
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
