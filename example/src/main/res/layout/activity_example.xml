@@ -52,6 +52,7 @@
         android:layout_width="@dimen/stageStepBarLargeDimension"
         android:layout_height="@dimen/stageStepBarSmallDimension"
         app:ssb_stageStepConfig="5,5,5"
+        app:ssb_currentState="1,2"
         app:ssb_animationDuration="500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -107,6 +107,8 @@ class ExampleActivity : AppCompatActivity() {
         binding.stageStepBar.setFilledTrackToNormalShape(availableColors[filledTrackDefaultColorSelectionIndex])
         binding.unfilledTrackDefaultColorView.setBackgroundColor(availableColors[unfilledTrackDefaultColorSelectionIndex])
         binding.stageStepBar.setUnfilledTrackToNormalShape(availableColors[unfilledTrackDefaultColorSelectionIndex])
+
+        binding.stageStepBar.setDrawTracksBehindThumbs(false)
     }
 
     @SuppressLint("SetTextI18n")

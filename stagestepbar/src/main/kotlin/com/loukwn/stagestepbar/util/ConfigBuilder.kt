@@ -114,6 +114,11 @@ internal class ConfigBuilder {
             attrArray.getBoolean(R.styleable.StageStepBar_ssb_showThumbs, oldConfig.showThumbs)
         newConfig = newConfig.copy(showThumbs = showThumbs)
 
+        // Set ShowThumbs
+        val drawTracksBehindThumbs =
+            attrArray.getBoolean(R.styleable.StageStepBar_ssb_drawTracksBehindThumbs, oldConfig.drawTracksBehindThumbs)
+        newConfig = newConfig.copy(drawTracksBehindThumbs = drawTracksBehindThumbs)
+
         return newConfig
     }
 

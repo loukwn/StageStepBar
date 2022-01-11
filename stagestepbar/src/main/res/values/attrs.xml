@@ -34,5 +34,6 @@
         <attr name="ssb_crossAxisFilledTrackSize" format="dimension" />
         <attr name="ssb_crossAxisUnfilledTrackSize" format="dimension" />
         <attr name="ssb_showThumbs" format="boolean" />
+        <attr name="ssb_drawTracksBehindThumbs" format="boolean" />
     </declare-styleable>
 </resources>
