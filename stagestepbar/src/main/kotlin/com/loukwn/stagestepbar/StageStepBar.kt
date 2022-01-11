@@ -707,14 +707,17 @@ class StageStepBar @JvmOverloads constructor(
         val showThumbs: Boolean,
     )
 
+    @Keep
     enum class Orientation {
         Horizontal, Vertical
     }
 
+    @Keep
     enum class HorizontalDirection {
         Auto, Ltr, Rtl
     }
 
+    @Keep
     enum class VerticalDirection {
         Ttb, Btt
     }
@@ -730,5 +733,6 @@ class StageStepBar @JvmOverloads constructor(
         ) : DrawnComponent()
     }
 
+    @Keep
     data class State(val stage: Int, val step: Int)
 }
