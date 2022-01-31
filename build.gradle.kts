@@ -5,9 +5,10 @@ buildscript {
     }
 
     dependencies {
-        classpath(Config.BuildPlugins.buildGradle)
+        classpath(Config.BuildPlugins.buildGradlePlugin)
         classpath(Config.BuildPlugins.kotlinGradlePlugin)
-        classpath(Config.BuildPlugins.ktlintGradle)
+        classpath(Config.BuildPlugins.ktlintGradlePlugin)
+        classpath(Config.BuildPlugins.paparazziPlugin)
     }
 }
 

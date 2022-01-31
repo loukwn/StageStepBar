@@ -23,26 +23,38 @@ internal class ConfigBuilder {
                 val stageStepConfig = attrStageStepConfig.split(",").map { it.toInt() }
                 newConfig = newConfig.copy(stageStepConfig = stageStepConfig)
             } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("Please make sure that your stageStepConfig is in the form of comma separated integers (e.g: '5,5,6')")
+                throw IllegalArgumentException(
+                    "Please make sure that your stageStepConfig is in the form of comma separated integers (e.g: '5,5,6')"
+                )
             }
         }
 
         // Set CurrentState
         val attrCurrentState = attrArray.getString(R.styleable.StageStepBar_ssb_currentState)
         if (attrCurrentState != null) {
-            try {
-                val currentState = attrCurrentState.split(",").map { it.toInt() }
-                if (currentState.size != 2) {
-                    throw IllegalArgumentException("The current state argument should be 2 comma separated integers")
-                }
+            if (attrCurrentState == "null") {
                 newConfig = newConfig.copy(
-                    currentState = StageStepBar.State(
-                        stage = currentState[0],
-                        currentState[1]
-                    )
+                    currentState = null
                 )
-            } catch (e: NumberFormatException) {
-                throw IllegalArgumentException("The current state argument should be 2 comma separated integers")
+            } else {
+                try {
+                    val currentState = attrCurrentState.split(",").map { it.toInt() }
+                    if (currentState.size != 2) {
+                        throw IllegalArgumentException(
+                            "The current state argument should be 2 comma separated integers"
+                        )
+                    }
+                    newConfig = newConfig.copy(
+                        currentState = StageStepBar.State(
+                            stage = currentState[0],
+                            currentState[1]
+                        )
+                    )
+                } catch (e: NumberFormatException) {
+                    throw IllegalArgumentException(
+                        "The current state argument should be 2 comma separated integers or 'null'."
+                    )
+                }
             }
         }
 
