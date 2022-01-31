@@ -794,7 +794,7 @@ class StageStepBar @JvmOverloads constructor(
     private fun getDefaultConfig(): StageStepBarConfig {
         return StageStepBarConfig(
             stageStepConfig = listOf(50, 50),
-            currentState = null,
+            currentState = State(0, 21),
             shouldAnimate = true,
             animationDuration = 500L,
             orientation = Orientation.Horizontal,
