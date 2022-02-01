@@ -9,4 +9,15 @@
         android:layout_height="200dp"
         android:layout_marginHorizontal="40dp" />
 
+    <TextView
+        android:id="@+id/testName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@android:color/black"
+        android:textColor="@android:color/white"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="10dp"
+        android:gravity="center" />
+
 </FrameLayout>
