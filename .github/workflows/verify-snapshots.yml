@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - feat/snapshot-testing
-  pull_request:
-    branches:
-      - feat/snapshot-testing
+#  pull_request:
+#    branches:
+#      - feat/snapshot-testing
 
 jobs:
   test:
-    name: Test against Snapshots
+    name: Test against snapshots
 
     runs-on: ubuntu-latest
 
@@ -20,5 +20,11 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '11'
-    - name: Gradle - Clean and Verify Snapshots with Paparazzi
+    - name: Gradle - Clean and verify snapshots with Paparazzi
       run: ./gradlew clean snapshot-test:verifyPaparazziDebug
+    - name: Upload snapshot failure deltas
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: snapshot-failure-deltas
+        path: snapshot-test/out/failures/delta-*.png
