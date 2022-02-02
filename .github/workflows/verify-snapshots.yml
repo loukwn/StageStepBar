@@ -67,7 +67,8 @@ jobs:
 
     - name: Create or update comment on PR (Failure)
       uses: peter-evans/create-or-update-comment@v1
-      if: steps.testStep.outcome == 'success'
+#      if: steps.testStep.outcome == 'success'
+      if: success()
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}
