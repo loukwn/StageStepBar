@@ -33,10 +33,11 @@ jobs:
       if: success()
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
         script: |
           const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
           console.log(context);
-          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + context.runId;
+          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
           github.issues.createComment({ issue_number, owner, repo, body: 'All good with PR! :tada: ([Run]('+ runUrl +'))' });
     - name: Comment (Failure)
       uses: actions/github-script@0.3.0
@@ -45,5 +46,5 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + context.runId;
-          github.issues.createComment({ issue_number, owner, repo, body: 'Problem with [tun]('+ runUrl +')... :sob: \n\nMost likely the snapshots are not matching so a check at the artifacts section of the run is recommended.' });
+          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
+          github.issues.createComment({ issue_number, owner, repo, body: 'Problem with [run]('+ runUrl +')... :sob: \n\nMost likely the snapshots are not matching so a check at the artifacts section of the run is recommended.' });
