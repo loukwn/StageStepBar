@@ -33,7 +33,7 @@ jobs:
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         message: |
-          ${{ github.event.number }}
+          ${{ env.GITHUB_RUN_ID }} $(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
 #    - name: Comment (Success)
 #      uses: actions/github-script@0.3.0
 #      if: success()
