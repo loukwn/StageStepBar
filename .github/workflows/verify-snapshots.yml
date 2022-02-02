@@ -52,7 +52,7 @@ jobs:
       with:
         issue-number: ${{ steps.findPr.outputs.pr }}
         comment-author: 'github-actions[bot]'
-        body-includes: Snapshot testing results
+        body-includes: Snapshot testing result
 
 #    - name: Create or update comment on PR (Success)
 #      uses: peter-evans/create-or-update-comment@v1
@@ -75,7 +75,7 @@ jobs:
         body: |
           Snapshot testing result:
           Some of the snapshot tests seem to have failed. Please:
-          - Head over to the artifacts section of the [CI Run](https://github.com/loukwn/StageStepBar/actions/runs/$GITHUB_RUN_ID)
+          - Head over to the artifacts section of the [CI Run](https://github.com/loukwn/StageStepBar/actions/runs/${{ github.run_id }})
           - Download the zip
           - If these changes are fixing an issue then please speak to the maintainer. If they are not intended then please fix them and repush again.
         edit-mode: replace
