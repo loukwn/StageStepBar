@@ -16,24 +16,26 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Java 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: '11'
-    - name: Gradle - Clean and verify snapshots with Paparazzi
-      id: testStep
-      run: ./gradlew clean snapshot-test:verifyPaparazziDebug
-    - name: Upload snapshot failure deltas
-      if: failure()
-      uses: actions/upload-artifact@v2
-      with:
-        name: snapshot-failure-deltas
-        path: snapshot-test/out/failures/delta-*.png
-    - name: Comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        message: |
-          ${{ env.GITHUB_RUN_ID }} $(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+    - name: Experiment with scripts
+      run: echo $GITHUB_RUN_ID
+#    - name: Set up Java 11
+#      uses: actions/setup-java@v1
+#      with:
+#        java-version: '11'
+#    - name: Gradle - Clean and verify snapshots with Paparazzi
+#      id: testStep
+#      run: ./gradlew clean snapshot-test:verifyPaparazziDebug
+#    - name: Upload snapshot failure deltas
+#      if: failure()
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: snapshot-failure-deltas
+#        path: snapshot-test/out/failures/delta-*.png
+#    - name: Comment
+#      uses: marocchino/sticky-pull-request-comment@v2
+#      with:
+#        message: |
+#          ${{ env.GITHUB_RUN_ID }} $(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
 #    - name: Comment (Success)
 #      uses: actions/github-script@0.3.0
 #      if: success()
