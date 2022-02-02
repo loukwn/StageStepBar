@@ -800,16 +800,16 @@ class StageStepBar @JvmOverloads constructor(
             horizontalDirection = HorizontalDirection.Auto,
             verticalDirection = VerticalDirection.Btt,
             filledTrack = DrawnComponent.Default(
-                color = ContextCompat.getColor(context, R.color.default_track_filled_color)
+                color = Color.BLACK
             ),
             unfilledTrack = DrawnComponent.Default(
-                color = ContextCompat.getColor(context, R.color.default_track_unfilled_color)
+                color = Color.LTGRAY
             ),
             filledThumb = DrawnComponent.Default(
-                color = ContextCompat.getColor(context, R.color.default_thumb_filled_color)
+                color = Color.BLACK
             ),
             unfilledThumb = DrawnComponent.Default(
-                color = ContextCompat.getColor(context, R.color.default_thumb_unfilled_color)
+                color = Color.GREEN
             ),
             thumbSize = resources.getDimensionPixelSize(R.dimen.default_thumb_size),
             crossAxisSizeFilledTrack = resources.getDimensionPixelOffset(R.dimen.default_track_cross_axis_size),

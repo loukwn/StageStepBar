@@ -54,7 +54,7 @@ jobs:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}
         body: |
-          Snapshot testing result - :heavy_check_mark:
+          Snapshot testing result: :heavy_check_mark:
           Everything looks good!
         edit-mode: replace
 
@@ -65,7 +65,7 @@ jobs:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}
         body: |
-          Snapshot testing result - :x:
+          Snapshot testing result: :x:
           Some of the snapshot tests seem to have failed. Please:
           - Head over to the artifacts section of the [CI Run](https://github.com/loukwn/StageStepBar/actions/runs/${{ github.run_id }}).
           - Download the zip.
