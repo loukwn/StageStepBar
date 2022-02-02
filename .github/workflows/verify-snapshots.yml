@@ -26,6 +26,7 @@ jobs:
       if: success() && steps.findPr.outputs.number
       env:
         PR: ${{ steps.findPr.outputs.pr }}
+    - run: echo $PR && echo " " && echo $GITHUB_RUN_ID
 #      run: echo $GITHUB_RUN_ID <- WORKZ
 #    - name: Set up Java 11
 #      uses: actions/setup-java@v1
