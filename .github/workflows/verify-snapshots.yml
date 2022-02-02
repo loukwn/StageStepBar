@@ -21,6 +21,7 @@ jobs:
       with:
         java-version: '11'
     - name: Gradle - Clean and verify snapshots with Paparazzi
+      id: testStep
       run: ./gradlew clean snapshot-test:verifyPaparazziDebug
     - name: Upload snapshot failure deltas
       if: failure()
@@ -28,22 +29,27 @@ jobs:
       with:
         name: snapshot-failure-deltas
         path: snapshot-test/out/failures/delta-*.png
-    - name: Comment (Success)
-      uses: actions/github-script@0.3.0
-      if: success()
+    - name: Comment
+      uses: marocchino/sticky-pull-request-comment@v2
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          console.log(context);
-          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
-          github.issues.createComment({ issue_number, owner, repo, body: 'All good with PR! :tada: ([Run]('+ runUrl +'))' });
-    - name: Comment (Failure)
-      uses: actions/github-script@0.3.0
-      if: failure()
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
-          github.issues.createComment({ issue_number, owner, repo, body: 'Problem with [run]('+ runUrl +')... :sob: \n\nMost likely the snapshots are not matching so a check at the artifacts section of the run is recommended.' });
+        message: |
+          ${{ github.event.number }}
+#    - name: Comment (Success)
+#      uses: actions/github-script@0.3.0
+#      if: success()
+#      with:
+#        github-token: ${{ secrets.GITHUB_TOKEN }}
+#        script: |
+#          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+#          console.log(context);
+#          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
+#          github.issues.createComment({ issue_number, owner, repo, body: 'All good with PR! :tada: ([Run]('+ runUrl +'))' });
+#    - name: Comment (Failure)
+#      uses: actions/github-script@0.3.0
+#      if: failure()
+#      with:
+#        github-token: ${{ secrets.GITHUB_TOKEN }}
+#        script: |
+#          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+#          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
+#          github.issues.createComment({ issue_number, owner, repo, body: 'Problem with [run]('+ runUrl +')... :sob: \n\nMost likely the snapshots are not matching so a check at the artifacts section of the run is recommended.' });
