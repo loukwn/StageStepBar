@@ -46,16 +46,40 @@ jobs:
 #      with:
 #        message: |
 #          ${{ env.GITHUB_RUN_ID }} $(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-#    - name: Comment (Success)
-#      uses: actions/github-script@0.3.0
-#      if: success()
+    - name: Find Comment on PR
+      uses: peter-evans/find-comment@v1
+      id: fc
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'github-actions[bot]'
+        body-includes: Snapshot testing results
+
+#    - name: Create or update comment on PR (Success)
+#      uses: peter-evans/create-or-update-comment@v1
+#      if: steps.testStep.outcome == 'success'
 #      with:
-#        github-token: ${{ secrets.GITHUB_TOKEN }}
-#        script: |
-#          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-#          console.log(context);
-#          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
-#          github.issues.createComment({ issue_number, owner, repo, body: 'All good with PR! :tada: ([Run]('+ runUrl +'))' });
+#        comment-id: ${{ steps.fc.outputs.comment-id }}
+#        issue-number: ${{ steps.findPr.outputs.pr }}
+#        body: |
+#          Snapshot testing result: Success!
+#        edit-mode: replace
+#        reactions: tada
+
+    - name: Create or update comment on PR (Failure)
+      uses: peter-evans/create-or-update-comment@v1
+      if: steps.testStep.outcome == 'success'
+      with:
+        comment-id: ${{ steps.fc.outputs.comment-id }}
+        issue-number: ${{ steps.findPr.outputs.pr }}
+        body: |
+          Snapshot testing result:
+          Some of the snapshot tests seem to have failed. Please:
+          - Head over to the artifacts section of the [CI Run](https://github.com/loukwn/StageStepBar/actions/runs/`$GITHUB_RUN_ID`)
+          - Download the zip
+          - If these changes are fixing an issue then please speak to the maintainer. If they are not intended then please fix them and repush again.
+        edit-mode: replace
+        reactions: sob
+#    - name: Comment (Success), owner, repo, body: 'All good with PR! :tada: ([Run]('+ runUrl +'))' });
 #    - name: Comment (Failure)
 #      uses: actions/github-script@0.3.0
 #      if: failure()
@@ -65,3 +89,13 @@ jobs:
 #          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
 #          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
 #          github.issues.createComment({ issue_number, owner, repo, body: 'Problem with [run]('+ runUrl +')... :sob: \n\nMost likely the snapshots are not matching so a check at the artifacts section of the run is recommended.' });
+
+#      uses: actions/github-script@0.3.0
+#      if: success()
+#      with:
+#        github-token: ${{ secrets.GITHUB_TOKEN }}
+#        script: |
+#          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+#          console.log(context);
+#          const runUrl = 'https://github.com/' + owner + '/' + repo + '/actions/runs/' + `${{ env.GITHUB_RUN_ID }}`;
+#          github.issues.createComment({ issue_number
