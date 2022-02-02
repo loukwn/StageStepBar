@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <com.loukwn.stagestepbar.StageStepBar
         android:id="@+id/stageStepbar"
@@ -15,9 +16,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@android:color/black"
-        android:textColor="@android:color/white"
+        android:gravity="center"
         android:paddingHorizontal="20dp"
         android:paddingBottom="10dp"
-        android:gravity="center" />
+        android:textColor="@android:color/white" />
 
 </FrameLayout>
