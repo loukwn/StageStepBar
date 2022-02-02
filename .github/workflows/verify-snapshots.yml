@@ -33,7 +33,6 @@ jobs:
       if: success()
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        env:
         script: |
           const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
           console.log(context);
