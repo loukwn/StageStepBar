@@ -32,7 +32,7 @@ jobs:
         path: snapshot-test/out/failures/delta-*.png
 
     - name: Find PR number
-    - uses: jwalton/gh-find-current-pr@v1
+      uses: jwalton/gh-find-current-pr@v1
       id: findPr
       with:
         state: open
