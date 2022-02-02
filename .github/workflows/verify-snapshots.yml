@@ -16,9 +16,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Experiment with scripts
+    - uses: jwalton/gh-find-current-pr@v1
+      id: findPr
+      with:
+        # Can be "open", "closed", or "all".  Defaults to "open".
+        state: open
+        # This will echo "Your PR is 7", or be skipped if there is no current PR.
+    - run: echo "Your PR is ${PR}"
+      if: success() && steps.findPr.outputs.number
+      env:
+        PR: ${{ steps.findPr.outputs.pr }}
 #      run: echo $GITHUB_RUN_ID <- WORKZ
-      run: echo $GITHUB_REF
 #    - name: Set up Java 11
 #      uses: actions/setup-java@v1
 #      with:
