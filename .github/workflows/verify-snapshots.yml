@@ -44,6 +44,7 @@ jobs:
     - name: Find Comment on PR
       uses: peter-evans/find-comment@v1
       id: fc
+      if: always()
       with:
         issue-number: ${{ steps.findPr.outputs.pr }}
         comment-author: 'github-actions[bot]'
