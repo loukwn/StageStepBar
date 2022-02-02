@@ -54,9 +54,9 @@ jobs:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}
         body: |
-          Snapshot testing result: Success!
+          Snapshot testing result - :heavy_check_mark:
+          Success!
         edit-mode: replace
-        reactions: hooray
 
     - name: Create or update comment on PR (Failure)
       uses: peter-evans/create-or-update-comment@v1
@@ -65,10 +65,10 @@ jobs:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}
         body: |
-          Snapshot testing result:
+          Snapshot testing result - :x:
           Some of the snapshot tests seem to have failed. Please:
-          - Head over to the artifacts section of the [CI Run](https://github.com/loukwn/StageStepBar/actions/runs/${{ github.run_id }})
-          - Download the zip
+          - Head over to the artifacts section of the [CI Run](https://github.com/loukwn/StageStepBar/actions/runs/${{ github.run_id }}).
+          - Download the zip.
+          - Unzip and you can find one or more images that show the expected and the actual test results.
           - If these changes are fixing an issue then please speak to the maintainer. If they are not intended then please fix them and repush again.
         edit-mode: replace
-        reactions: confused
