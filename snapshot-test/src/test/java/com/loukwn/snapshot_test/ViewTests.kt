@@ -57,7 +57,7 @@ class ViewTests {
     }
 
     private fun snap(snapName: String?) {
-        testNameTextView.text = "View test\n$snapName"
+        testNameTextView.text = "View test:\n$snapName"
         paparazzi.snapshot(parentView, snapName)
     }
 }
