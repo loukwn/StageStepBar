@@ -803,7 +803,7 @@ class StageStepBar @JvmOverloads constructor(
                 color = Color.BLACK
             ),
             unfilledTrack = DrawnComponent.Default(
-                color = Color.LTGRAY
+                color = Color.GREEN
             ),
             filledThumb = DrawnComponent.Default(
                 color = Color.BLACK
