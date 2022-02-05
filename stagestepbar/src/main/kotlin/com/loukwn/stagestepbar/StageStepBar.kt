@@ -589,7 +589,7 @@ class StageStepBar @JvmOverloads constructor(
         when (config.unfilledTrack) {
             is DrawnComponent.Default -> {
                 unfilledTrackRect.set(left, top, right, bottom)
-                canvas.drawRect(unfilledTrackRect, clearPaint)
+//                canvas.drawRect(unfilledTrackRect, clearPaint)
                 canvas.drawRect(unfilledTrackRect, unfilledTrackPaint)
             }
             is DrawnComponent.UserProvided -> {
