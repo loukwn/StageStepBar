@@ -800,10 +800,10 @@ class StageStepBar @JvmOverloads constructor(
             horizontalDirection = HorizontalDirection.Auto,
             verticalDirection = VerticalDirection.Btt,
             filledTrack = DrawnComponent.Default(
-                color = Color.BLACK
+                color = Color.YELLOW
             ),
             unfilledTrack = DrawnComponent.Default(
-                color = Color.GREEN
+                color = Color.RED
             ),
             filledThumb = DrawnComponent.Default(
                 color = Color.BLACK

@@ -26,11 +26,6 @@ class ViewTests {
         testNameTextView = parentView.findViewById(R.id.testName)
     }
 
-    @After
-    fun cleanup() {
-        paparazzi.close()
-    }
-
     @Test
     fun `Default state`() {
         val name = object{}.javaClass.enclosingMethod?.name
@@ -48,6 +43,14 @@ class ViewTests {
     @Test
     fun `State test`() {
         stageStepBar.setCurrentState(null)
+
+        val name = object{}.javaClass.enclosingMethod?.name
+        snap(snapName = name)
+    }
+
+    @Test
+    fun `Fully completed`() {
+        stageStepBar.setCurrentState(StageStepBar.State(3, 0))
 
         val name = object{}.javaClass.enclosingMethod?.name
         snap(snapName = name)

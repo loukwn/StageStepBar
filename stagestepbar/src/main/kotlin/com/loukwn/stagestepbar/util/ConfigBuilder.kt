@@ -143,7 +143,7 @@ internal class ConfigBuilder {
         val alpha = attrArray.getFloat(R.styleable.StageStepBar_ssb_filledTrackDrawableAlpha, 1f)
         val color = attrArray.getColor(
             R.styleable.StageStepBar_ssb_filledTrackColor,
-            Color.BLACK,
+            Color.YELLOW,
         )
 
         return if (drawable == null) {
@@ -161,7 +161,7 @@ internal class ConfigBuilder {
         val alpha = attrArray.getFloat(R.styleable.StageStepBar_ssb_unfilledTrackDrawableAlpha, 1f)
         val color = attrArray.getColor(
             R.styleable.StageStepBar_ssb_unfilledTrackColor,
-            Color.GREEN,
+            Color.RED,
         )
 
         return if (drawable == null) {
@@ -197,7 +197,7 @@ internal class ConfigBuilder {
         val alpha = attrArray.getFloat(R.styleable.StageStepBar_ssb_unfilledThumbDrawableAlpha, 1f)
         val color = attrArray.getColor(
             R.styleable.StageStepBar_ssb_unfilledThumbColor,
-            Color.DKGRAY
+            Color.GREEN
         )
 
         return if (drawable == null) {
