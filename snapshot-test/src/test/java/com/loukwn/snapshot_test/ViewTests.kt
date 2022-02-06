@@ -28,33 +28,72 @@ class ViewTests {
     }
 
     @Test
-    fun `Default state`() {
-        val name = object{}.javaClass.enclosingMethod?.name
-        snap(snapName = name)
+    fun `Default configuration`() {
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
     }
 
     @Test
-    fun `6 stages test`() {
-        stageStepBar.setStageStepConfig(listOf(9,9,9,9,9,9))
+    fun `7 stages`() {
+        stageStepBar.setStageStepConfig(listOf(9, 9, 9, 9, 9, 9))
 
-        val name = object{}.javaClass.enclosingMethod?.name
-        snap(snapName = name)
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
     }
 
     @Test
-    fun `State test`() {
+    fun `Null State`() {
         stageStepBar.setCurrentState(null)
 
-        val name = object{}.javaClass.enclosingMethod?.name
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Non null state`() {
+        stageStepBar.setStageStepConfig(listOf(5, 5, 5))
+        stageStepBar.setCurrentState(StageStepBar.State(1, 2))
+
+        val name = object {}.javaClass.enclosingMethod?.name
         snap(snapName = name)
     }
 
     @Test
-    fun `Fully completed`() {
+    fun `Fully completed (max stage)`() {
+        stageStepBar.setStageStepConfig(listOf(5, 5, 5))
         stageStepBar.setCurrentState(StageStepBar.State(3, 0))
 
-        val name = object{}.javaClass.enclosingMethod?.name
-        snap(snapName = name)
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Fully completed (max step on second to last stage)`() {
+        stageStepBar.setStageStepConfig(listOf(5, 5, 5))
+        stageStepBar.setCurrentState(StageStepBar.State(2, 5))
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+
+    @Test
+    fun `Fully completed (max stage more than max steps)`() {
+        stageStepBar.setStageStepConfig(listOf(5, 5, 5))
+        stageStepBar.setCurrentState(StageStepBar.State(2, 512))
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Fully completed (more than max steps and stages)`() {
+        stageStepBar.setStageStepConfig(listOf(5, 5, 5))
+        stageStepBar.setCurrentState(StageStepBar.State(20, 512))
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Lots of steps between two stages`() {
+        stageStepBar.setStageStepConfig(listOf(5, 5, 1000))
+        stageStepBar.setCurrentState(StageStepBar.State(1, 478))
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
     }
 
     private fun snap(snapName: String?) {
