@@ -24,6 +24,7 @@ class ViewTests {
         parentView = paparazzi.inflate(R.layout.layout_to_test)
         stageStepBar = parentView.findViewById(R.id.stageStepbar)
         testNameTextView = parentView.findViewById(R.id.testName)
+        stageStepBar.setAnimate(false)
     }
 
     @Test
