@@ -412,7 +412,7 @@ class StageStepBar @JvmOverloads constructor(
     }
 
     /**
-     * Sets whether the tracks are visible behind the thumbs. This is by default set to [true], as it
+     * Sets whether the tracks are visible behind the thumbs. This is by default set to true, as it
      * requires one extra draw (erasing the area behind the thumb) otherwise.
      * This however can be particularly useful if semitransparent thumbs are used and seeing
      * the track peeking through them is not desired.
@@ -589,7 +589,7 @@ class StageStepBar @JvmOverloads constructor(
         when (config.unfilledTrack) {
             is DrawnComponent.Default -> {
                 unfilledTrackRect.set(left, top, right, bottom)
-//                canvas.drawRect(unfilledTrackRect, clearPaint)
+                canvas.drawRect(unfilledTrackRect, clearPaint)
                 canvas.drawRect(unfilledTrackRect, unfilledTrackPaint)
             }
             is DrawnComponent.UserProvided -> {
@@ -800,16 +800,16 @@ class StageStepBar @JvmOverloads constructor(
             horizontalDirection = HorizontalDirection.Auto,
             verticalDirection = VerticalDirection.Btt,
             filledTrack = DrawnComponent.Default(
-                color = Color.YELLOW
+                color = ContextCompat.getColor(context, R.color.default_track_filled_color)
             ),
             unfilledTrack = DrawnComponent.Default(
-                color = Color.RED
+                color = ContextCompat.getColor(context, R.color.default_track_unfilled_color)
             ),
             filledThumb = DrawnComponent.Default(
-                color = Color.BLACK
+                color = ContextCompat.getColor(context, R.color.default_thumb_filled_color)
             ),
             unfilledThumb = DrawnComponent.Default(
-                color = Color.GREEN
+                color = ContextCompat.getColor(context, R.color.default_thumb_unfilled_color)
             ),
             thumbSize = resources.getDimensionPixelSize(R.dimen.default_thumb_size),
             crossAxisSizeFilledTrack = resources.getDimensionPixelOffset(R.dimen.default_track_cross_axis_size),

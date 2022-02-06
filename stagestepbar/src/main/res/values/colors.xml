@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <public name="empty" type="string" />
-<!--    <color name="default_thumb_filled_color">#000000</color>-->
-<!--    <color name="default_thumb_unfilled_color">#6F6F6F</color>-->
-<!--    <color name="default_track_filled_color">#000000</color>-->
-<!--    <color name="default_track_unfilled_color">#A9A9A9</color>-->
+    <color name="default_thumb_filled_color">#000000</color>
+    <color name="default_thumb_unfilled_color">#6F6F6F</color>
+    <color name="default_track_filled_color">#000000</color>
+    <color name="default_track_unfilled_color">#A9A9A9</color>
 </resources>
