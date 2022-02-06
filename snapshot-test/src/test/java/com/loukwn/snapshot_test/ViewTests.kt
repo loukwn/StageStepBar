@@ -51,8 +51,7 @@ class ViewTests {
         stageStepBar.setStageStepConfig(listOf(5, 5, 5))
         stageStepBar.setCurrentState(StageStepBar.State(1, 2))
 
-        val name = object {}.javaClass.enclosingMethod?.name
-        snap(snapName = name)
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
     }
 
     @Test
