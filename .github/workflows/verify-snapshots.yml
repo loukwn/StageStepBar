@@ -1,15 +1,15 @@
 name: PR checks
 
 on:
-  push:
+  issue_comment:
+    types: [ created, edited ]
+  pull_request:
     branches:
-      - feat/snapshot-testing
-#  pull_request:
-#    branches:
-#      - feat/snapshot-testing
+      - master
 
 jobs:
   test:
+    if: github.event_name == 'pull_request' || (github.event_name == 'issue_comment' && contains(github.event.comment.html_url, '/pull/') && github.event.comment.body == '!snapshot'))
     name: Test against snapshots
     runs-on: macos-latest
     steps:
