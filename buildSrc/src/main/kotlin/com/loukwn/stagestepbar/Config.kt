@@ -7,9 +7,10 @@ object Config {
     }
 
     object BuildPlugins {
-        const val buildGradle = "com.android.tools.build:gradle:_"
+        const val buildGradlePlugin = "com.android.tools.build:gradle:_"
         const val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:_"
-        const val ktlintGradle = "org.jlleitschuh.gradle:ktlint-gradle:_"
+        const val ktlintGradlePlugin = "org.jlleitschuh.gradle:ktlint-gradle:_"
+        const val paparazziPlugin = "app.cash.paparazzi:paparazzi-gradle-plugin:_"
     }
 
     object Libs {

@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.Keep
-import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.loukwn.stagestepbar.util.ConfigBuilder
@@ -413,7 +412,7 @@ class StageStepBar @JvmOverloads constructor(
     }
 
     /**
-     * Sets whether the tracks are visible behind the thumbs. This is by default set to [true], as it
+     * Sets whether the tracks are visible behind the thumbs. This is by default set to true, as it
      * requires one extra draw (erasing the area behind the thumb) otherwise.
      * This however can be particularly useful if semitransparent thumbs are used and seeing
      * the track peeking through them is not desired.
@@ -794,7 +793,7 @@ class StageStepBar @JvmOverloads constructor(
     private fun getDefaultConfig(): StageStepBarConfig {
         return StageStepBarConfig(
             stageStepConfig = listOf(50, 50),
-            currentState = State(0, 21),
+            currentState = null,
             shouldAnimate = true,
             animationDuration = 500L,
             orientation = Orientation.Horizontal,
