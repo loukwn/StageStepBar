@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    if: github.event_name == 'pull_request' || (contains(github.event.comment.html_url, '/pull/') && contains(github.event.comment.body, '!snapshot'))
+    if: github.event_name == 'pull_request' || (github.event_name == 'issue_comment' && contains(github.event.comment.html_url, '/pull/') && github.event.comment.body == '!snapshot')
     name: Test against snapshots
     runs-on: macos-latest
     steps:

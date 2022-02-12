@@ -1,5 +1,6 @@
 package com.loukwn.snapshot_test
 
+import android.graphics.Color
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -95,8 +96,107 @@ class ViewTests {
         snap(snapName = object {}.javaClass.enclosingMethod?.name)
     }
 
+    @Test
+    fun `Random colors Horizontal LTR`() {
+        stageStepBar.setStageStepConfig(listOf(5,5,5))
+        stageStepBar.setCurrentState(StageStepBar.State(1, 3))
+        stageStepBar.setThumbsVisible(true)
+        stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#ff00ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
+        stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#0000ff"))
+        stageStepBar.setUnfilledTrackToNormalShape(Color.parseColor("#00ff00"))
+        stageStepBar.setOrientation(StageStepBar.Orientation.Horizontal)
+        stageStepBar.setHorizontalDirection(StageStepBar.HorizontalDirection.Ltr)
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Random colors Horizontal RTL`() {
+        stageStepBar.setStageStepConfig(listOf(5,5,5))
+        stageStepBar.setCurrentState(StageStepBar.State(1, 3))
+        stageStepBar.setThumbsVisible(true)
+        stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#ff00ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
+        stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#0000ff"))
+        stageStepBar.setUnfilledTrackToNormalShape(Color.parseColor("#00ff00"))
+        stageStepBar.setOrientation(StageStepBar.Orientation.Horizontal)
+        stageStepBar.setHorizontalDirection(StageStepBar.HorizontalDirection.Rtl)
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Random colors Vertical TTB`() {
+        stageStepBar.setStageStepConfig(listOf(5,5,5))
+        stageStepBar.setCurrentState(StageStepBar.State(1, 3))
+        stageStepBar.setThumbsVisible(true)
+        stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#ff00ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
+        stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#0000ff"))
+        stageStepBar.setUnfilledTrackToNormalShape(Color.parseColor("#00ff00"))
+        stageStepBar.setOrientation(StageStepBar.Orientation.Vertical)
+        stageStepBar.setVerticalDirection(StageStepBar.VerticalDirection.Ttb)
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Random colors Vertical BTT`() {
+        stageStepBar.setStageStepConfig(listOf(5,5,5))
+        stageStepBar.setCurrentState(StageStepBar.State(1, 3))
+        stageStepBar.setThumbsVisible(true)
+        stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#ff00ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
+        stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#0000ff"))
+        stageStepBar.setUnfilledTrackToNormalShape(Color.parseColor("#00ff00"))
+        stageStepBar.setOrientation(StageStepBar.Orientation.Vertical)
+        stageStepBar.setVerticalDirection(StageStepBar.VerticalDirection.Btt)
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Alpha on filled thumb with normal shape`() {
+        stageStepBar.setStageStepConfig(listOf(5,5,5))
+        stageStepBar.setCurrentState(StageStepBar.State(1, 3))
+        stageStepBar.setThumbsVisible(true)
+        stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#55ff00ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
+        stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#0000ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#00ff00"))
+        stageStepBar.setOrientation(StageStepBar.Orientation.Horizontal)
+        stageStepBar.setHorizontalDirection(StageStepBar.HorizontalDirection.Ltr)
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Alpha on filled thumb and filled track with normal shape`() {
+        stageStepBar.setStageStepConfig(listOf(5,5,5))
+        stageStepBar.setCurrentState(StageStepBar.State(1, 3))
+        stageStepBar.setThumbsVisible(true)
+        stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#55ff00ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
+        stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#550000ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#00ff00"))
+        stageStepBar.setOrientation(StageStepBar.Orientation.Horizontal)
+        stageStepBar.setHorizontalDirection(StageStepBar.HorizontalDirection.Ltr)
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `No thumbs`() {
+        stageStepBar.setStageStepConfig(listOf(100))
+        stageStepBar.setCurrentState(StageStepBar.State(0, 42))
+        stageStepBar.setThumbsVisible(false)
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
     private fun snap(snapName: String?) {
         testNameTextView.text = "View test:\n$snapName"
-        paparazzi.snapshot(parentView, snapName)
+        paparazzi.snapshot(parentView, "")
     }
 }
