@@ -15,4 +15,3 @@ dependencies {
     implementation(project(Config.Modules.lib))
     testImplementation(project(Config.Modules.lib))
 }
-

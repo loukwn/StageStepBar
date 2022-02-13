@@ -39,7 +39,7 @@ class ViewTests {
      * as possible having errors leak to multiple different tests.
      */
     private fun prepareViewDefaults() {
-        stageStepBar.setStageStepConfig(listOf(5,5,5))
+        stageStepBar.setStageStepConfig(listOf(5, 5, 5))
         stageStepBar.setCurrentState(StageStepBar.State(1, 3))
         stageStepBar.setThumbsVisible(true)
         stageStepBar.setThumbSize(defaultThumbSize)
@@ -114,7 +114,6 @@ class ViewTests {
 
         snap(snapName = object {}.javaClass.enclosingMethod?.name)
     }
-
 
     @Test
     fun `Fully completed (max stage more than max steps)`() {
