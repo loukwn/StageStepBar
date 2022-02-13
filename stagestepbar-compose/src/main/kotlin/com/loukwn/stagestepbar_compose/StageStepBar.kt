@@ -1,5 +1,6 @@
 package com.loukwn.stagestepbar_compose
 
+import androidx.annotation.Keep
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.height
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.loukwn.stagestepbar_compose.data.*
 
 @Composable
+@Keep
 fun StageStepBar(
     modifier: Modifier = Modifier,
     config: StageStepBarConfig,

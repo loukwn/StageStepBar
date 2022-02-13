@@ -9,9 +9,9 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import com.loukwn.example_compose.presentation.MainUi
 import com.loukwn.example_compose.ui.theme.StageStepBarTheme
 
+@ExperimentalUnitApi
 class MainActivity : ComponentActivity() {
 
-    @ExperimentalUnitApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

@@ -5,13 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk = 30
-    buildToolsVersion = "30.0.3"
+    compileSdk = Config.Project.compileSdk
+    buildToolsVersion = Config.Project.buildToolsVersion
 
     defaultConfig {
-        minSdk = 16
-        targetSdk = 30
-        targetSdk = 30
+        minSdk = Config.Project.minSdkView
+        targetSdk = Config.Project.targetSdk
     }
 
     buildTypes {
@@ -36,7 +35,7 @@ afterEvaluate {
                 from(components.findByName("release"))
 
                 group = "com.loukwn"
-                version = "0.3.2"
+                version = Config.Project.libraryReleaseVersion
             }
         }
     }

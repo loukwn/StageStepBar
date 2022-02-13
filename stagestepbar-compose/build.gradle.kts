@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk = 30
-    buildToolsVersion = "30.0.3"
+    compileSdk = Config.Project.compileSdk
+    buildToolsVersion = Config.Project.buildToolsVersion
 
     defaultConfig {
-        minSdk = 21
-        targetSdk = 30
+        minSdk = Config.Project.minSdkCompose
+        targetSdk = Config.Project.targetSdk
 
         vectorDrawables {
             useSupportLibrary = true
@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -28,7 +28,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
         compose = true
     }
 
@@ -52,7 +51,7 @@ afterEvaluate {
                 from(components.findByName("release"))
 
                 group = "com.loukwn"
-                version = "0.3.2"
+                version = Config.Project.libraryReleaseVersion
             }
         }
     }

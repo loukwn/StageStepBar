@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    compileSdk = 30
-    buildToolsVersion = "30.0.3"
+    compileSdk = Config.Project.compileSdk
+    buildToolsVersion = Config.Project.buildToolsVersion
 
     defaultConfig {
         applicationId = "com.loukwn.stagestepbarexample"
-        minSdk = 16
-        targetSdk = 30
+        minSdk = Config.Project.minSdkView
+        targetSdk = Config.Project.targetSdk
         versionCode = 1
         versionName = "1.0.0"
     }
