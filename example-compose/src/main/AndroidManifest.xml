@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StageStepBar">
         <activity
-            android:name=".MainActivity"
+            android:name=".ExampleComposeActivity"
             android:exported="true"
             android:theme="@style/Theme.StageStepBar.NoActionBar">
             <intent-filter>

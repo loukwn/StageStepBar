@@ -112,6 +112,7 @@ private fun MainCanvas(modifier: Modifier, progress: Float, config: StageStepBar
             if (config.showThumbs) {
                 drawThumbs(
                     drawScope = this,
+                    progress = progress,
                     progressBarEnd = progressBarEnd,
                     drawReverse = drawReverse,
                     config = config,
@@ -190,75 +191,72 @@ private fun drawFilledTrack(
     filledTrackSizePx: Float,
     thumbSizePx: Float,
 ): Float {
-    if (config.currentState != null) {
-        var left: Float
-        var top: Float
-        var right: Float
-        var bottom: Float
-        val progressBarEnd: Float
-        val canvasHeight = drawScope.size.height
-        val canvasWidth = drawScope.size.width
+    var left: Float
+    var top: Float
+    var right: Float
+    var bottom: Float
+    val progressBarEnd: Float
+    val canvasHeight = drawScope.size.height
+    val canvasWidth = drawScope.size.width
 
-        when (config.orientation) {
-            Orientation.Horizontal -> {
-                top = canvasHeight / 2f - filledTrackSizePx / 2f
-                bottom = canvasHeight / 2f + filledTrackSizePx / 2f
-                left = thumbSizePx / 2f
-                right =
-                    (canvasWidth - thumbSizePx) * progress + thumbSizePx / 2f
+    when (config.orientation) {
+        Orientation.Horizontal -> {
+            top = canvasHeight / 2f - filledTrackSizePx / 2f
+            bottom = canvasHeight / 2f + filledTrackSizePx / 2f
+            left = thumbSizePx / 2f
+            right =
+                (canvasWidth - thumbSizePx) * progress + thumbSizePx / 2f
 
-                if (drawReverse) {
-                    val temp = left
-                    left = canvasWidth - right
-                    right = canvasWidth - temp
-                }
-                progressBarEnd = if (drawReverse) left else right
+            if (drawReverse) {
+                val temp = left
+                left = canvasWidth - right
+                right = canvasWidth - temp
             }
-            Orientation.Vertical -> {
-                left = canvasWidth / 2f - filledTrackSizePx / 2f
-                right = canvasWidth / 2f + filledTrackSizePx / 2f
-                top = thumbSizePx / 2f
-                bottom =
-                    (canvasHeight - thumbSizePx) * progress + thumbSizePx / 2f
-
-                if (drawReverse) {
-                    val temp = top
-                    top = canvasHeight - bottom
-                    bottom = canvasHeight - temp
-                }
-                progressBarEnd = if (drawReverse) top else bottom
-            }
+            progressBarEnd = if (drawReverse) left else right
         }
+        Orientation.Vertical -> {
+            left = canvasWidth / 2f - filledTrackSizePx / 2f
+            right = canvasWidth / 2f + filledTrackSizePx / 2f
+            top = thumbSizePx / 2f
+            bottom =
+                (canvasHeight - thumbSizePx) * progress + thumbSizePx / 2f
 
-        when (config.filledTrack) {
-            is DrawnComponent.Default -> {
-                drawScope.drawRect(
-                    color = config.filledTrack.color,
-                    topLeft = Offset(left, top),
-                    size = Size(right - left, bottom - top)
-                )
+            if (drawReverse) {
+                val temp = top
+                top = canvasHeight - bottom
+                bottom = canvasHeight - temp
             }
-            is DrawnComponent.UserProvided -> {
-                val imageBitmap = config.filledTrack.imageBitmap
-                val colorFilter = config.filledTrack.colorFilter
-
-                drawScope.drawImage(
-                    image = imageBitmap,
-                    dstOffset = IntOffset(left.toInt(), top.toInt()),
-                    dstSize = IntSize((right - left).toInt(), (bottom - top).toInt()),
-                    colorFilter = colorFilter,
-                )
-            }
+            progressBarEnd = if (drawReverse) top else bottom
         }
-
-        return progressBarEnd
     }
 
-    return 0f
+    when (config.filledTrack) {
+        is DrawnComponent.Default -> {
+            drawScope.drawRect(
+                color = config.filledTrack.color,
+                topLeft = Offset(left, top),
+                size = Size(right - left, bottom - top)
+            )
+        }
+        is DrawnComponent.UserProvided -> {
+            val imageBitmap = config.filledTrack.imageBitmap
+            val colorFilter = config.filledTrack.colorFilter
+
+            drawScope.drawImage(
+                image = imageBitmap,
+                dstOffset = IntOffset(left.toInt(), top.toInt()),
+                dstSize = IntSize((right - left).toInt(), (bottom - top).toInt()),
+                colorFilter = colorFilter,
+            )
+        }
+    }
+
+    return progressBarEnd
 }
 
 private fun drawThumbs(
     drawScope: DrawScope,
+    progress: Float,
     progressBarEnd: Float,
     drawReverse: Boolean,
     config: StageStepBarConfig,
@@ -282,7 +280,7 @@ private fun drawThumbs(
         }
 
         val shouldFillThumb = when {
-            config.currentState == null -> false
+            config.currentState == null && stage == 0 && progress == 0f -> false
             drawReverse -> progressBarEnd <= centerOfThisThumb
             else -> progressBarEnd >= centerOfThisThumb
         }

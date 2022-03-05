@@ -51,6 +51,7 @@ data class StageStepBarConfig(
     val crossAxisSizeFilledTrack: Dp,
     val crossAxisSizeUnfilledTrack: Dp,
     val showThumbs: Boolean,
+    val drawTracksBehindThumbs: Boolean,
 ) {
     internal val numOfStages: Int
         get() = stageStepConfig.size + 1
@@ -66,21 +67,22 @@ data class StageStepBarConfig(
                 horizontalDirection = HorizontalDirection.Auto,
                 verticalDirection = VerticalDirection.Btt,
                 filledTrack = DrawnComponent.Default(
-                    color = Color(0x00000000)
+                    color = Color(0xFF000000)
                 ),
                 unfilledTrack = DrawnComponent.Default(
-                    color = Color(0x00A9A9A9)
+                    color = Color(0xFFA9A9A9)
                 ),
                 filledThumb = DrawnComponent.Default(
-                    color = Color(0x00000000)
+                    color = Color(0xFF000000)
                 ),
                 unfilledThumb = DrawnComponent.Default(
-                    color = Color(0x006F6F6F)
+                    color = Color(0xFF6F6F6F)
                 ),
                 thumbSize = 20.dp,
                 crossAxisSizeFilledTrack = 6.dp,
                 crossAxisSizeUnfilledTrack = 6.dp,
                 showThumbs = true,
+                drawTracksBehindThumbs = true,
             )
     }
 }

@@ -28,7 +28,7 @@ import com.loukwn.stagestepbar_compose.data.StageStepBarConfig
 
 @ExperimentalUnitApi
 @Composable
-internal fun InternalMainUi(uiModel: UiModel, interactions: Interactions) {
+internal fun ExampleComposeUi(uiModel: UiModel, interactions: Interactions) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -104,7 +104,15 @@ private fun StageStepBarArea(stageStepBarConfig: StageStepBarConfig) {
 @ExperimentalUnitApi
 @Composable
 private fun ConfigListArea(uiModel: UiModel, interactions: Interactions) {
-    val listOfColors = listOf(Color.Gray, Color.Magenta, Color.Green, Color.Red, Color.Yellow)
+    val listOfColors = listOf(
+        Color.Magenta,
+        Color.Green,
+        Color.Red,
+        Color.Yellow,
+        Color(0xFF000000),
+        Color(0xFFA9A9A9),
+        Color(0xFF6F6F6F),
+    )
 
     LazyColumn(
         modifier = Modifier
@@ -218,8 +226,15 @@ private fun ConfigListArea(uiModel: UiModel, interactions: Interactions) {
 @Composable
 private fun PreviewUi() {
     StageStepBarTheme(darkTheme = false) {
-        Surface(color = MaterialTheme.colors.background) {
-            MainUi {}
+        Surface(color = MaterialTheme.colors.primary) {
+            Box(modifier = Modifier.size(200.dp)) {
+                StageStepBar(
+                    config = StageStepBarConfig.default(),
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .height(100.dp)
+                )
+            }
         }
     }
 }
