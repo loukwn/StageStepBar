@@ -519,6 +519,9 @@ class StageStepBar @JvmOverloads constructor(
 
         val canvasToUse = transparentCanvas
 
+        // This deletes any artifacts from previous draws.
+        canvasToUse.drawRect(0f, 0f, width.toFloat(), height.toFloat(), clearPaint)
+
         if (numOfStages > 1) {
             val progressBarEnd = drawFilledTrack(
                 canvas = canvasToUse,
