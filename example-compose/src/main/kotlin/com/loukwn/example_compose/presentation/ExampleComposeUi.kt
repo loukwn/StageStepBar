@@ -218,6 +218,25 @@ private fun ConfigListArea(uiModel: UiModel, interactions: Interactions) {
                 })
             }
         }
+
+        // Toggle Thumbs
+        item {
+            Row(
+                modifier = Modifier.fillParentMaxWidth(1f),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+                    text = "Draw Tracks Behind Thumbs?",
+                    fontSize = TextUnit(18f, TextUnitType.Sp),
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Switch(checked = uiModel.stageStepBarConfig.drawTracksBehindThumbs, onCheckedChange = {
+                    interactions.onDrawTracksBehindThumbsChanged(it)
+                })
+            }
+        }
     }
 }
 

@@ -2,7 +2,6 @@ package com.loukwn.example_compose
 
 import androidx.compose.ui.graphics.Color
 import com.loukwn.stagestepbar_compose.data.StageStepBarConfig
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 data class UiModel(
@@ -47,7 +46,7 @@ interface Interactions {
     fun onFilledTrackCrossAxisSizeChanged(value: Float)
     fun onUnfilledTrackCrossAxisSizeChanged(value: Float)
     fun onShowThumbsChanged(enabled: Boolean)
-    fun onDrawBehindThumbsChanged(value: Boolean)
+    fun onDrawTracksBehindThumbsChanged(value: Boolean)
 }
 
 interface ViewModelContract : Interactions {

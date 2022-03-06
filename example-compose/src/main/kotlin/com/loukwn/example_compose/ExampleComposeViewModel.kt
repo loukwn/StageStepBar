@@ -172,8 +172,12 @@ class ExampleComposeViewModel(application: Application): AndroidViewModel(applic
         )
     }
 
-    override fun onDrawBehindThumbsChanged(value: Boolean) {
-
+    override fun onDrawTracksBehindThumbsChanged(value: Boolean) {
+        uiModels.value = uiModel.copy(
+            stageStepBarConfig = uiModel.stageStepBarConfig.copy(
+                drawTracksBehindThumbs = value
+            )
+        )
     }
 
     private fun getImageBitmapFromResources(

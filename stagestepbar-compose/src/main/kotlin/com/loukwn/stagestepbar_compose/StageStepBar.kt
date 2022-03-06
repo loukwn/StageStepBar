@@ -10,9 +10,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,7 +87,12 @@ private fun MainCanvas(modifier: Modifier, progress: Float, config: StageStepBar
     val (thumbSizePx, crossAxisFilledTrackSizePx, crossAxisUnfilledTrackSizePx) =
         getPixelSizesForComponents(config)
 
-    Canvas(modifier = modifier, onDraw = {
+    val canvasModifier = if (!config.drawTracksBehindThumbs) {
+        modifier.drawOffscreen()
+    } else {
+        modifier
+    }
+    Canvas(modifier = canvasModifier, onDraw = {
         val drawReverse = (config.orientation == Orientation.Horizontal &&
                 config.horizontalDirection == HorizontalDirection.Rtl) ||
                 (config.orientation == Orientation.Vertical &&
@@ -290,6 +299,18 @@ private fun drawThumbs(
             is DrawnComponent.Default -> {
                 when (config.orientation) {
                     Orientation.Horizontal -> {
+                        if (!config.drawTracksBehindThumbs) {
+                            drawScope.drawCircle(
+                                color = Color.Transparent,
+                                center = Offset(
+                                    centerOfThisThumb.toFloat(),
+                                    canvasHeight / 2f
+                                ),
+                                radius = thumbSizePx / 2f,
+                                blendMode = BlendMode.Clear
+                            )
+                        }
+
                         drawScope.drawCircle(
                             color = drawnComponent.color,
                             center = Offset(
@@ -300,6 +321,18 @@ private fun drawThumbs(
                         )
                     }
                     Orientation.Vertical -> {
+                        if (!config.drawTracksBehindThumbs) {
+                            drawScope.drawCircle(
+                                color = Color.Transparent,
+                                center = Offset(
+                                    canvasWidth / 2f,
+                                    centerOfThisThumb.toFloat(),
+                                ),
+                                radius = thumbSizePx / 2f,
+                                blendMode = BlendMode.Clear
+                            )
+                        }
+
                         drawScope.drawCircle(
                             color = drawnComponent.color,
                             center = Offset(
@@ -335,6 +368,15 @@ private fun drawThumbs(
                     }
                 }
 
+                if (!config.drawTracksBehindThumbs) {
+                    drawScope.drawRect(
+                        color = Color.Transparent,
+                        topLeft = Offset(left.toFloat(), top.toFloat()),
+                        size = Size((right - left).toFloat(), (bottom - top).toFloat()),
+                        blendMode = BlendMode.Clear
+                    )
+                }
+
                 drawScope.drawImage(
                     image = imageBitmap,
                     dstOffset = IntOffset(left, top),
@@ -361,5 +403,13 @@ private fun Preview() {
                 currentState = State(2, 3),
             )
         )
+    }
+}
+
+private fun Modifier.drawOffscreen(): Modifier = this.drawWithContent {
+    with(drawContext.canvas.nativeCanvas) {
+        val checkPoint = saveLayer(null, null)
+        drawContent()
+        restoreToCount(checkPoint)
     }
 }

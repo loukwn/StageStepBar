@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -31,6 +32,7 @@ internal fun StateListItem(
 ) {
     Column {
         Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth(1f),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -41,12 +43,12 @@ internal fun StateListItem(
                 fontWeight = FontWeight.ExtraBold
             )
 
-            Row(modifier = Modifier.clickable {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
                 onNullToggleChanged(uiModel.stageStepBarConfig.currentState != null)
             }) {
                 Text(
                     modifier = Modifier.padding(top = 18.dp, end = 4.dp),
-                    text = "Make null",
+                    text = "null?",
                     fontSize = TextUnit(16f, TextUnitType.Sp),
                     fontWeight = FontWeight.ExtraBold
                 )
