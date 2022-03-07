@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StageStepBar" >
-        <activity android:name="com.loukwn.stagestepbarexample.ExampleActivity"
+        <activity android:name="com.loukwn.stagestepbarexample.ExampleViewActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"
             android:exported="true">

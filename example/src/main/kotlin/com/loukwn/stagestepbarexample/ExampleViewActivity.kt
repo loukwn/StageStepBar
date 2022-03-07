@@ -17,7 +17,7 @@ import com.loukwn.stagestepbarexample.ExampleViewViewModel.Companion.DEFAULT_THU
 import com.loukwn.stagestepbarexample.ExampleViewViewModel.Companion.DEFAULT_UNFILLED_TRACK_SIZE_DP
 import com.loukwn.stagestepbarexample.databinding.ActivityExampleBinding
 
-internal class ExampleActivity : AppCompatActivity() {
+internal class ExampleViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExampleBinding
     private val viewModel: ExampleViewViewModel by viewModels()
 
@@ -131,6 +131,7 @@ internal class ExampleActivity : AppCompatActivity() {
                     }
                     is Event.FilledThumbSetToCustom -> {
                         binding.stageStepBar.setFilledThumbToCustomDrawable(event.drawable)
+                        setColorSelectorClickable(binding.filledThumbDefaultColorView, false)
                     }
                     is Event.FilledThumbSetToDefault -> {
                         binding.stageStepBar.setFilledThumbToNormalShape(event.color)
@@ -140,13 +141,14 @@ internal class ExampleActivity : AppCompatActivity() {
                     is Event.FilledTrackCrossAxisSizeChanged -> {
                         binding.stageStepBar.setCrossAxisFilledTrackSize(
                             event.sizeInPixel.dpToPx(
-                                this@ExampleActivity
+                                this@ExampleViewActivity
                             )
                         )
                         binding.filledTrackSizeValue.text = "${event.sizeInPixel}dp"
                     }
                     is Event.FilledTrackSetToCustom -> {
                         binding.stageStepBar.setFilledTrackToCustomDrawable(event.drawable)
+                        setColorSelectorClickable(binding.filledTrackDefaultColorView, false)
                     }
                     is Event.FilledTrackSetToDefault -> {
                         binding.stageStepBar.setFilledTrackToNormalShape(event.color)
@@ -176,11 +178,12 @@ internal class ExampleActivity : AppCompatActivity() {
                         }
                     }
                     is Event.ThumbSizeChanged -> {
-                        binding.stageStepBar.setThumbSize(event.sizeInPixel.dpToPx(this@ExampleActivity))
+                        binding.stageStepBar.setThumbSize(event.sizeInPixel.dpToPx(this@ExampleViewActivity))
                         binding.thumbSizeValue.text = "${event.sizeInPixel}dp"
                     }
                     is Event.UnfilledThumbSetToCustom -> {
                         binding.stageStepBar.setUnfilledThumbToCustomDrawable(event.drawable)
+                        setColorSelectorClickable(binding.unfilledThumbDefaultColorView, false)
                     }
                     is Event.UnfilledThumbSetToDefault -> {
                         binding.stageStepBar.setUnfilledThumbToNormalShape(event.color)
@@ -190,13 +193,14 @@ internal class ExampleActivity : AppCompatActivity() {
                     is Event.UnfilledTrackCrossAxisSizeChanged -> {
                         binding.stageStepBar.setCrossAxisUnfilledTrackSize(
                             event.sizeInPixel.dpToPx(
-                                this@ExampleActivity
+                                this@ExampleViewActivity
                             )
                         )
                         binding.unfilledTrackSizeValue.text = "${event.sizeInPixel}dp"
                     }
                     is Event.UnfilledTrackSetToCustom -> {
                         binding.stageStepBar.setUnfilledTrackToCustomDrawable(event.drawable)
+                        setColorSelectorClickable(binding.unfilledTrackDefaultColorView, false)
                     }
                     is Event.UnfilledTrackSetToDefault -> {
                         binding.stageStepBar.setUnfilledTrackToNormalShape(event.color)
