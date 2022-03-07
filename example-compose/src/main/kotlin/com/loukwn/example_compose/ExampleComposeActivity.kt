@@ -14,7 +14,7 @@ import com.loukwn.example_compose.ui.theme.StageStepBarTheme
 import kotlinx.coroutines.flow.collect
 
 @ExperimentalUnitApi
-class ExampleComposeActivity : ComponentActivity() {
+internal class ExampleComposeActivity : ComponentActivity() {
 
     private val viewModel: ViewModelContract by viewModels<ExampleComposeViewModel>()
 

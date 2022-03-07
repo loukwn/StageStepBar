@@ -11,52 +11,50 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/closeBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            app:tint="?attr/colorOnSurface"
+            android:padding="8dp"
             android:src="@drawable/ic_close_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnSurface"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="8dp"
-            android:textColor="?attr/colorOnSurface"
             android:layout_marginEnd="8dp"
-            android:text="StageStepBar View Example" />
+            android:text="StageStepBar View Example"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <com.loukwn.stagestepbar.StageStepBar
         android:id="@+id/stageStepBar"
         android:layout_width="@dimen/stageStepBarLargeDimension"
         android:layout_height="@dimen/stageStepBarSmallDimension"
-        app:ssb_stageStepConfig="5,5,5"
-        app:ssb_currentState="1,2"
-        app:ssb_animationDuration="500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:ssb_animationDuration="500"
+        app:ssb_stageStepConfig="5,5,5" />
 
     <ScrollView
         android:id="@+id/scrollContainer"
@@ -117,11 +115,11 @@
                 android:id="@+id/nullStateCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Make it null?"
+                android:text="null?"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/currentStateStageTextInputLayout" />
+                app:layout_constraintBottom_toTopOf="@id/currentStateStageTextInputLayout"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline50"
@@ -236,9 +234,9 @@
                     android:id="@+id/orientationDropDown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:inputType="none"
                     tools:ignore="LabelFor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -258,9 +256,9 @@
                     android:id="@+id/horizDirectionDropDown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:inputType="none"
                     tools:ignore="LabelFor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -280,9 +278,9 @@
                     android:id="@+id/verticalDirectionDropDown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:inputType="none"
                     tools:ignore="LabelFor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -314,9 +312,9 @@
                     android:id="@+id/filledTrackDropDown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:inputType="none"
                     tools:ignore="LabelFor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -368,9 +366,9 @@
                     android:id="@+id/unfilledTrackDropDown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:inputType="none"
                     tools:ignore="LabelFor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -422,9 +420,9 @@
                     android:id="@+id/filledThumbDropDown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:inputType="none"
                     tools:ignore="LabelFor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -476,9 +474,9 @@
                     android:id="@+id/unfilledThumbDropDown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:inputType="none"
                     tools:ignore="LabelFor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -632,8 +630,8 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/mainSeparatorSize"
         android:background="?attr/colorOnSurface"
-        app:layout_constraintTop_toTopOf="@id/scrollContainer"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/scrollContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

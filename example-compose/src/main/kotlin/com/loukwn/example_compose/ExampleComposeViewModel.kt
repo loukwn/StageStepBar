@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModel
 import com.loukwn.stagestepbar_compose.data.*
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ExampleComposeViewModel(application: Application): AndroidViewModel(application), ViewModelContract {
+internal class ExampleComposeViewModel(application: Application): AndroidViewModel(application), ViewModelContract {
     override val uiModels = MutableStateFlow(UiModel.default())
     override val events: MutableStateFlow<Event?> = MutableStateFlow(null)
 

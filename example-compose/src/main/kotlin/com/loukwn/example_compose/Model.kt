@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.loukwn.stagestepbar_compose.data.StageStepBarConfig
 import kotlinx.coroutines.flow.StateFlow
 
-data class UiModel(
+internal data class UiModel(
     val stageStepBarConfig: StageStepBarConfig,
     val currentStage: Int,
     val currentStep: Int,
@@ -19,18 +19,18 @@ data class UiModel(
     }
 }
 
-sealed class Event {
+internal sealed class Event {
     object Close: Event()
 }
 
-enum class ComponentType(val title: String) {
+internal enum class ComponentType(val title: String) {
     FilledTrack("Filled Track"),
     UnfilledTrack("Unfilled Track"),
     FilledThumb("Filled Thumb"),
     UnfilledThumb("Unfilled Thumb"),
 }
 
-interface Interactions {
+internal interface Interactions {
     fun onClosePressed()
     fun onStepsInStagesConfigChanged(value: List<Int>)
     fun onCurrentStateMadeNull(isNull: Boolean)
@@ -49,7 +49,7 @@ interface Interactions {
     fun onDrawTracksBehindThumbsChanged(value: Boolean)
 }
 
-interface ViewModelContract : Interactions {
+internal interface ViewModelContract : Interactions {
     val uiModels: StateFlow<UiModel>
     val events: StateFlow<Event?>
 }

@@ -29,6 +29,7 @@ object Config {
             const val coreKtx = "androidx.core:core-ktx:_"
             const val material = "com.google.android.material:material:_"
             const val lifecycleRuntimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:_"
+            const val activity = "androidx.activity:activity-ktx:_"
 
             object Compose {
                 const val ui = "androidx.compose.ui:ui:_"
@@ -37,6 +38,10 @@ object Config {
                 const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview:_"
                 const val activity = "androidx.activity:activity-compose:_"
             }
+        }
+
+        object Kotlin {
+            const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:_"
         }
     }
 

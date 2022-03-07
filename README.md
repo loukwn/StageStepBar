@@ -96,6 +96,7 @@ All XML attributes are optional (set to their defaults).
 | `ssb_crossAxisFilledTrackSize`| `6dp` | The height of the filled track if the bar is horizontal or its width if it is vertical. <br/><br/>**In code:** `setCrossAxisFilledTrackSize(Int) Value is expected to be in pixels.`|
 | `ssb_crossAxisUnfilledTrackSize`| `6dp` | The height of the unfilled track if the bar is horizontal or its width if it is vertical. <br/><br/>**In code:** `setCrossAxisUnfilledTrackSize(Int) Value is expected to be in pixels.`|
 | `ssb_showThumbs`|`true`| Whether or not to show the thumbs. <br/><br/>**In code:** `setThumbsVisible(Boolean)`|
+| `ssb_drawTracksBehindThumbs`|`true`| This option addresses the cases where we might not want to see the track behind the thumb (e.g semi transparent thumb). <br/><br/>**In code:** `setDrawTracksBehindThumbs(Boolean)`|
 
 Note: Both thumbs and tracks can either have:
 - A default shape but with the color specified by the user. Calling a `set*ToNormalShape()` function takes you to this state.

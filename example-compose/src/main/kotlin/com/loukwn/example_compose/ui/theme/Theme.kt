@@ -30,16 +30,16 @@ private val LightColorPalette = lightColors(
 )
 
 @get:Composable
-val Colors.dropdownBg: Color
+internal val Colors.dropdownBg: Color
     get() = if (isLight) Color(0f, 0f, 0f, .12f) else Color(1f, 1f, 1f, .12f)
 
 @get:Composable
-val Colors.dropDownLabelColor: Color
+internal val Colors.dropDownLabelColor: Color
     get() = if (isLight) Color(0f, 0f, 0f, .60f) else Color(1f, 1f, 1f, .60f)
 
 
 @Composable
-fun StageStepBarTheme(
+internal fun StageStepBarTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

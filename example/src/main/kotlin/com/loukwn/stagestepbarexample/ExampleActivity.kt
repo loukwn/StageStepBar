@@ -1,53 +1,34 @@
 package com.loukwn.stagestepbarexample
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import com.loukwn.stagestepbar.StageStepBar
+import com.loukwn.stagestepbarexample.ExampleViewViewModel.Companion.DEFAULT_FILLED_TRACK_SIZE_DP
+import com.loukwn.stagestepbarexample.ExampleViewViewModel.Companion.DEFAULT_THUMB_SIZE_DP
+import com.loukwn.stagestepbarexample.ExampleViewViewModel.Companion.DEFAULT_UNFILLED_TRACK_SIZE_DP
 import com.loukwn.stagestepbarexample.databinding.ActivityExampleBinding
 
-class ExampleActivity : AppCompatActivity() {
+internal class ExampleActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExampleBinding
+    private val viewModel: ExampleViewViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExampleBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prepareFields()
+        listenToChanges()
         setupListeners()
     }
-
-    private val availableColors by lazy {
-        listOf(
-            getColorFromAttr(R.attr.colorPrimary),
-            getColorFromAttr(R.attr.colorSecondary),
-            Color.GRAY,
-            Color.MAGENTA,
-            Color.GREEN,
-            Color.RED,
-            Color.YELLOW
-        )
-    }
-
-    private var filledTrackDefaultColorSelectionIndex = 0
-    private var unfilledTrackDefaultColorSelectionIndex = 2
-    private var filledThumbDefaultColorSelectionIndex = 0
-    private var unfilledThumbDefaultColorSelectionIndex = 2
-
-    private var currentStage = 0
-    private var currentStep = 0
 
     @SuppressLint("SetTextI18n")
     private fun prepareFields() {
@@ -55,8 +36,8 @@ class ExampleActivity : AppCompatActivity() {
         binding.nullStateCheckBox.isChecked = true
         binding.currentStateStageTextInputLayout.isEnabled = false
         binding.currentStateStepTextInputLayout.isEnabled = false
-        binding.currentStateStageTextInputEditText.setText("0")
-        binding.currentStateStepTextInputEditText.setText("0")
+        binding.currentStateStageTextInputEditText.setText("2")
+        binding.currentStateStepTextInputEditText.setText("3")
         binding.animationDurationInputEditText.setText("500")
 
         val orientationItems = listOf("Horizontal", "Vertical")
@@ -99,309 +80,276 @@ class ExampleActivity : AppCompatActivity() {
         binding.unfilledTrackSizeSeekBar.progress = 50
         binding.unfilledTrackSizeValue.text = "${DEFAULT_UNFILLED_TRACK_SIZE_DP}dp"
 
-        binding.filledThumbDefaultColorView.setBackgroundColor(availableColors[filledThumbDefaultColorSelectionIndex])
-        binding.stageStepBar.setFilledThumbToNormalShape(availableColors[filledThumbDefaultColorSelectionIndex])
-        binding.unfilledThumbDefaultColorView.setBackgroundColor(availableColors[unfilledThumbDefaultColorSelectionIndex])
-        binding.stageStepBar.setUnfilledThumbToNormalShape(availableColors[unfilledThumbDefaultColorSelectionIndex])
-        binding.filledTrackDefaultColorView.setBackgroundColor(availableColors[filledTrackDefaultColorSelectionIndex])
-        binding.stageStepBar.setFilledTrackToNormalShape(availableColors[filledTrackDefaultColorSelectionIndex])
-        binding.unfilledTrackDefaultColorView.setBackgroundColor(availableColors[unfilledTrackDefaultColorSelectionIndex])
-        binding.stageStepBar.setUnfilledTrackToNormalShape(availableColors[unfilledTrackDefaultColorSelectionIndex])
+        binding.filledThumbDefaultColorView.setBackgroundColor(viewModel.firstFilledThumbColor)
+        binding.stageStepBar.setFilledThumbToNormalShape(viewModel.firstFilledThumbColor)
+        binding.unfilledThumbDefaultColorView.setBackgroundColor(viewModel.firstUnfilledThumbColor)
+        binding.stageStepBar.setUnfilledThumbToNormalShape(viewModel.firstUnfilledThumbColor)
+        binding.filledTrackDefaultColorView.setBackgroundColor(viewModel.firstFilledTrackColor)
+        binding.stageStepBar.setFilledTrackToNormalShape(viewModel.firstFilledTrackColor)
+        binding.unfilledTrackDefaultColorView.setBackgroundColor(viewModel.firstUnfilledTrackColor)
+        binding.stageStepBar.setUnfilledTrackToNormalShape(viewModel.firstUnfilledTrackColor)
 
         binding.stageStepBar.setDrawTracksBehindThumbs(false)
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setupListeners() {
-        binding.closeBtn.setOnClickListener {
-            finish()
+    private fun listenToChanges() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collect { event ->
+                when (event) {
+                    is Event.AnimateChanged -> {
+                        binding.animationDurationTextInputLayout.isEnabled = event.animate
+                        binding.stageStepBar.setAnimate(event.animate)
+                    }
+                    is Event.AnimationDurationChanged -> {
+                        binding.stageStepBar.setAnimationDuration(event.animationDuration)
+                    }
+                    is Event.CurrentStateChanged -> {
+                        when (event.change) {
+                            is CurrentStateChange.Invalid -> {
+                                if (event.change.isForStage) {
+                                    binding.currentStateStageTextInputLayout.error =
+                                        event.change.error
+                                } else {
+                                    binding.currentStateStepTextInputLayout.error =
+                                        event.change.error
+                                }
+                            }
+                            is CurrentStateChange.Valid -> {
+                                binding.currentStateStageTextInputLayout.error = null
+                                binding.currentStateStepTextInputLayout.error = null
+                                binding.stageStepBar.setCurrentState(event.change.state)
+                                binding.currentStateStageTextInputLayout.isEnabled =
+                                    event.change.state != null
+                                binding.currentStateStepTextInputLayout.isEnabled =
+                                    event.change.state != null
+                            }
+                        }
+                    }
+                    is Event.DrawTracksBehindThumbsChanged -> {
+                        binding.stageStepBar.setDrawTracksBehindThumbs(event.enabled)
+                    }
+                    is Event.FilledThumbSetToCustom -> {
+                        binding.stageStepBar.setFilledThumbToCustomDrawable(event.drawable)
+                    }
+                    is Event.FilledThumbSetToDefault -> {
+                        binding.stageStepBar.setFilledThumbToNormalShape(event.color)
+                        binding.filledThumbDefaultColorView.setBackgroundColor(event.color)
+                        setColorSelectorClickable(binding.filledThumbDefaultColorView, true)
+                    }
+                    is Event.FilledTrackCrossAxisSizeChanged -> {
+                        binding.stageStepBar.setCrossAxisFilledTrackSize(
+                            event.sizeInPixel.dpToPx(
+                                this@ExampleActivity
+                            )
+                        )
+                        binding.filledTrackSizeValue.text = "${event.sizeInPixel}dp"
+                    }
+                    is Event.FilledTrackSetToCustom -> {
+                        binding.stageStepBar.setFilledTrackToCustomDrawable(event.drawable)
+                    }
+                    is Event.FilledTrackSetToDefault -> {
+                        binding.stageStepBar.setFilledTrackToNormalShape(event.color)
+                        binding.filledTrackDefaultColorView.setBackgroundColor(event.color)
+                        setColorSelectorClickable(binding.filledTrackDefaultColorView, true)
+                    }
+                    is Event.HorizontalDirectionChanged -> {
+                        binding.stageStepBar.setHorizontalDirection(event.hDirection)
+                    }
+                    is Event.OrientationChanged -> {
+                        when (event.orientation) {
+                            StageStepBar.Orientation.Horizontal -> changeUiToHorizontal()
+                            StageStepBar.Orientation.Vertical -> changeUiToVertical()
+                        }
+                        binding.stageStepBar.setOrientation(event.orientation)
+                    }
+                    is Event.ShowThumbsChanged -> binding.stageStepBar.setThumbsVisible(event.enabled)
+                    is Event.StepsInStagesConfigChanged -> {
+                        when (event.change) {
+                            is StepsInStagesChange.Invalid -> {
+                                binding.stepsInStagesTextInputLayout.error = event.change.error
+                            }
+                            is StepsInStagesChange.Valid -> {
+                                binding.stageStepBar.setStageStepConfig(event.change.config)
+                                binding.stepsInStagesTextInputLayout.error = null
+                            }
+                        }
+                    }
+                    is Event.ThumbSizeChanged -> {
+                        binding.stageStepBar.setThumbSize(event.sizeInPixel.dpToPx(this@ExampleActivity))
+                        binding.thumbSizeValue.text = "${event.sizeInPixel}dp"
+                    }
+                    is Event.UnfilledThumbSetToCustom -> {
+                        binding.stageStepBar.setUnfilledThumbToCustomDrawable(event.drawable)
+                    }
+                    is Event.UnfilledThumbSetToDefault -> {
+                        binding.stageStepBar.setUnfilledThumbToNormalShape(event.color)
+                        binding.unfilledThumbDefaultColorView.setBackgroundColor(event.color)
+                        setColorSelectorClickable(binding.unfilledThumbDefaultColorView, true)
+                    }
+                    is Event.UnfilledTrackCrossAxisSizeChanged -> {
+                        binding.stageStepBar.setCrossAxisUnfilledTrackSize(
+                            event.sizeInPixel.dpToPx(
+                                this@ExampleActivity
+                            )
+                        )
+                        binding.unfilledTrackSizeValue.text = "${event.sizeInPixel}dp"
+                    }
+                    is Event.UnfilledTrackSetToCustom -> {
+                        binding.stageStepBar.setUnfilledTrackToCustomDrawable(event.drawable)
+                    }
+                    is Event.UnfilledTrackSetToDefault -> {
+                        binding.stageStepBar.setUnfilledTrackToNormalShape(event.color)
+                        binding.unfilledTrackDefaultColorView.setBackgroundColor(event.color)
+                        setColorSelectorClickable(binding.unfilledTrackDefaultColorView, true)
+                    }
+                    is Event.VerticalDirectionChanged -> {
+                        binding.stageStepBar.setVerticalDirection(event.vDirection)
+                    }
+                    null -> {}
+                }
+            }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setupListeners() {
+        binding.closeBtn.setOnClickListener { finish() }
 
         binding.stepsInStagesTextInputEditText.doOnTextChanged { text, _, _, _ ->
-            try {
-                val stepsConfig = text.toString().split(",").map {
-                    it.trim().toInt()
-                }
-                if (stepsConfig.isEmpty()) {
-                    binding.stepsInStagesTextInputLayout.error =
-                        "At least one number must be specified"
-                }
-
-                binding.stepsInStagesTextInputLayout.error = null
-                binding.stageStepBar.setStageStepConfig(stepsConfig)
-            } catch (e: NumberFormatException) {
-                binding.stepsInStagesTextInputLayout.error = "Comma separated list of integers"
-            }
+            viewModel.stepsInStagesChanged(text.toString())
         }
 
         binding.currentStateStageTextInputEditText.doOnTextChanged { text, _, _, _ ->
-            try {
-                currentStage = text!!.toString().toInt()
-
-                binding.stageStepBar.setCurrentState(
-                    StageStepBar.State(
-                        stage = currentStage,
-                        step = currentStep,
-                    )
-                )
-                binding.currentStateStageTextInputLayout.error = null
-            } catch (e: Exception) {
-                binding.currentStateStageTextInputLayout.error = "Positive integer required"
-            }
+            viewModel.currentStageChanged(text.toString())
         }
 
         binding.currentStateStepTextInputEditText.doOnTextChanged { text, _, _, _ ->
-            try {
-                currentStep = text!!.toString().toInt()
-
-                binding.stageStepBar.setCurrentState(
-                    StageStepBar.State(
-                        stage = currentStage,
-                        step = currentStep,
-                    )
-                )
-
-                binding.currentStateStepTextInputLayout.error = null
-            } catch (e: Exception) {
-                binding.currentStateStepTextInputLayout.error = "Positive integer required"
-            }
+            viewModel.currentStepChanged(text.toString())
         }
 
         binding.nullStateCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            binding.currentStateStageTextInputLayout.isEnabled = !isChecked
-            binding.currentStateStepTextInputLayout.isEnabled = !isChecked
-
-            if (isChecked) {
-                binding.stageStepBar.setCurrentState(null)
-            } else {
-                binding.stageStepBar.setCurrentState(
-                    StageStepBar.State(
-                        stage = currentStage,
-                        step = currentStep,
-                    )
-                )
-            }
+            viewModel.stateNullToggled(isChecked)
         }
 
         binding.animateToggleButton.setOnCheckedChangeListener { _, isChecked ->
-            binding.animationDurationTextInputLayout.isEnabled = isChecked
-            binding.stageStepBar.setAnimate(isChecked)
+            viewModel.animateToggled(isChecked)
         }
 
         binding.animationDurationInputEditText.doOnTextChanged { text, _, _, _ ->
-            val animationDuration = if (text.isNullOrEmpty()) 0 else text.toString().toInt()
-            binding.stageStepBar.setAnimationDuration(animationDuration.toLong())
+            viewModel.animationDurationChanged(text.toString())
         }
 
         binding.orientationDropDown.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> {
-                    binding.stageStepBar.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                        bottomToBottom = ConstraintLayout.LayoutParams.UNSET
-                        height =
-                            resources.getDimensionPixelOffset(R.dimen.stageStepBarSmallDimension)
-                        width =
-                            resources.getDimensionPixelOffset(R.dimen.stageStepBarLargeDimension)
-                    }
-
-                    binding.mainSeparator.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                        endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                        topToTop = binding.scrollContainer.id
-                        bottomToBottom = ConstraintLayout.LayoutParams.UNSET
-                        width = 0
-                        height = resources.getDimensionPixelOffset(R.dimen.mainSeparatorSize)
-                    }
-
-                    binding.scrollContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                        startToEnd = ConstraintLayout.LayoutParams.UNSET
-                        topToTop = ConstraintLayout.LayoutParams.UNSET
-                        topToBottom = binding.stageStepBar.id
-                    }
-
-                    binding.stageStepBar.setOrientation(StageStepBar.Orientation.Horizontal)
-                }
-                1 -> {
-                    binding.stageStepBar.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                        endToEnd = ConstraintLayout.LayoutParams.UNSET
-                        height =
-                            resources.getDimensionPixelOffset(R.dimen.stageStepBarLargeDimension)
-                        width =
-                            resources.getDimensionPixelOffset(R.dimen.stageStepBarSmallDimension)
-                    }
-
-                    binding.mainSeparator.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        startToStart = binding.scrollContainer.id
-                        bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                        topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                        endToEnd = ConstraintLayout.LayoutParams.UNSET
-                        height = 0
-                        width = resources.getDimensionPixelOffset(R.dimen.mainSeparatorSize)
-                    }
-
-                    binding.scrollContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                        startToStart = ConstraintLayout.LayoutParams.UNSET
-                        startToEnd = binding.stageStepBar.id
-                        topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                        topToBottom = ConstraintLayout.LayoutParams.UNSET
-                    }
-
-                    binding.stageStepBar.setOrientation(StageStepBar.Orientation.Vertical)
-                }
-            }
+            viewModel.orientationChanged(position)
         }
 
         binding.horizDirectionDropDown.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> binding.stageStepBar.setHorizontalDirection(StageStepBar.HorizontalDirection.Auto)
-                1 -> binding.stageStepBar.setHorizontalDirection(StageStepBar.HorizontalDirection.Ltr)
-                2 -> binding.stageStepBar.setHorizontalDirection(StageStepBar.HorizontalDirection.Rtl)
-            }
+            viewModel.horizontalDirectionChanged(position)
         }
 
         binding.verticalDirectionDropDown.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> binding.stageStepBar.setVerticalDirection(StageStepBar.VerticalDirection.Btt)
-                1 -> binding.stageStepBar.setVerticalDirection(StageStepBar.VerticalDirection.Ttb)
-            }
+            viewModel.verticalDirectionChanged(position)
         }
 
         binding.filledTrackDropDown.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> {
-                    binding.stageStepBar.setFilledTrackToNormalShape(availableColors[filledTrackDefaultColorSelectionIndex])
-                    setColorSelectorClickable(binding.filledTrackDefaultColorView, true)
-                }
-                1 -> {
-                    binding.stageStepBar.setFilledTrackToCustomDrawable(
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.gradient_drawable
-                        )!!
-                    )
-                    setColorSelectorClickable(binding.filledTrackDefaultColorView, false)
-                }
-            }
+            viewModel.filledTrackDropdownSelected(position)
         }
 
         binding.unfilledTrackDropDown.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> {
-                    binding.stageStepBar.setUnfilledTrackToNormalShape(availableColors[unfilledTrackDefaultColorSelectionIndex])
-                    setColorSelectorClickable(binding.unfilledTrackDefaultColorView, true)
-                }
-                1 -> {
-                    binding.stageStepBar.setUnfilledTrackToCustomDrawable(
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.gradient_drawable_2
-                        )!!
-                    )
-                    setColorSelectorClickable(binding.unfilledTrackDefaultColorView, false)
-                }
-            }
+            viewModel.unfilledTrackDropdownSelected(position)
         }
 
         binding.filledThumbDropDown.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> {
-                    binding.stageStepBar.setFilledThumbToNormalShape(availableColors[filledThumbDefaultColorSelectionIndex])
-                    setColorSelectorClickable(binding.filledThumbDefaultColorView, true)
-                }
-                1 -> {
-                    binding.stageStepBar.setFilledThumbToCustomDrawable(
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.custom_shape_drawable
-                        )!!
-                    )
-                    setColorSelectorClickable(binding.filledThumbDefaultColorView, false)
-                }
-            }
+            viewModel.filledThumbDropdownSelected(position)
         }
 
         binding.unfilledThumbDropDown.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> {
-                    binding.stageStepBar.setUnfilledThumbToNormalShape(availableColors[unfilledThumbDefaultColorSelectionIndex])
-                    setColorSelectorClickable(binding.unfilledThumbDefaultColorView, true)
-                }
-                1 -> {
-                    binding.stageStepBar.setUnfilledThumbToCustomDrawable(
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.custom_shape_drawable_2
-                        )!!
-                    )
-                    setColorSelectorClickable(binding.unfilledThumbDefaultColorView, false)
-                }
-            }
+            viewModel.unfilledThumbDropdownSelected(position)
         }
 
-        binding.filledTrackDefaultColorView.setOnClickListener {
-            filledTrackDefaultColorSelectionIndex =
-                (filledTrackDefaultColorSelectionIndex + 1) % availableColors.size
-            binding.filledTrackDefaultColorView.setBackgroundColor(availableColors[filledTrackDefaultColorSelectionIndex])
-            binding.stageStepBar.setFilledTrackToNormalShape(availableColors[filledTrackDefaultColorSelectionIndex])
-        }
-
-        binding.unfilledTrackDefaultColorView.setOnClickListener {
-            unfilledTrackDefaultColorSelectionIndex =
-                (unfilledTrackDefaultColorSelectionIndex + 1) % availableColors.size
-            binding.unfilledTrackDefaultColorView.setBackgroundColor(availableColors[unfilledTrackDefaultColorSelectionIndex])
-            binding.stageStepBar.setUnfilledTrackToNormalShape(availableColors[unfilledTrackDefaultColorSelectionIndex])
-        }
-
-        binding.filledThumbDefaultColorView.setOnClickListener {
-            filledThumbDefaultColorSelectionIndex =
-                (filledThumbDefaultColorSelectionIndex + 1) % availableColors.size
-            binding.filledThumbDefaultColorView.setBackgroundColor(availableColors[filledThumbDefaultColorSelectionIndex])
-            binding.stageStepBar.setFilledThumbToNormalShape(availableColors[filledThumbDefaultColorSelectionIndex])
-        }
-
-        binding.unfilledThumbDefaultColorView.setOnClickListener {
-            unfilledThumbDefaultColorSelectionIndex =
-                (unfilledThumbDefaultColorSelectionIndex + 1) % availableColors.size
-            binding.unfilledThumbDefaultColorView.setBackgroundColor(availableColors[unfilledThumbDefaultColorSelectionIndex])
-            binding.stageStepBar.setUnfilledThumbToNormalShape(availableColors[unfilledThumbDefaultColorSelectionIndex])
-        }
-
+        binding.filledTrackDefaultColorView.setOnClickListener { viewModel.filledTrackColorViewClicked() }
+        binding.unfilledTrackDefaultColorView.setOnClickListener { viewModel.unfilledTrackColorViewClicked() }
+        binding.filledThumbDefaultColorView.setOnClickListener { viewModel.filledThumbColorViewClicked() }
+        binding.unfilledThumbDefaultColorView.setOnClickListener { viewModel.unfilledThumbColorViewClicked() }
 
         binding.showThumbsToggleButton.setOnCheckedChangeListener { _, isChecked ->
-            binding.stageStepBar.setThumbsVisible(isChecked)
+            viewModel.showThumbsToggled(isChecked)
         }
 
         binding.thumbSizeSeekBar.setOnSeekBarChangeListener(object :
             OnSeekBarChangeListenerAdapter() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val value = binding.thumbSizeSeekBar.progress * 2 * DEFAULT_THUMB_SIZE_DP / 100
-                binding.stageStepBar.setThumbSize(value.dpToPx(this@ExampleActivity))
-                binding.thumbSizeValue.text = "${value}dp"
+                viewModel.thumbSizeChanged(progress)
             }
         })
 
         binding.filledTrackSizeSeekBar.setOnSeekBarChangeListener(object :
             OnSeekBarChangeListenerAdapter() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val value =
-                    binding.filledTrackSizeSeekBar.progress * 2 * DEFAULT_FILLED_TRACK_SIZE_DP / 100
-                binding.stageStepBar.setCrossAxisFilledTrackSize(value.dpToPx(this@ExampleActivity))
-                binding.filledTrackSizeValue.text = "${value}dp"
+                viewModel.filledTrackSizeChanged(progress)
             }
         })
 
         binding.unfilledTrackSizeSeekBar.setOnSeekBarChangeListener(object :
             OnSeekBarChangeListenerAdapter() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val value =
-                    binding.unfilledTrackSizeSeekBar.progress * 2 * DEFAULT_UNFILLED_TRACK_SIZE_DP / 100
-                binding.stageStepBar.setCrossAxisUnfilledTrackSize(value.dpToPx(this@ExampleActivity))
-                binding.unfilledTrackSizeValue.text = "${value}dp"
+                viewModel.unfilledTrackSizeChanged(progress)
             }
         })
+    }
+
+    private fun changeUiToHorizontal() {
+        binding.stageStepBar.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+            bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+            height =
+                resources.getDimensionPixelOffset(R.dimen.stageStepBarSmallDimension)
+            width =
+                resources.getDimensionPixelOffset(R.dimen.stageStepBarLargeDimension)
+        }
+
+        binding.mainSeparator.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+            topToTop = binding.scrollContainer.id
+            bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+            width = 0
+            height = resources.getDimensionPixelOffset(R.dimen.mainSeparatorSize)
+        }
+
+        binding.scrollContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            startToEnd = ConstraintLayout.LayoutParams.UNSET
+            topToTop = ConstraintLayout.LayoutParams.UNSET
+            topToBottom = binding.stageStepBar.id
+        }
+    }
+
+    private fun changeUiToVertical() {
+        binding.stageStepBar.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            endToEnd = ConstraintLayout.LayoutParams.UNSET
+            height =
+                resources.getDimensionPixelOffset(R.dimen.stageStepBarLargeDimension)
+            width =
+                resources.getDimensionPixelOffset(R.dimen.stageStepBarSmallDimension)
+        }
+
+        binding.mainSeparator.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = binding.scrollContainer.id
+            bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            topToBottom = binding.toolbar.id
+            endToEnd = ConstraintLayout.LayoutParams.UNSET
+            height = 0
+            width = resources.getDimensionPixelOffset(R.dimen.mainSeparatorSize)
+        }
+
+        binding.scrollContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            startToStart = ConstraintLayout.LayoutParams.UNSET
+            startToEnd = binding.stageStepBar.id
+            topToBottom = binding.toolbar.id
+        }
     }
 
     private fun setColorSelectorClickable(view: View, isClickable: Boolean) {
@@ -409,27 +357,5 @@ class ExampleActivity : AppCompatActivity() {
         view.isFocusable = isClickable
         view.isFocusableInTouchMode = isClickable
     }
-
-    companion object {
-        private const val DEFAULT_THUMB_SIZE_DP = 20
-        private const val DEFAULT_FILLED_TRACK_SIZE_DP = 6
-        private const val DEFAULT_UNFILLED_TRACK_SIZE_DP = 6
-    }
 }
 
-private fun Int.dpToPx(context: Context): Int =
-    TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this.toFloat(),
-        context.resources.displayMetrics
-    ).toInt()
-
-@ColorInt
-fun Context.getColorFromAttr(
-    @AttrRes attrColor: Int,
-    typedValue: TypedValue = TypedValue(),
-    resolveRefs: Boolean = true
-): Int {
-    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
-    return typedValue.data
-}
