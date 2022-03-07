@@ -510,6 +510,9 @@
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/thumbSizeValue"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/unfilledThumbDefaultColorView" />
 
@@ -521,6 +524,7 @@
                 android:textColor="?attr/colorOnSurface"
                 app:layout_constraintBottom_toBottomOf="@id/thumbSizeTitle"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/thumbSizeTitle"
                 app:layout_constraintTop_toTopOf="@id/thumbSizeTitle" />
 
             <androidx.appcompat.widget.AppCompatSeekBar
@@ -542,6 +546,9 @@
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/filledTrackSizeValue"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/thumbSizeSeekBar" />
 
@@ -553,6 +560,7 @@
                 android:textColor="?attr/colorOnSurface"
                 app:layout_constraintBottom_toBottomOf="@id/filledTrackSizeTitle"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/filledTrackSizeTitle"
                 app:layout_constraintTop_toTopOf="@id/filledTrackSizeTitle" />
 
             <androidx.appcompat.widget.AppCompatSeekBar
@@ -574,6 +582,9 @@
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/unfilledTrackSizeValue"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/filledTrackSizeSeekBar" />
 
@@ -585,6 +596,7 @@
                 android:textColor="?attr/colorOnSurface"
                 app:layout_constraintBottom_toBottomOf="@id/unfilledTrackSizeTitle"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/unfilledTrackSizeTitle"
                 app:layout_constraintTop_toTopOf="@id/unfilledTrackSizeTitle" />
 
             <androidx.appcompat.widget.AppCompatSeekBar
@@ -606,6 +618,9 @@
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/showThumbsToggleButton"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/unfilledTrackSizeSeekBar" />
 
@@ -617,10 +632,38 @@
                 android:checked="true"
                 android:textOff="No"
                 android:textOn="Yes"
-                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="@id/showThumbsTitle"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/showThumbsTitle"
                 app:layout_constraintTop_toTopOf="@id/showThumbsTitle" />
+
+            <TextView
+                android:id="@+id/drawTracksBehindThumbsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Draw tracks behind thumbs?"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/drawTracksBehindThumbsToggleButton"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/showThumbsTitle" />
+
+            <androidx.appcompat.widget.AppCompatToggleButton
+                android:id="@+id/drawTracksBehindThumbsToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:checked="true"
+                android:textOff="No"
+                android:textOn="Yes"
+                app:layout_constraintBottom_toBottomOf="@id/drawTracksBehindThumbsTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/drawTracksBehindThumbsTitle"
+                app:layout_constraintTop_toTopOf="@id/drawTracksBehindThumbsTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

@@ -481,6 +481,7 @@ class StageStepBar @JvmOverloads constructor(
                 override fun onAnimationStart(animation: Animator?) {
                     isAnimating = true
                 }
+
                 override fun onAnimationEnd(animation: Animator?) {
                     isAnimating = false
                 }
@@ -527,9 +528,23 @@ class StageStepBar @JvmOverloads constructor(
                 canvas = canvasToUse,
                 drawReverse = drawReverse
             )
+
+            val startOfUnfilledTrack = if (progressBarEnd == 0) {
+                when (config.orientation) {
+                    Orientation.Horizontal -> {
+                        if (drawReverse) width - config.thumbSize / 2f else config.thumbSize / 2f
+                    }
+                    Orientation.Vertical -> {
+                        if (drawReverse) height - config.thumbSize / 2f else config.thumbSize / 2f
+                    }
+                }
+            } else {
+                progressBarEnd
+            }
+
             drawUnfilledTrack(
                 canvas = canvasToUse,
-                endOfFilledTrack = progressBarEnd,
+                endOfFilledTrack = startOfUnfilledTrack.toInt(),
                 drawReverse = drawReverse
             )
 
@@ -600,7 +615,13 @@ class StageStepBar @JvmOverloads constructor(
                     drawable to round(255 * alpha).toInt()
                 }
                 drawable.alpha = alpha
-                canvas.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), clearPaint)
+                canvas.drawRect(
+                    left.toFloat(),
+                    top.toFloat(),
+                    right.toFloat(),
+                    bottom.toFloat(),
+                    clearPaint
+                )
                 drawable.setBounds(left, top, right, bottom)
                 drawable.draw(canvas)
             }
@@ -657,7 +678,13 @@ class StageStepBar @JvmOverloads constructor(
                         drawable to round(255 * alpha).toInt()
                     }
                     drawable.alpha = alpha
-                    canvas.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), clearPaint)
+                    canvas.drawRect(
+                        left.toFloat(),
+                        top.toFloat(),
+                        right.toFloat(),
+                        bottom.toFloat(),
+                        clearPaint
+                    )
                     drawable.setBounds(left, top, right, bottom)
                     drawable.draw(canvas)
                 }

@@ -89,7 +89,8 @@ internal class ExampleViewActivity : AppCompatActivity() {
         binding.unfilledTrackDefaultColorView.setBackgroundColor(viewModel.firstUnfilledTrackColor)
         binding.stageStepBar.setUnfilledTrackToNormalShape(viewModel.firstUnfilledTrackColor)
 
-        binding.stageStepBar.setDrawTracksBehindThumbs(false)
+        binding.stageStepBar.setDrawTracksBehindThumbs(true)
+        binding.drawTracksBehindThumbsToggleButton.isChecked = true
     }
 
     @SuppressLint("SetTextI18n")
@@ -277,10 +278,6 @@ internal class ExampleViewActivity : AppCompatActivity() {
         binding.filledThumbDefaultColorView.setOnClickListener { viewModel.filledThumbColorViewClicked() }
         binding.unfilledThumbDefaultColorView.setOnClickListener { viewModel.unfilledThumbColorViewClicked() }
 
-        binding.showThumbsToggleButton.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.showThumbsToggled(isChecked)
-        }
-
         binding.thumbSizeSeekBar.setOnSeekBarChangeListener(object :
             OnSeekBarChangeListenerAdapter() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -301,6 +298,14 @@ internal class ExampleViewActivity : AppCompatActivity() {
                 viewModel.unfilledTrackSizeChanged(progress)
             }
         })
+
+        binding.showThumbsToggleButton.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.showThumbsToggled(isChecked)
+        }
+
+        binding.drawTracksBehindThumbsToggleButton.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.drawTracksBehindThumbsChanged(isChecked)
+        }
     }
 
     private fun changeUiToHorizontal() {
