@@ -453,6 +453,7 @@ class StageStepBar @JvmOverloads constructor(
     }
 
     private fun calculateNewProgress(): Float =
+
         config.currentState?.let {
             val stage = it.stage.coerceAtMost(config.stageStepConfig.size - 1)
             val step = if (it.stage > config.stageStepConfig.size - 1) {
@@ -629,71 +630,67 @@ class StageStepBar @JvmOverloads constructor(
     }
 
     private fun drawFilledTrack(canvas: Canvas, drawReverse: Boolean): Int {
-        if (config.currentState != null) {
-            var left: Int
-            var top: Int
-            var right: Int
-            var bottom: Int
-            val progressBarEnd: Int
+        var left: Int
+        var top: Int
+        var right: Int
+        var bottom: Int
+        val progressBarEnd: Int
 
-            when (config.orientation) {
-                Orientation.Horizontal -> {
-                    top = (canvas.height / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
-                    bottom = (canvas.height / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
-                    left = (config.thumbSize / 2f).toInt()
-                    right =
-                        ((canvas.width - config.thumbSize) * animatedProgress + config.thumbSize / 2f).toInt()
+        when (config.orientation) {
+            Orientation.Horizontal -> {
+                top = (canvas.height / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
+                bottom = (canvas.height / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
+                left = (config.thumbSize / 2f).toInt()
+                right =
+                    ((canvas.width - config.thumbSize) * animatedProgress + config.thumbSize / 2f).toInt()
 
-                    if (drawReverse) {
-                        val temp = left
-                        left = canvas.width - right
-                        right = canvas.width - temp
-                    }
-                    progressBarEnd = if (drawReverse) left else right
+                if (drawReverse) {
+                    val temp = left
+                    left = canvas.width - right
+                    right = canvas.width - temp
                 }
-                Orientation.Vertical -> {
-                    left = (canvas.width / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
-                    right = (canvas.width / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
-                    top = (config.thumbSize / 2f).toInt()
-                    bottom =
-                        ((canvas.height - config.thumbSize) * animatedProgress + config.thumbSize / 2f).toInt()
-
-                    if (drawReverse) {
-                        val temp = top
-                        top = canvas.height - bottom
-                        bottom = canvas.height - temp
-                    }
-                    progressBarEnd = if (drawReverse) top else bottom
-                }
+                progressBarEnd = if (drawReverse) left else right
             }
+            Orientation.Vertical -> {
+                left = (canvas.width / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
+                right = (canvas.width / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
+                top = (config.thumbSize / 2f).toInt()
+                bottom =
+                    ((canvas.height - config.thumbSize) * animatedProgress + config.thumbSize / 2f).toInt()
 
-            when (config.filledTrack) {
-                is DrawnComponent.Default -> {
-                    filledTrackRect.set(left, top, right, bottom)
-                    canvas.drawRect(filledTrackRect, clearPaint)
-                    canvas.drawRect(filledTrackRect, filledTrackPaint)
+                if (drawReverse) {
+                    val temp = top
+                    top = canvas.height - bottom
+                    bottom = canvas.height - temp
                 }
-                is DrawnComponent.UserProvided -> {
-                    val (drawable, alpha) = with(config.filledTrack as DrawnComponent.UserProvided) {
-                        drawable to round(255 * alpha).toInt()
-                    }
-                    drawable.alpha = alpha
-                    canvas.drawRect(
-                        left.toFloat(),
-                        top.toFloat(),
-                        right.toFloat(),
-                        bottom.toFloat(),
-                        clearPaint
-                    )
-                    drawable.setBounds(left, top, right, bottom)
-                    drawable.draw(canvas)
-                }
+                progressBarEnd = if (drawReverse) top else bottom
             }
-
-            return progressBarEnd
         }
 
-        return 0
+        when (config.filledTrack) {
+            is DrawnComponent.Default -> {
+                filledTrackRect.set(left, top, right, bottom)
+                canvas.drawRect(filledTrackRect, clearPaint)
+                canvas.drawRect(filledTrackRect, filledTrackPaint)
+            }
+            is DrawnComponent.UserProvided -> {
+                val (drawable, alpha) = with(config.filledTrack as DrawnComponent.UserProvided) {
+                    drawable to round(255 * alpha).toInt()
+                }
+                drawable.alpha = alpha
+                canvas.drawRect(
+                    left.toFloat(),
+                    top.toFloat(),
+                    right.toFloat(),
+                    bottom.toFloat(),
+                    clearPaint
+                )
+                drawable.setBounds(left, top, right, bottom)
+                drawable.draw(canvas)
+            }
+        }
+
+        return progressBarEnd
     }
 
     private fun drawThumbs(canvas: Canvas, progressBarEnd: Int, drawReverse: Boolean) {
@@ -712,7 +709,7 @@ class StageStepBar @JvmOverloads constructor(
             }
 
             val shouldFillThumb = when {
-                config.currentState == null -> false
+                config.currentState == null && animatedProgress == currentProgress -> false
                 drawReverse -> progressBarEnd <= centerOfThisThumb
                 else -> progressBarEnd >= centerOfThisThumb
             }
