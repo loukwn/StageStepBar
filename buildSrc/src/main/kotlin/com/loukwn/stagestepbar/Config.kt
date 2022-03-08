@@ -8,7 +8,7 @@ object Config {
         const val minSdkCompose = 21
         const val targetSdk = 31
         const val buildToolsVersion = "30.0.3"
-        const val libraryReleaseVersion = "0.3.2"
+        const val libraryReleaseVersion = "1.0.0"
     }
 
     object Version {
