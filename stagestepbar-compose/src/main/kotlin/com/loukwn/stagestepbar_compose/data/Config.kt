@@ -2,6 +2,7 @@
 
 package com.loukwn.stagestepbar_compose.data
 
+import androidx.annotation.Keep
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.Color
@@ -10,18 +11,22 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+@Keep
 enum class Orientation {
     Horizontal, Vertical
 }
 
+@Keep
 enum class HorizontalDirection {
     Auto, Ltr, Rtl
 }
 
+@Keep
 enum class VerticalDirection {
     Ttb, Btt
 }
 
+@Keep
 sealed class DrawnComponent {
     data class UserProvided(
         val imageBitmap: ImageBitmap,
@@ -33,8 +38,10 @@ sealed class DrawnComponent {
     ) : DrawnComponent()
 }
 
+@Keep
 data class State(val stage: Int, val step: Int)
 
+@Keep
 data class StageStepBarConfig(
     val stageStepConfig: List<Int>,
     val currentState: State?,
