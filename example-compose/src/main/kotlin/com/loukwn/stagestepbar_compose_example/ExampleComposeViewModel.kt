@@ -1,4 +1,4 @@
-package com.loukwn.example_compose
+package com.loukwn.stagestepbar_compose_example
 
 import android.app.Application
 import android.content.res.Resources
@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import com.loukwn.stagestepbar_compose.data.*
 import kotlinx.coroutines.flow.MutableStateFlow
 

@@ -1,4 +1,4 @@
-package com.loukwn.example_compose.presentation.list
+package com.loukwn.stagestepbar_compose_example.presentation.list
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Slider
@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.loukwn.example_compose.UiModel
+import com.loukwn.stagestepbar_compose_example.UiModel
 
 @ExperimentalUnitApi
 @Composable

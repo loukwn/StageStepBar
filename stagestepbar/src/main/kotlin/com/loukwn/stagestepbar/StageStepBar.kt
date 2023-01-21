@@ -479,11 +479,11 @@ class StageStepBar @JvmOverloads constructor(
                 invalidate()
             }
             addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationStart(animation: Animator?) {
+                override fun onAnimationStart(animation: Animator) {
                     isAnimating = true
                 }
 
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     isAnimating = false
                 }
             })

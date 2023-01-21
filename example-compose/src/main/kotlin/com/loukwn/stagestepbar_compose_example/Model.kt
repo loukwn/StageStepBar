@@ -1,4 +1,4 @@
-package com.loukwn.example_compose
+package com.loukwn.stagestepbar_compose_example
 
 import androidx.compose.ui.graphics.Color
 import com.loukwn.stagestepbar_compose.data.StageStepBarConfig

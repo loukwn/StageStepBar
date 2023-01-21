@@ -1,4 +1,4 @@
-package com.loukwn.example_compose.presentation
+package com.loukwn.stagestepbar_compose_example.presentation
 
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.layout.*
@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.loukwn.example_compose.ComponentType
-import com.loukwn.example_compose.Interactions
-import com.loukwn.example_compose.R
-import com.loukwn.example_compose.UiModel
-import com.loukwn.example_compose.presentation.list.*
-import com.loukwn.example_compose.ui.theme.StageStepBarTheme
+import com.loukwn.stagestepbar_compose_example.ComponentType
+import com.loukwn.stagestepbar_compose_example.Interactions
+import com.loukwn.stagestepbar_compose_example.R
+import com.loukwn.stagestepbar_compose_example.UiModel
+import com.loukwn.stagestepbar_compose_example.presentation.list.*
+import com.loukwn.stagestepbar_compose_example.ui.theme.StageStepBarTheme
 import com.loukwn.stagestepbar_compose.StageStepBar
 import com.loukwn.stagestepbar_compose.data.Orientation
 import com.loukwn.stagestepbar_compose.data.StageStepBarConfig

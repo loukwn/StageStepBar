@@ -5,7 +5,8 @@ plugins {
 }
 
 android {
-    compileSdk = 29
+    namespace = "com.loukwn.snapshot_test"
+    compileSdk = 33
     defaultConfig {
         minSdk = 25
     }

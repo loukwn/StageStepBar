@@ -1,4 +1,4 @@
-package com.loukwn.example_compose.presentation.list
+package com.loukwn.stagestepbar_compose_example.presentation.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

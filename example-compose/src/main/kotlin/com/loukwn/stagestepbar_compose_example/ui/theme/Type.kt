@@ -1,4 +1,4 @@
-package com.loukwn.example_compose.ui.theme
+package com.loukwn.stagestepbar_compose_example.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

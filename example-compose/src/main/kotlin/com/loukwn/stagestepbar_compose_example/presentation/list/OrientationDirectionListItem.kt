@@ -1,4 +1,4 @@
-package com.loukwn.example_compose.presentation.list
+package com.loukwn.stagestepbar_compose_example.presentation.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.loukwn.example_compose.UiModel
-import com.loukwn.example_compose.presentation.common.DropDown
+import com.loukwn.stagestepbar_compose_example.UiModel
+import com.loukwn.stagestepbar_compose_example.presentation.common.DropDown
 import com.loukwn.stagestepbar_compose.data.HorizontalDirection
 import com.loukwn.stagestepbar_compose.data.Orientation
 import com.loukwn.stagestepbar_compose.data.VerticalDirection

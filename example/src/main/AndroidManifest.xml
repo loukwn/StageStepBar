@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.loukwn.stagestepbarexample">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +8,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StageStepBar" >
-        <activity android:name="com.loukwn.stagestepbarexample.ExampleViewActivity"
+        <activity android:name="com.loukwn.stagestepbar_example.ExampleViewActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"
             android:exported="true">

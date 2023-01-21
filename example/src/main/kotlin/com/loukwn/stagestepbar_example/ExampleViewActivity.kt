@@ -1,4 +1,4 @@
-package com.loukwn.stagestepbarexample
+package com.loukwn.stagestepbar_example
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,10 +12,10 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.loukwn.stagestepbar.StageStepBar
-import com.loukwn.stagestepbarexample.ExampleViewViewModel.Companion.DEFAULT_FILLED_TRACK_SIZE_DP
-import com.loukwn.stagestepbarexample.ExampleViewViewModel.Companion.DEFAULT_THUMB_SIZE_DP
-import com.loukwn.stagestepbarexample.ExampleViewViewModel.Companion.DEFAULT_UNFILLED_TRACK_SIZE_DP
-import com.loukwn.stagestepbarexample.databinding.ActivityExampleBinding
+import com.loukwn.stagestepbar_example.ExampleViewViewModel.Companion.DEFAULT_FILLED_TRACK_SIZE_DP
+import com.loukwn.stagestepbar_example.ExampleViewViewModel.Companion.DEFAULT_THUMB_SIZE_DP
+import com.loukwn.stagestepbar_example.ExampleViewViewModel.Companion.DEFAULT_UNFILLED_TRACK_SIZE_DP
+import com.loukwn.stagestepbar_example.databinding.ActivityExampleBinding
 
 internal class ExampleViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExampleBinding

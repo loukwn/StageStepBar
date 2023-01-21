@@ -1,4 +1,4 @@
-package com.loukwn.stagestepbarexample
+package com.loukwn.stagestepbar_example
 
 import android.app.Application
 import android.graphics.Color
@@ -53,7 +53,7 @@ internal class ExampleViewViewModel(application: Application) : AndroidViewModel
 
     fun currentStageChanged(stage: String) {
         try {
-            currentState = currentState?.copy(
+            currentState = currentState.copy(
                 stage = stage.toInt()
             )
 
@@ -66,7 +66,7 @@ internal class ExampleViewViewModel(application: Application) : AndroidViewModel
 
     fun currentStepChanged(step: String) {
         try {
-            currentState = currentState?.copy(
+            currentState = currentState.copy(
                 step = step.toInt()
             )
 

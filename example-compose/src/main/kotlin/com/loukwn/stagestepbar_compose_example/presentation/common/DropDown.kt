@@ -1,4 +1,4 @@
-package com.loukwn.example_compose.presentation.common
+package com.loukwn.stagestepbar_compose_example.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.loukwn.example_compose.ui.theme.dropDownLabelColor
-import com.loukwn.example_compose.ui.theme.dropdownBg
+import com.loukwn.stagestepbar_compose_example.ui.theme.dropDownLabelColor
+import com.loukwn.stagestepbar_compose_example.ui.theme.dropdownBg
 
 
 @ExperimentalUnitApi

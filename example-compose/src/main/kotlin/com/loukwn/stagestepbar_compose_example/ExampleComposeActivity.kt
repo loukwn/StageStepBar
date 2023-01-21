@@ -1,4 +1,4 @@
-package com.loukwn.example_compose
+package com.loukwn.stagestepbar_compose_example
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,9 +9,8 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.lifecycle.lifecycleScope
-import com.loukwn.example_compose.presentation.ExampleComposeUi
-import com.loukwn.example_compose.ui.theme.StageStepBarTheme
-import kotlinx.coroutines.flow.collect
+import com.loukwn.stagestepbar_compose_example.presentation.ExampleComposeUi
+import com.loukwn.stagestepbar_compose_example.ui.theme.StageStepBarTheme
 
 @ExperimentalUnitApi
 internal class ExampleComposeActivity : ComponentActivity() {

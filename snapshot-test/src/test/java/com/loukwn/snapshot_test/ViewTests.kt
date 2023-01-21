@@ -5,6 +5,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import app.cash.paparazzi.Paparazzi
 import com.loukwn.stagestepbar.StageStepBar
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -24,6 +25,11 @@ class ViewTests {
 
     private val defaultTrackSize by lazy {
         paparazzi.resources.getDimensionPixelSize(R.dimen.default_track_cross_axis_size)
+    }
+
+    @After
+    fun tearDown() {
+        paparazzi.close()
     }
 
     @Before

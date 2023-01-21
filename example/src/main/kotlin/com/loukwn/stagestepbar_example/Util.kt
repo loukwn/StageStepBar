@@ -1,4 +1,4 @@
-package com.loukwn.stagestepbarexample
+package com.loukwn.stagestepbar_example
 
 import android.content.Context
 import android.util.TypedValue

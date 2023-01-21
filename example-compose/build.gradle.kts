@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace = "com.loukwn.stagestepbar_compose_example"
     compileSdk = Config.Project.compileSdk
     buildToolsVersion = Config.Project.buildToolsVersion
 

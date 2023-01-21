@@ -7,6 +7,7 @@ plugins {
 android {
     compileSdk = Config.Project.compileSdk
     buildToolsVersion = Config.Project.buildToolsVersion
+    namespace = "com.loukwn.stagestepbar_compose"
 
     defaultConfig {
         minSdk = Config.Project.minSdkCompose

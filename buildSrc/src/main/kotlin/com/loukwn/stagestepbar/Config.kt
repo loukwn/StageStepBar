@@ -3,16 +3,16 @@
 object Config {
 
     object Project {
-        const val compileSdk = 31
+        const val compileSdk = 33
         const val minSdkView = 16
         const val minSdkCompose = 21
-        const val targetSdk = 31
+        const val targetSdk = 33
         const val buildToolsVersion = "30.0.3"
         const val libraryReleaseVersion = "1.0.1"
     }
 
     object Version {
-        const val compose = "1.1.0"
+        const val compose = "1.4.0"
     }
 
     object BuildPlugins {
