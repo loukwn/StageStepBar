@@ -5,6 +5,7 @@ package com.loukwn.stagestepbar_compose.data
 import androidx.annotation.Keep
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
@@ -42,6 +43,7 @@ sealed class DrawnComponent {
 data class State(val stage: Int, val step: Int)
 
 @Keep
+@Immutable
 data class StageStepBarConfig(
     val stageStepConfig: List<Int>,
     val currentState: State?,

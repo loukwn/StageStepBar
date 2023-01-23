@@ -103,7 +103,8 @@ private fun MainCanvas(modifier: Modifier, progress: Float, config: StageStepBar
 
         drawUnfilledTrack(
             drawScope = this,
-            config = config,
+            orientation = config.orientation,
+            unfilledTrack = config.unfilledTrack,
             unfilledTrackSizePx = crossAxisUnfilledTrackSizePx,
             thumbSizePx = thumbSizePx,
         )
@@ -113,7 +114,8 @@ private fun MainCanvas(modifier: Modifier, progress: Float, config: StageStepBar
                 drawScope = this,
                 drawReverse = drawReverse,
                 progress = progress,
-                config = config,
+                orientation = config.orientation,
+                filledTrack = config.filledTrack,
                 filledTrackSizePx = crossAxisFilledTrackSizePx,
                 thumbSizePx = thumbSizePx,
             )
@@ -144,7 +146,8 @@ private fun getPixelSizesForComponents(config: StageStepBarConfig): Triple<Float
 
 private fun drawUnfilledTrack(
     drawScope: DrawScope,
-    config: StageStepBarConfig,
+    unfilledTrack: DrawnComponent,
+    orientation: Orientation,
     unfilledTrackSizePx: Float,
     thumbSizePx: Float,
 ) {
@@ -155,7 +158,7 @@ private fun drawUnfilledTrack(
     val canvasHeight = drawScope.size.height
     val canvasWidth = drawScope.size.width
 
-    when (config.orientation) {
+    when (orientation) {
         Orientation.Horizontal -> {
             left = thumbSizePx / 2
             top = canvasHeight / 2 - unfilledTrackSizePx / 2
@@ -170,17 +173,17 @@ private fun drawUnfilledTrack(
         }
     }
 
-    when (config.unfilledTrack) {
+    when (unfilledTrack) {
         is DrawnComponent.Default -> {
             drawScope.drawRect(
-                color = config.unfilledTrack.color,
+                color = unfilledTrack.color,
                 topLeft = Offset(left, top),
                 size = Size(right - left, bottom - top)
             )
         }
         is DrawnComponent.UserProvided -> {
-            val imageBitmap = config.unfilledTrack.imageBitmap
-            val colorFilter = config.unfilledTrack.colorFilter
+            val imageBitmap = unfilledTrack.imageBitmap
+            val colorFilter = unfilledTrack.colorFilter
 
             drawScope.drawImage(
                 image = imageBitmap,
@@ -196,7 +199,8 @@ private fun drawFilledTrack(
     drawScope: DrawScope,
     drawReverse: Boolean,
     progress: Float,
-    config: StageStepBarConfig,
+    orientation: Orientation,
+    filledTrack: DrawnComponent,
     filledTrackSizePx: Float,
     thumbSizePx: Float,
 ): Float {
@@ -208,7 +212,7 @@ private fun drawFilledTrack(
     val canvasHeight = drawScope.size.height
     val canvasWidth = drawScope.size.width
 
-    when (config.orientation) {
+    when (orientation) {
         Orientation.Horizontal -> {
             top = canvasHeight / 2f - filledTrackSizePx / 2f
             bottom = canvasHeight / 2f + filledTrackSizePx / 2f
@@ -239,17 +243,17 @@ private fun drawFilledTrack(
         }
     }
 
-    when (config.filledTrack) {
+    when (filledTrack) {
         is DrawnComponent.Default -> {
             drawScope.drawRect(
-                color = config.filledTrack.color,
+                color = filledTrack.color,
                 topLeft = Offset(left, top),
                 size = Size(right - left, bottom - top)
             )
         }
         is DrawnComponent.UserProvided -> {
-            val imageBitmap = config.filledTrack.imageBitmap
-            val colorFilter = config.filledTrack.colorFilter
+            val imageBitmap = filledTrack.imageBitmap
+            val colorFilter = filledTrack.colorFilter
 
             drawScope.drawImage(
                 image = imageBitmap,
