@@ -2,6 +2,7 @@
 
 package com.loukwn.stagestepbar_compose.data
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.Keep
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
@@ -10,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
 @Keep
@@ -29,7 +31,13 @@ enum class VerticalDirection {
 
 @Keep
 sealed class DrawnComponent {
-    data class UserProvided(
+    data class Drawable(
+        @DrawableRes val drawableRes: Int,
+        val colorFilter: ColorFilter? = null,
+        val size: IntSize? = null,
+    ) : DrawnComponent()
+
+    data class Bitmap(
         val imageBitmap: ImageBitmap,
         val colorFilter: ColorFilter? = null,
     ) : DrawnComponent()

@@ -21,9 +21,6 @@ internal class ExampleComposeViewModel(application: Application): AndroidViewMod
     private val uiModel: UiModel
         get() = uiModels.value
 
-    private val resources: Resources
-        get() = getApplication<Application>().resources
-
     override fun onClosePressed() {
         events.value = Event.Close
     }
@@ -117,15 +114,28 @@ internal class ExampleComposeViewModel(application: Application): AndroidViewMod
         color: Color
     ) {
         val drawnComponent = if (position == 0) {
-            DrawnComponent.Default(
-                color = color
-            )
+            DrawnComponent.Default(color = color)
         } else {
-            val imageBitmap = getImageBitmapFromResources(resources, component, position)
+            val drawable = when (component) {
+                ComponentType.FilledTrack,
+                ComponentType.UnfilledTrack -> {
+                    if (position == 1) {
+                        R.drawable.gradient_drawable
+                    } else {
+                        R.drawable.gradient_drawable_2
+                    }
+                }
+                ComponentType.FilledThumb,
+                ComponentType.UnfilledThumb -> {
+                    if (position == 1) {
+                        R.drawable.custom_shape_drawable
+                    } else {
+                        R.drawable.custom_shape_drawable_2
+                    }
+                }
+            }
 
-            DrawnComponent.UserProvided(
-                imageBitmap = imageBitmap,
-            )
+            DrawnComponent.Drawable(drawableRes = drawable)
         }
         val oldStepBarModel = uiModel.stageStepBarConfig
 
@@ -178,51 +188,4 @@ internal class ExampleComposeViewModel(application: Application): AndroidViewMod
             )
         )
     }
-
-    private fun getImageBitmapFromResources(
-        resources: Resources,
-        component: ComponentType,
-        positionOnDropdown: Int
-    ): ImageBitmap {
-        return when (component) {
-            ComponentType.FilledTrack,
-            ComponentType.UnfilledTrack -> {
-                val drawableRes = if (positionOnDropdown == 1) {
-                    R.drawable.gradient_drawable
-                } else {
-                    R.drawable.gradient_drawable_2
-                }
-
-                val drawable = requireNotNull(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        drawableRes,
-                        null
-                    )
-                )
-
-                (drawable as GradientDrawable).toBitmap(40, 40).asImageBitmap()
-            }
-            ComponentType.FilledThumb,
-            ComponentType.UnfilledThumb -> {
-                val drawableRes = if (positionOnDropdown == 1) {
-                    R.drawable.custom_shape_drawable
-                } else {
-                    R.drawable.custom_shape_drawable_2
-                }
-
-                val drawable = requireNotNull(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        drawableRes,
-                        null
-                    )
-                )
-
-                drawable.toBitmap().asImageBitmap()
-            }
-        }
-    }
-
-
 }
