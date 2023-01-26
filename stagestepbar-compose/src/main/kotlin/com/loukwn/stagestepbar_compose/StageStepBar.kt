@@ -175,11 +175,19 @@ private fun DrawnComponent.toInternal(): InternalDrawnComponent {
                 drawable?.toBitmap(width, height)?.asImageBitmap()
 
             }
-            InternalDrawnComponent.Bitmap(bitmap!!, this.colorFilter)
+            InternalDrawnComponent.Bitmap(
+                imageBitmap = bitmap!!,
+                colorFilter = this.colorFilter,
+                alpha = this.alpha,
+            )
         }
 
         is DrawnComponent.Bitmap -> {
-            InternalDrawnComponent.Bitmap(this.imageBitmap, this.colorFilter)
+            InternalDrawnComponent.Bitmap(
+                imageBitmap = this.imageBitmap,
+                colorFilter = this.colorFilter,
+                alpha = this.alpha,
+            )
         }
     }
 }
@@ -236,12 +244,14 @@ private fun drawUnfilledTrack(
         is InternalDrawnComponent.Bitmap -> {
             val imageBitmap = unfilledTrack.imageBitmap
             val colorFilter = unfilledTrack.colorFilter
+            val alpha = unfilledTrack.alpha
 
             drawScope.drawImage(
                 image = imageBitmap,
                 dstOffset = IntOffset(left.toInt(), top.toInt()),
                 dstSize = IntSize((right - left).toInt(), (bottom - top).toInt()),
                 colorFilter = colorFilter,
+                alpha = alpha,
             )
         }
     }
@@ -308,12 +318,14 @@ private fun drawFilledTrack(
         is InternalDrawnComponent.Bitmap -> {
             val imageBitmap = filledTrack.imageBitmap
             val colorFilter = filledTrack.colorFilter
+            val alpha = filledTrack.alpha
 
             drawScope.drawImage(
                 image = imageBitmap,
                 dstOffset = IntOffset(left.toInt(), top.toInt()),
                 dstSize = IntSize((right - left).toInt(), (bottom - top).toInt()),
                 colorFilter = colorFilter,
+                alpha = alpha,
             )
         }
     }
@@ -448,6 +460,7 @@ private fun drawThumbs(
                     dstOffset = IntOffset(left, top),
                     dstSize = IntSize(right - left, bottom - top),
                     colorFilter = colorFilter,
+                    alpha = drawnComponent.alpha,
                 )
             }
         }
@@ -484,6 +497,7 @@ private sealed class InternalDrawnComponent {
     data class Bitmap(
         val imageBitmap: ImageBitmap,
         val colorFilter: ColorFilter? = null,
+        val alpha: Float = 1f,
     ) : InternalDrawnComponent()
 
     data class Default(

@@ -35,11 +35,13 @@ sealed class DrawnComponent {
         @DrawableRes val drawableRes: Int,
         val colorFilter: ColorFilter? = null,
         val size: IntSize? = null,
+        val alpha: Float = 1f,
     ) : DrawnComponent()
 
     data class Bitmap(
         val imageBitmap: ImageBitmap,
         val colorFilter: ColorFilter? = null,
+        val alpha: Float = 1f,
     ) : DrawnComponent()
 
     data class Default(
