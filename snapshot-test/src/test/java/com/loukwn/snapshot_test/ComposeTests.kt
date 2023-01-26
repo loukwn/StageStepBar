@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.Paparazzi
@@ -69,7 +70,7 @@ class ComposeTests(private val config: StageStepBarConfig, private val testName:
                     baseTestConfig.copy(
                         currentState = State(2, 5),
                     ),
-                   "Fully completed (max step on second to last stage)",
+                    "Fully completed (max step on second to last stage)",
                 ),
                 arrayOf(
                     baseTestConfig.copy(
@@ -174,7 +175,60 @@ class ComposeTests(private val config: StageStepBarConfig, private val testName:
                         showThumbs = false
                     ),
                     "No thumbs",
-                )
+                ),
+                arrayOf(
+                    baseTestConfig.copy(
+                        filledThumb = DrawnComponent.Drawable(R.drawable.custom_shape_drawable),
+                        unfilledThumb = DrawnComponent.Drawable(R.drawable.custom_shape_drawable_2),
+                        filledTrack = DrawnComponent.Drawable(R.drawable.gradient_drawable),
+                        unfilledTrack = DrawnComponent.Drawable(R.drawable.gradient_drawable_2),
+                    ),
+                    "Custom drawables random state"
+                ),
+                arrayOf(
+                    baseTestConfig.copy(
+                        filledThumb = DrawnComponent.Drawable(
+                            drawableRes = R.drawable.custom_shape_drawable,
+                            alpha = .5f,
+                        ),
+                        unfilledThumb = DrawnComponent.Drawable(
+                            drawableRes = R.drawable.custom_shape_drawable_2,
+                            alpha = .3f,
+                        ),
+                        filledTrack = DrawnComponent.Drawable(
+                            R.drawable.gradient_drawable,
+                            alpha = .7f,
+                        ),
+                        unfilledTrack = DrawnComponent.Drawable(
+                            R.drawable.gradient_drawable_2,
+                            alpha = .4f,
+                        ),
+                        drawTracksBehindThumbs = true,
+                    ),
+                    "Custom drawables with alpha random state and tracks drawn behind thumbs"
+                ),
+                arrayOf(
+                    baseTestConfig.copy(
+                        filledThumb = DrawnComponent.Drawable(
+                            drawableRes = R.drawable.custom_shape_drawable,
+                            alpha = .5f,
+                        ),
+                        unfilledThumb = DrawnComponent.Drawable(
+                            drawableRes = R.drawable.custom_shape_drawable_2,
+                            alpha = .3f,
+                        ),
+                        filledTrack = DrawnComponent.Drawable(
+                            R.drawable.gradient_drawable,
+                            alpha = .7f,
+                        ),
+                        unfilledTrack = DrawnComponent.Drawable(
+                            R.drawable.gradient_drawable_2,
+                            alpha = .4f,
+                        ),
+                        drawTracksBehindThumbs = false,
+                    ),
+                    "Custom drawables with alpha random state and tracks NOT drawn behind thumbs"
+                ),
             )
         }
     }
