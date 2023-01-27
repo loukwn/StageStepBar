@@ -1,20 +1,17 @@
 package com.loukwn.stagestepbar_compose_example
 
-import android.app.Application
-import android.content.res.Resources
-import android.graphics.drawable.GradientDrawable
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.AndroidViewModel
-import com.loukwn.stagestepbar_compose.data.*
+import androidx.lifecycle.ViewModel
+import com.loukwn.stagestepbar_compose.data.DrawnComponent
+import com.loukwn.stagestepbar_compose.data.HorizontalDirection
+import com.loukwn.stagestepbar_compose.data.Orientation
+import com.loukwn.stagestepbar_compose.data.State
+import com.loukwn.stagestepbar_compose.data.VerticalDirection
 import kotlinx.coroutines.flow.MutableStateFlow
 
-internal class ExampleComposeViewModel(application: Application): AndroidViewModel(application), ViewModelContract {
+internal class ExampleComposeViewModel: ViewModel(), ViewModelContract {
     override val uiModels = MutableStateFlow(UiModel.default())
     override val events: MutableStateFlow<Event?> = MutableStateFlow(null)
 

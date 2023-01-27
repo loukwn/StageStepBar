@@ -1,8 +1,5 @@
 package com.loukwn.stagestepbar_compose
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.annotation.Keep
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -10,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -35,7 +31,12 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import com.loukwn.stagestepbar_compose.data.*
+import com.loukwn.stagestepbar_compose.data.DrawnComponent
+import com.loukwn.stagestepbar_compose.data.HorizontalDirection
+import com.loukwn.stagestepbar_compose.data.Orientation
+import com.loukwn.stagestepbar_compose.data.StageStepBarConfig
+import com.loukwn.stagestepbar_compose.data.State
+import com.loukwn.stagestepbar_compose.data.VerticalDirection
 
 @Composable
 @Keep

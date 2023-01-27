@@ -77,7 +77,7 @@ internal fun StateListItem(
                         if (stage >= 0) {
                             onStageChanged(stage)
                         }
-                    } catch (e: NumberFormatException) {
+                    } catch (_: NumberFormatException) {
                     }
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -99,7 +99,7 @@ internal fun StateListItem(
                         if (step >= 0) {
                             onStepChanged(step)
                         }
-                    } catch (e: NumberFormatException) {
+                    } catch (_: NumberFormatException) {
                     }
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(

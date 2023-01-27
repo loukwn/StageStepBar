@@ -53,7 +53,7 @@ internal fun AnimateListItem(
                 onValueChange = {
                     try {
                         onAnimationDurationChanged(it.toInt())
-                    } catch (e: NumberFormatException) {
+                    } catch (_: NumberFormatException) {
                     }
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(

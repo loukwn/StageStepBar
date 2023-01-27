@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package com.loukwn.stagestepbar_compose.data
 
 import androidx.annotation.DrawableRes

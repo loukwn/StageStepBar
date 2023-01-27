@@ -26,7 +26,7 @@ Add Jitpack distribution to the end of the repositories in your root `build.grad
 ```groovy
 allprojects {
     repositories {
-        ...
+        //...
         maven { url 'https://jitpack.io' }
     }
 }
@@ -108,7 +108,7 @@ Note: Both thumbs and tracks can either have:
 @Composable
 fun Example() {
     StageStepBar(
-        modifier = Modifier...,
+        modifier = Modifier, //...
         config = StageStepBarConfig(
             stageStepConfig = listOf(12,45,1)
             //...
