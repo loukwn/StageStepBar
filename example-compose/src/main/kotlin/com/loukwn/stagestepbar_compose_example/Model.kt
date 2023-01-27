@@ -20,7 +20,7 @@ internal data class UiModel(
 }
 
 internal sealed class Event {
-    data object Close: Event()
+    object Close: Event()
 }
 
 internal enum class ComponentType(val title: String) {
