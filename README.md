@@ -2,6 +2,7 @@
 
 ![License](https://img.shields.io/github/license/loukwn/StageStepBar?style=flat-square)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Ready-green?style=flat-square)
+<a href="https://jetc.dev/issues/106.html"><img src="https://img.shields.io/badge/As_Seen_In-jetc.dev_Newsletter_Issue_%23106-blue?logo=Jetpack+Compose&amp;logoColor=white" alt="As Seen In - jetc.dev Newsletter Issue #106"></a>
 
 A staged progressbar that you can use if you want finer control of the steps in between its stages. You can customize:
 - Number of steps between particular stages
