@@ -21,6 +21,7 @@
         <attr name="ssb_filledTrackColor" format="color" />
         <attr name="ssb_unfilledTrackColor" format="color" />
         <attr name="ssb_filledTrackDrawable" format="reference" />
+        <attr name="ssb_filledDoneTrackDrawable" format="reference" />
         <attr name="ssb_filledTrackDrawableAlpha" format="float" />
         <attr name="ssb_unfilledTrackDrawable" format="reference" />
         <attr name="ssb_unfilledTrackDrawableAlpha" format="float" />

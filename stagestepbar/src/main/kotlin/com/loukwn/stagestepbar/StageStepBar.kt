@@ -325,6 +325,22 @@ class StageStepBar @JvmOverloads constructor(
     }
 
     /**
+     * Sets the filled thumb to be a user specified drawable.
+     *
+     * @param filledThumbDrawable The drawable to set on the filled thumb.
+     * @param alpha Alpha for the drawable.
+     */
+    fun setFilledDoneThumbToCustomDrawable(filledThumbDrawable: Drawable, alpha: Float = 1f) {
+        val newDrawnComponent = DrawnComponent.UserProvided(filledThumbDrawable, alpha)
+        if (config.filledDoneThumb != newDrawnComponent) {
+            config = config.copy(filledDoneThumb = newDrawnComponent)
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
+        }
+    }
+
+    /**
      * Sets (or reverts) the unfilled thumb to its default shape (rectangle).
      *
      * @param unfilledThumbColor Color for the default shape
@@ -714,10 +730,21 @@ class StageStepBar @JvmOverloads constructor(
                 else -> progressBarEnd >= centerOfThisThumb
             }
 
+            val shouldShowDone = if (shouldFillThumb) {
+                progressBarEnd != centerOfThisThumb
+            } else {
+                false
+            }
+
             val paint = if (shouldFillThumb) filledThumbPaint else unfilledThumbPaint
 
             when (val drawnComponent =
-                if (shouldFillThumb) config.filledThumb else config.unfilledThumb) {
+                if (shouldFillThumb) {
+                    if (shouldShowDone) config.filledDoneThumb else config.filledThumb
+                } else {
+                    config.unfilledThumb
+                }
+            ) {
                 is DrawnComponent.Default -> {
                     when (config.orientation) {
                         Orientation.Horizontal -> {
@@ -835,6 +862,9 @@ class StageStepBar @JvmOverloads constructor(
             filledThumb = DrawnComponent.Default(
                 color = ContextCompat.getColor(context, R.color.default_thumb_filled_color)
             ),
+            filledDoneThumb = DrawnComponent.Default(
+                color = ContextCompat.getColor(context, R.color.default_thumb_filled_color)
+            ),
             unfilledThumb = DrawnComponent.Default(
                 color = ContextCompat.getColor(context, R.color.default_thumb_unfilled_color)
             ),
@@ -857,6 +887,7 @@ class StageStepBar @JvmOverloads constructor(
         val filledTrack: DrawnComponent,
         val unfilledTrack: DrawnComponent,
         val filledThumb: DrawnComponent,
+        val filledDoneThumb: DrawnComponent,
         val unfilledThumb: DrawnComponent,
         val thumbSize: Int,
         val crossAxisSizeFilledTrack: Int,
