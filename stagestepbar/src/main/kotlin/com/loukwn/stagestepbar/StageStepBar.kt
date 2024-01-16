@@ -731,7 +731,8 @@ class StageStepBar @JvmOverloads constructor(
             }
 
             val shouldShowDone = if (shouldFillThumb) {
-                progressBarEnd != centerOfThisThumb
+                (progressBarEnd != centerOfThisThumb) ||
+                        (config.currentState?.stage!! > numOfStages)
             } else {
                 false
             }
