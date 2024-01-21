@@ -8,7 +8,7 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libs.versions.minSdkScreenshotTesting.get().toInt()
+        minSdk = libs.versions.minSdkSnapshotTesting.get().toInt()
     }
 
     namespace = "com.loukwn.snapshot_test"

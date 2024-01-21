@@ -3,7 +3,7 @@
 compileSdk = "34"
 minSdkView = "16"
 minSdkCompose = "21"
-minSdkScreenshotTesting = "25"
+minSdkSnapshotTesting = "25"
 targetSdk = "33"
 libraryRelease = "1.0.1"
 javaTarget = "1.8"
