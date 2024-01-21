@@ -47,17 +47,16 @@ android {
             jvmTarget = "1.8"
 
             if (project.findProperty("stagestepbar_compose.enableComposeCompilerReports") == "true") {
-                freeCompilerArgs = freeCompilerArgs
-                    .plus("-P")
-                    .plus(
-                        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                                project.buildDir.absolutePath + "/compose_metrics"
-                    )
-                    .plus("-P")
-                    .plus(
-                        "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                                project.buildDir.absolutePath + "/compose_metrics"
-                    )
+                val extraCompilerArgs = listOf(
+                    "-P",
+                    "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+                        project.buildDir.absolutePath + "/compose_metrics",
+                    "-P",
+                    "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+                        project.buildDir.absolutePath + "/compose_metrics",
+                )
+
+                freeCompilerArgs = freeCompilerArgs.plus(extraCompilerArgs)
             }
         }
 

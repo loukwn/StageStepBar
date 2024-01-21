@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 33
 
     defaultConfig {
         minSdk = libs.versions.minSdkScreenshotTesting.get().toInt()
@@ -39,3 +39,5 @@ dependencies {
     testImplementation(libs.compose.ui)
     testImplementation(libs.compose.material)
 }
+
+apply(from = "guava-fix.gradle.kts")
