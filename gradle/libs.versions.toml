@@ -1,0 +1,41 @@
+[versions]
+
+compileSdk = "34"
+minSdkView = "16"
+minSdkCompose = "21"
+minSdkSnapshotTesting = "25"
+targetSdk = "33"
+libraryRelease = "1.0.1"
+javaTarget = "1.8"
+
+agp = "8.2.1"
+activity = "1.8.2"
+appcompat = "1.6.1"
+compose-version = "1.5.4"
+core = "1.12.0"
+lifecycle = "2.7.0"
+android-material = "1.11.0"
+kotlin-version = "1.9.20"
+coroutines = "1.7.3"
+ktlint = "11.0.0"
+paparazzi = "1.3.2"
+
+[libraries]
+
+android-core = { module = "androidx.core:core-ktx", version.ref = "core" }
+android-activity = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
+android-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+android-material = { module = "com.google.android.material:material", version.ref = "android-material" }
+android-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose-version" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose-version" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-version" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-version" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# Unused plugins just so we can get version updates on this file
+plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp"}
+plugin-kotlin-android = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-version" }
+plugin-ktlint = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
+plugin-paparazzi = { module = "app.cash.paparazzi:paparazzi-gradle-plugin", version.ref = "paparazzi" }

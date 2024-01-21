@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="default_thumb_size">20dp</dimen>
+    <dimen name="default_track_cross_axis_size">6dp</dimen>
+
     <dimen name="custom_thumb_size">23dp</dimen>
     <dimen name="custom_unfilled_track_size">10dp</dimen>
     <dimen name="custom_filled_track_size">8dp</dimen>

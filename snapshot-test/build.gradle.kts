@@ -5,25 +5,39 @@ plugins {
 }
 
 android {
-    namespace = "com.loukwn.snapshot_test"
-    compileSdk = 33
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
     defaultConfig {
-        minSdk = 25
+        minSdk = libs.versions.minSdkSnapshotTesting.get().toInt()
     }
+
+    namespace = "com.loukwn.snapshot_test"
 
     buildFeatures {
         compose = true
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Config.Version.compose
+        kotlinCompilerExtensionVersion = libs.versions.compose.version.get()
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.javaTarget.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.javaTarget.get())
+
+        kotlinOptions {
+            jvmTarget = libs.versions.javaTarget.get()
+        }
     }
 }
 
 dependencies {
-    implementation(project(Config.Modules.lib))
-    testImplementation(project(Config.Modules.lib))
-    testImplementation(project(Config.Modules.libCompose))
-    testImplementation(Config.Libs.Android.Compose.ui)
-    testImplementation(Config.Libs.Android.Compose.material)
+    implementation(project(":stagestepbar"))
+    testImplementation(project(":stagestepbar"))
+    testImplementation(project(":stagestepbar-compose"))
+
+    testImplementation(libs.compose.ui)
+    testImplementation(libs.compose.material)
 }
+
+apply(from = "guava-fix.gradle.kts")

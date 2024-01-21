@@ -14,18 +14,18 @@ jobs:
         with:
           lfs: true
 
-      - name: Set up Java 11
+      - name: Set up Java
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       - name: Gradle - Check everything compiles and verify snapshots
-        run: ./gradlew clean buildRelease snapshot-test:verifyPaparazziDebug
+        run: ./gradlew ktlintCheck clean buildRelease snapshot-test:verifyPaparazziDebug
 
       - name: Upload snapshot failure deltas
         if: failure()
         uses: actions/upload-artifact@v2
         with:
           name: snapshot-failure-deltas
-          path: snapshot-test/out/failures/delta-*.png
+          path: snapshot-test/build/paparazzi/failures/delta-*.png

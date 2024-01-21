@@ -18,34 +18,40 @@ jobs:
       with:
         lfs: true
 
-    - name: Set up Java 11
+    - name: Set up Java
       uses: actions/setup-java@v2
       with:
         distribution: 'zulu'
-        java-version: '11'
+        java-version: '17'
+
+    - name: Gradle - Regular checks
+      run: ./gradlew ktlintCheck clean buildDebug
 
     - name: Gradle - Verify snapshots with Paparazzi
-      id: testStep
-      run: ./gradlew clean snapshot-test:verifyPaparazziDebug
+      id: snapshotTestStep
+      run: ./gradlew snapshot-test:verifyPaparazziDebug
+
+    # always() is needed in steps that we want to conditionally run since otherwise they will never
+    # run if the CI run fails above
 
     - name: Upload snapshot failure deltas
-      if: failure()
+      if: always() && steps.snapshotTestStep.outcome == 'failure'
       uses: actions/upload-artifact@v2
       with:
         name: snapshot-failure-deltas
-        path: snapshot-test/out/failures/delta-*.png
+        path: snapshot-test/build/paparazzi/failures/delta-*.png
 
     - name: Find PR number
       uses: jwalton/gh-find-current-pr@v1
       id: findPr
-      if: always()
+      if: always() && (steps.snapshotTestStep.outcome == 'failure' || steps.snapshotTestStep.outcome == 'success')
       with:
         state: open
 
     - name: Find Comment on PR
       uses: peter-evans/find-comment@v1
       id: fc
-      if: always()
+      if: always() && (steps.snapshotTestStep.outcome == 'failure' || steps.snapshotTestStep.outcome == 'success')
       with:
         issue-number: ${{ steps.findPr.outputs.pr }}
         comment-author: 'github-actions[bot]'
@@ -53,7 +59,7 @@ jobs:
 
     - name: Create or update comment on PR (Success)
       uses: peter-evans/create-or-update-comment@v1
-      if: always() && steps.testStep.outcome == 'success'
+      if: always() && steps.snapshotTestStep.outcome == 'success'
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}
@@ -64,7 +70,7 @@ jobs:
 
     - name: Create or update comment on PR (Failure)
       uses: peter-evans/create-or-update-comment@v1
-      if: always() && steps.testStep.outcome == 'failure'
+      if: always() && steps.snapshotTestStep.outcome == 'failure'
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}
