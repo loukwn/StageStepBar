@@ -32,7 +32,7 @@ jobs:
       run: ./gradlew snapshot-test:verifyPaparazziDebug
 
     - name: Upload snapshot failure deltas
-      if: failure()
+      if: steps.snapshotTestStep.outcome == 'failure'
       uses: actions/upload-artifact@v2
       with:
         name: snapshot-failure-deltas
@@ -41,14 +41,14 @@ jobs:
     - name: Find PR number
       uses: jwalton/gh-find-current-pr@v1
       id: findPr
-      if: always()
+      if: steps.snapshotTestStep.outcome == 'failure' || steps.snapshotTestStep.outcome == 'success'
       with:
         state: open
 
     - name: Find Comment on PR
       uses: peter-evans/find-comment@v1
       id: fc
-      if: always()
+      if: steps.snapshotTestStep.outcome == 'failure' || steps.snapshotTestStep.outcome == 'success'
       with:
         issue-number: ${{ steps.findPr.outputs.pr }}
         comment-author: 'github-actions[bot]'
