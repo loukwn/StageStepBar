@@ -24,9 +24,12 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
+    - name: Gradle - Regular checks
+      run: ./gradlew ktlintCheck clean buildDebug
+
     - name: Gradle - Verify snapshots with Paparazzi
-      id: testStep
-      run: ./gradlew clean snapshot-test:verifyPaparazziDebug
+      id: snapshotTestStep
+      run: ./gradlew snapshot-test:verifyPaparazziDebug
 
     - name: Upload snapshot failure deltas
       if: failure()
@@ -53,7 +56,7 @@ jobs:
 
     - name: Create or update comment on PR (Success)
       uses: peter-evans/create-or-update-comment@v1
-      if: always() && steps.testStep.outcome == 'success'
+      if: always() && steps.snapshotTestStep.outcome == 'success'
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}
@@ -64,7 +67,7 @@ jobs:
 
     - name: Create or update comment on PR (Failure)
       uses: peter-evans/create-or-update-comment@v1
-      if: always() && steps.testStep.outcome == 'failure'
+      if: always() && steps.snapshotTestStep.outcome == 'failure'
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ steps.findPr.outputs.pr }}

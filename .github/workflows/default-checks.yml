@@ -21,7 +21,7 @@ jobs:
           java-version: '17'
 
       - name: Gradle - Check everything compiles and verify snapshots
-        run: ./gradlew clean buildRelease snapshot-test:verifyPaparazziDebug
+        run: ./gradlew ktlintCheck clean buildRelease snapshot-test:verifyPaparazziDebug
 
       - name: Upload snapshot failure deltas
         if: failure()
