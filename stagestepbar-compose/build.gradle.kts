@@ -33,7 +33,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeVer.get()
+        kotlinCompilerExtensionVersion = libs.versions.compose.version.get()
     }
 
     publishing {
@@ -44,7 +44,7 @@ android {
 
     compileOptions {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = libs.versions.javaTarget.get()
 
             if (project.findProperty("stagestepbar_compose.enableComposeCompilerReports") == "true") {
                 val extraCompilerArgs = listOf(
@@ -60,8 +60,8 @@ android {
             }
         }
 
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.javaTarget.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.javaTarget.get())
     }
 }
 
