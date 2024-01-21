@@ -5,25 +5,37 @@ plugins {
 }
 
 android {
-    namespace = "com.loukwn.snapshot_test"
-    compileSdk = 33
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
     defaultConfig {
-        minSdk = 25
+        minSdk = libs.versions.minSdkScreenshotTesting.get().toInt()
     }
+
+    namespace = "com.loukwn.snapshot_test"
 
     buildFeatures {
         compose = true
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Config.Version.compose
+        kotlinCompilerExtensionVersion = libs.versions.composeVer.get()
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
 }
 
 dependencies {
-    implementation(project(Config.Modules.lib))
-    testImplementation(project(Config.Modules.lib))
-    testImplementation(project(Config.Modules.libCompose))
-    testImplementation(Config.Libs.Android.Compose.ui)
-    testImplementation(Config.Libs.Android.Compose.material)
+    implementation(project(":stagestepbar"))
+    testImplementation(project(":stagestepbar"))
+    testImplementation(project(":stagestepbar-compose"))
+
+    testImplementation(libs.compose.ui)
+    testImplementation(libs.compose.material)
 }

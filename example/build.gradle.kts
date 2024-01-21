@@ -6,17 +6,17 @@ plugins {
 }
 
 android {
-    namespace = "com.loukwn.stagestepbar_example"
-    compileSdk = Config.Project.compileSdk
-    buildToolsVersion = Config.Project.buildToolsVersion
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.loukwn.stagestepbarexample"
-        minSdk = Config.Project.minSdkView
-        targetSdk = Config.Project.targetSdk
+        minSdk = libs.versions.minSdkView.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0.0"
     }
+
+    namespace = "com.loukwn.stagestepbar_example"
 
     buildTypes {
         getByName("release") {
@@ -31,14 +31,23 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
 }
 
 dependencies {
-    implementation(project(Config.Modules.lib))
+    implementation(project(":stagestepbar"))
 
-    implementation(Config.Libs.Android.coreKtx)
-    implementation(Config.Libs.Android.appcompat)
-    implementation(Config.Libs.Android.activity)
-    implementation(Config.Libs.Android.material)
-    implementation(Config.Libs.Kotlin.coroutines)
+    implementation(libs.android.core)
+    implementation(libs.android.appcompat)
+    implementation(libs.android.activity)
+    implementation(libs.android.material)
+    implementation(libs.kotlin.coroutines)
 }

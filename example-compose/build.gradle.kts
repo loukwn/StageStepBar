@@ -4,13 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.loukwn.stagestepbar_compose_example"
-    compileSdk = Config.Project.compileSdk
-    buildToolsVersion = Config.Project.buildToolsVersion
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = Config.Project.minSdkCompose
-        targetSdk = Config.Project.targetSdk
+        minSdk = libs.versions.minSdkCompose.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         applicationId = "com.loukwn.example_compose"
         versionCode = 1
         versionName = "1.0.0"
@@ -19,6 +17,8 @@ android {
             useSupportLibrary = true
         }
     }
+
+    namespace = "com.loukwn.stagestepbar_compose_example"
 
     buildTypes {
         getByName("release") {
@@ -35,20 +35,29 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Config.Version.compose
+        kotlinCompilerExtensionVersion = libs.versions.composeVer.get()
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
 }
 
 dependencies {
-    implementation(project(Config.Modules.libCompose))
+    implementation(project(":stagestepbar-compose"))
 
-    implementation(Config.Libs.Android.coreKtx)
-    implementation(Config.Libs.Android.appcompat)
-    implementation(Config.Libs.Android.material)
-    implementation(Config.Libs.Android.Compose.ui)
-    implementation(Config.Libs.Android.Compose.material)
-    implementation(Config.Libs.Android.Compose.uiToolingPreview)
-    implementation(Config.Libs.Android.lifecycleRuntimeKtx)
-    implementation(Config.Libs.Android.Compose.activity)
-    debugImplementation(Config.Libs.Android.Compose.uiTooling)
+    implementation(libs.android.core)
+    implementation(libs.android.appcompat)
+    implementation(libs.android.material)
+    implementation(libs.android.lifecycle)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material)
+    implementation(libs.compose.activity)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
 }

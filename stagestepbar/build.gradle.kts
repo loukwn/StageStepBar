@@ -5,14 +5,14 @@ plugins {
 }
 
 android {
-    namespace = "com.loukwn.stagestepbar"
-    compileSdk = Config.Project.compileSdk
-    buildToolsVersion = Config.Project.buildToolsVersion
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = Config.Project.minSdkView
-        targetSdk = Config.Project.targetSdk
+        minSdk = libs.versions.minSdkView.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
     }
+
+    namespace = "com.loukwn.stagestepbar"
 
     buildTypes {
         getByName("release") {
@@ -29,10 +29,19 @@ android {
             withSourcesJar()
         }
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
 }
 
 dependencies {
-    implementation(Config.Libs.Android.coreKtx)
+    implementation(libs.android.core)
 }
 
 afterEvaluate {
@@ -42,7 +51,7 @@ afterEvaluate {
                 from(components.findByName("release"))
 
                 group = "com.loukwn"
-                version = Config.Project.libraryReleaseVersion
+                version = libs.versions.libraryRelease.get()
             }
         }
     }
