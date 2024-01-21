@@ -48,7 +48,7 @@ android {
 
             if (project.findProperty("stagestepbar_compose.enableComposeCompilerReports") == "true") {
                 val extraCompilerArgs = listOf(
-                    "-P",
+                                    "-P",
                     "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
                         project.buildDir.absolutePath + "/compose_metrics",
                     "-P",

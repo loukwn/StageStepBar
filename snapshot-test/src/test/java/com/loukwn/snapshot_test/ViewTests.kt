@@ -62,7 +62,6 @@ class ViewTests {
 
     @Test
     fun `Default configuration`() {
-        prepareViewDefaults()
         snap(snapName = object {}.javaClass.enclosingMethod?.name)
     }
 
