@@ -39,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: snapshot-failure-deltas
-        path: snapshot-test/out/failures/delta-*.png
+        path: snapshot-test/build/paparazzi/failures/delta-*.png
 
     - name: Find PR number
       uses: jwalton/gh-find-current-pr@v1
