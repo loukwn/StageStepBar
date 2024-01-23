@@ -1,12 +1,18 @@
 package com.loukwn.stagestepbar_compose
 
 import androidx.annotation.Keep
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -25,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
@@ -36,44 +43,118 @@ import com.loukwn.stagestepbar_compose.data.HorizontalDirection
 import com.loukwn.stagestepbar_compose.data.Orientation
 import com.loukwn.stagestepbar_compose.data.StageStepBarConfig
 import com.loukwn.stagestepbar_compose.data.State
+import com.loukwn.stagestepbar_compose.data.ThumbConfig
 import com.loukwn.stagestepbar_compose.data.VerticalDirection
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 @Keep
 fun StageStepBar(
     modifier: Modifier = Modifier,
-    config: StageStepBarConfig,
+    stageStepConfig: List<Int> = listOf(1),
+    currentState: State? = null,
+    shouldAnimate: Boolean = true,
+    animationSpec: AnimationSpec<Float> = tween(500),
+    orientation: Orientation = Orientation.Horizontal,
+    horizontalDirection: HorizontalDirection = HorizontalDirection.Auto,
+    verticalDirection: VerticalDirection = VerticalDirection.Btt,
+    filledTrack: DrawnComponent = DrawnComponent.Default(color = Color(0xFF000000)),
+    unfilledTrack: DrawnComponent = DrawnComponent.Default(color = Color(0xFFA9A9A9)),
+    filledThumb: ThumbConfig = ThumbConfig(listOf(DrawnComponent.Default(Color(0xFF000000)))),
+    unfilledThumb: ThumbConfig = ThumbConfig(listOf(DrawnComponent.Default(color = Color(0xFF6F6F6F)))),
+    thumbSize: Dp = 20.dp,
+    crossAxisSizeFilledTrack: Dp = 6.dp,
+    crossAxisSizeUnfilledTrack: Dp = 6.dp,
+    showThumbs: Boolean = true,
+    drawTracksBehindThumbs: Boolean = true,
 ) {
-    validateInput(config)
-    val finalProgress = calculateProgress(config.stageStepConfig, config.currentState)
-    val currentProgress = if (!config.shouldAnimate) {
-        rememberSaveable(
-            config.currentState,
-            config.stageStepConfig
-        ) { mutableStateOf(finalProgress) }
-    } else {
-        animateFloatAsState(targetValue = finalProgress, animationSpec = config.animationSpec)
+    LaunchedEffect(stageStepConfig, currentState, filledThumb, unfilledThumb) {
+        validateInput(stageStepConfig, currentState, filledThumb, unfilledThumb)
     }
-    MainCanvas(modifier = modifier, progress = currentProgress.value, config = config)
+
+    val finalProgress = calculateProgress(stageStepConfig, currentState)
+    val currentProgress = if (!shouldAnimate) {
+        rememberSaveable(currentState, stageStepConfig) { mutableFloatStateOf(finalProgress) }
+    } else {
+        animateFloatAsState(
+            targetValue = finalProgress,
+            animationSpec = animationSpec,
+            label = "StageStepBar progress animation",
+        )
+    }
+
+    MainCanvas(
+        modifier = modifier,
+        progress = currentProgress.value,
+        stageStepConfig = stageStepConfig.toImmutableList(),
+        currentState = currentState,
+        orientation = orientation,
+        horizontalDirection = horizontalDirection,
+        verticalDirection = verticalDirection,
+        filledTrack = filledTrack,
+        unfilledTrack = unfilledTrack,
+        filledThumb = filledThumb,
+        unfilledThumb = unfilledThumb,
+        thumbSize = thumbSize,
+        crossAxisSizeFilledTrack = crossAxisSizeFilledTrack,
+        crossAxisSizeUnfilledTrack = crossAxisSizeUnfilledTrack,
+        showThumbs = showThumbs,
+        drawTracksBehindThumbs = drawTracksBehindThumbs,
+    )
 }
 
-private fun validateInput(config: StageStepBarConfig) {
-    when {
-        config.stageStepConfig.isEmpty() -> {
-            throw IllegalArgumentException(
-                "The stageStepConfig should have at least one element."
-            )
-        }
+@Keep
+@Composable
+fun StageStepBar(
+    modifier: Modifier = Modifier,
+    config: StageStepBarConfig,
+) {
+    StageStepBar(
+        modifier = modifier,
+        stageStepConfig = config.stageStepConfig,
+        currentState = config.currentState,
+        shouldAnimate = config.shouldAnimate,
+        animationSpec = config.animationSpec,
+        orientation = config.orientation,
+        horizontalDirection = config.horizontalDirection,
+        verticalDirection = config.verticalDirection,
+        filledTrack = config.filledTrack,
+        unfilledTrack = config.unfilledTrack,
+        filledThumb = config.filledThumb,
+        unfilledThumb = config.unfilledThumb,
+        thumbSize = config.thumbSize,
+        crossAxisSizeFilledTrack = config.crossAxisSizeFilledTrack,
+        crossAxisSizeUnfilledTrack = config.crossAxisSizeUnfilledTrack,
+        showThumbs = config.showThumbs,
+        drawTracksBehindThumbs = config.drawTracksBehindThumbs,
+    )
+}
 
-        config.stageStepConfig.any { it <= 0 } -> {
-            throw IllegalArgumentException(
-                "The stageStepConfig should only include positive integers."
-            )
-        }
+private fun validateInput(
+    stageStepConfig: List<Int>,
+    currentState: State?,
+    filledThumb: ThumbConfig,
+    unfilledThumb: ThumbConfig,
+) {
+    if (stageStepConfig.isEmpty()) {
+        throw IllegalArgumentException("The stageStepConfig should have at least one element.")
+    }
 
-        (config.currentState != null && (config.currentState.stage < 0 || config.currentState.step < 0)) -> {
-            throw IllegalArgumentException("The state should only contain positive integers.")
-        }
+    if (stageStepConfig.any { it <= 0 }) {
+        throw IllegalArgumentException("The stageStepConfig should only include positive integers.")
+    }
+
+    if (currentState != null && (currentState.stage < 0 || currentState.step < 0)) {
+        throw IllegalArgumentException("The state should only contain positive integers.")
+    }
+
+    if (filledThumb.drawnComponentList.isEmpty()) {
+        throw IllegalStateException("The filledThumb list should have at least one DrawnComponent")
+    }
+
+    if (unfilledThumb.drawnComponentList.isEmpty()) {
+        throw IllegalStateException("The unfilledThumb list should have at least one DrawnComponent")
     }
 }
 
@@ -97,61 +178,85 @@ private fun calculateProgress(stageStepConfig: List<Int>, currentState: State?):
 }
 
 @Composable
-private fun MainCanvas(modifier: Modifier, progress: Float, config: StageStepBarConfig) {
+private fun MainCanvas(
+    modifier: Modifier,
+    progress: Float,
+    stageStepConfig: ImmutableList<Int>,
+    currentState: State?,
+    orientation: Orientation,
+    horizontalDirection: HorizontalDirection,
+    verticalDirection: VerticalDirection,
+    filledTrack: DrawnComponent,
+    unfilledTrack: DrawnComponent,
+    filledThumb: ThumbConfig,
+    unfilledThumb: ThumbConfig,
+    thumbSize: Dp,
+    crossAxisSizeFilledTrack: Dp,
+    crossAxisSizeUnfilledTrack: Dp,
+    showThumbs: Boolean,
+    drawTracksBehindThumbs: Boolean,
+) {
     val (thumbSizePx, crossAxisFilledTrackSizePx, crossAxisUnfilledTrackSizePx) =
-        getPixelSizesForComponents(config)
+        with(LocalDensity.current) {
+            Triple(
+                thumbSize.toPx(),
+                crossAxisSizeFilledTrack.toPx(),
+                crossAxisSizeUnfilledTrack.toPx()
+            )
+        }
 
-    val canvasModifier = if (!config.drawTracksBehindThumbs) {
+    val canvasModifier = if (!drawTracksBehindThumbs) {
         modifier.drawOffscreen()
     } else {
         modifier
     }
 
-    val internalFilledTrack = config.filledTrack.toInternal()
-    val internalUnfilledTrack = config.unfilledTrack.toInternal()
-    val internalFilledThumb = config.filledThumb.toInternal()
-    val internalUnfilledThumb = config.unfilledThumb.toInternal()
+    val internalFilledTrack = filledTrack.toInternal()
+    val internalUnfilledTrack = unfilledTrack.toInternal()
+    val internalFilledThumb = filledThumb.drawnComponentList.map { it.toInternal() }
+    val internalUnfilledThumb = unfilledThumb.drawnComponentList.map { it.toInternal() }
 
     Canvas(modifier = canvasModifier, onDraw = {
-        val drawReverse = (config.orientation == Orientation.Horizontal &&
-                config.horizontalDirection == HorizontalDirection.Rtl) ||
-                (config.orientation == Orientation.Vertical &&
-                        config.verticalDirection == VerticalDirection.Btt) ||
-                (config.orientation == Orientation.Horizontal &&
-                        config.horizontalDirection == HorizontalDirection.Auto &&
+        val drawReverse = (orientation == Orientation.Horizontal &&
+                horizontalDirection == HorizontalDirection.Rtl) ||
+                (orientation == Orientation.Vertical &&
+                        verticalDirection == VerticalDirection.Btt) ||
+                (orientation == Orientation.Horizontal &&
+                        horizontalDirection == HorizontalDirection.Auto &&
                         layoutDirection == LayoutDirection.Rtl)
 
         drawUnfilledTrack(
             drawScope = this,
-            orientation = config.orientation,
+            orientation = orientation,
             unfilledTrack = internalUnfilledTrack,
             unfilledTrackSizePx = crossAxisUnfilledTrackSizePx,
             thumbSizePx = thumbSizePx,
         )
 
-        if (config.numOfStages > 1) {
+        val numOfStages = stageStepConfig.size + 1
+        if (numOfStages > 1) {
             val progressBarEnd = drawFilledTrack(
                 drawScope = this,
                 drawReverse = drawReverse,
                 progress = progress,
-                orientation = config.orientation,
+                orientation = orientation,
                 filledTrack = internalFilledTrack,
                 filledTrackSizePx = crossAxisFilledTrackSizePx,
                 thumbSizePx = thumbSizePx,
             )
 
-            if (config.showThumbs) {
+            if (showThumbs) {
                 drawThumbs(
                     drawScope = this,
                     progress = progress,
                     progressBarEnd = progressBarEnd,
                     drawReverse = drawReverse,
-                    numOfStages = config.numOfStages,
-                    orientation = config.orientation,
-                    drawTracksBehindThumbs = config.drawTracksBehindThumbs,
-                    currentState = config.currentState,
-                    filledThumb = internalFilledThumb,
-                    unfilledThumb = internalUnfilledThumb,
+                    numOfStages = numOfStages,
+                    orientation = orientation,
+                    drawTracksBehindThumbs = drawTracksBehindThumbs,
+                    currentState = currentState,
+                    filledThumbs = internalFilledThumb,
+                    unfilledThumbs = internalUnfilledThumb,
                     thumbSizePx = thumbSizePx
                 )
             }
@@ -192,16 +297,6 @@ private fun DrawnComponent.toInternal(): InternalDrawnComponent {
         }
     }
 }
-
-@Composable
-private fun getPixelSizesForComponents(config: StageStepBarConfig): Triple<Float, Float, Float> =
-    with(LocalDensity.current) {
-        Triple(
-            config.thumbSize.toPx(),
-            config.crossAxisSizeFilledTrack.toPx(),
-            config.crossAxisSizeUnfilledTrack.toPx()
-        )
-    }
 
 private fun drawUnfilledTrack(
     drawScope: DrawScope,
@@ -334,6 +429,14 @@ private fun drawFilledTrack(
     return progressBarEnd
 }
 
+private fun List<InternalDrawnComponent>.getThumbAtStage(stage: Int): InternalDrawnComponent {
+    return if (stage > size - 1) {
+        this[size - 1]
+    } else {
+        this[stage]
+    }
+}
+
 private fun drawThumbs(
     drawScope: DrawScope,
     progress: Float,
@@ -343,14 +446,16 @@ private fun drawThumbs(
     orientation: Orientation,
     drawTracksBehindThumbs: Boolean,
     currentState: State?,
-    filledThumb: InternalDrawnComponent,
-    unfilledThumb: InternalDrawnComponent,
+    filledThumbs: List<InternalDrawnComponent>,
+    unfilledThumbs: List<InternalDrawnComponent>,
     thumbSizePx: Float,
 ) {
     val canvasHeight = drawScope.size.height
     val canvasWidth = drawScope.size.width
 
     repeat(numOfStages) { stage ->
+        val filledThumb = filledThumbs.getThumbAtStage(stage)
+        val unfilledThumb = unfilledThumbs.getThumbAtStage(stage)
 
         val canvasLimit = if (orientation == Orientation.Horizontal) {
             canvasWidth
@@ -477,11 +582,8 @@ private fun Preview() {
             modifier = Modifier
                 .height(50.dp)
                 .width(150.dp),
-            // You can edit this config below to see different stuff in the Preview
-            config = StageStepBarConfig.default().copy(
-                stageStepConfig = listOf(5, 5, 5),
-                currentState = State(2, 3),
-            )
+            stageStepConfig = listOf(5, 5, 5),
+            currentState = State(2, 3),
         )
     }
 }
@@ -495,6 +597,7 @@ private fun Modifier.drawOffscreen(): Modifier = this.drawWithContent {
 }
 
 private sealed class InternalDrawnComponent {
+    @Immutable // ImageBitmap is an interface (does not mutate)
     data class Bitmap(
         val imageBitmap: ImageBitmap,
         val colorFilter: ColorFilter? = null,

@@ -46,6 +46,7 @@ android {
         kotlinOptions {
             jvmTarget = libs.versions.javaTarget.get()
 
+            // gradle assembleRelease -Pstagestepbar_compose.enableComposeCompilerReports=true --rerun-tasks
             if (project.findProperty("stagestepbar_compose.enableComposeCompilerReports") == "true") {
                 val extraCompilerArgs = listOf(
                     "-P",
@@ -70,6 +71,7 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.material)
     implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.immutable.collections)
     debugImplementation(libs.compose.ui.tooling)
 }
 
