@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.loukwn.stagestepbar.util.ConfigBuilder
 import com.loukwn.stagestepbar.util.StageStepBarLifecycleObserver
 import java.lang.IllegalArgumentException
+import kotlin.math.ceil
 import kotlin.math.round
 
 @Keep
@@ -28,6 +29,9 @@ class StageStepBar @JvmOverloads constructor(
         style = Paint.Style.FILL
     }
     private var unfilledTrackPaint: Paint = Paint().apply {
+        style = Paint.Style.FILL
+    }
+    private var activeThumbPaint: Paint = Paint().apply {
         style = Paint.Style.FILL
     }
     private var filledThumbPaint: Paint = Paint().apply {
@@ -98,6 +102,11 @@ class StageStepBar @JvmOverloads constructor(
     }
 
     private fun updatePaintColors() {
+        if (config.activeThumb is DrawnComponent.Default) {
+            val color = (config.activeThumb as DrawnComponent.Default).color
+            activeThumbPaint.color = color
+        }
+
         if (config.filledThumb is DrawnComponent.Default) {
             val color = (config.filledThumb as DrawnComponent.Default).color
             filledThumbPaint.color = color
@@ -136,9 +145,11 @@ class StageStepBar @JvmOverloads constructor(
                 stepsPerStages.isEmpty() -> throw IllegalArgumentException(
                     "The stageStepConfig should have at least one element."
                 )
+
                 stepsPerStages.any { it <= 0 } -> throw IllegalArgumentException(
                     "The stageStepConfig should only include positive integers."
                 )
+
                 else -> config.copy(stageStepConfig = stepsPerStages)
             }
             redraw()
@@ -289,6 +300,50 @@ class StageStepBar @JvmOverloads constructor(
         if (config.unfilledTrack != newDrawnComponent) {
             config = config.copy(unfilledTrack = newDrawnComponent)
             redraw()
+        }
+    }
+
+    /**
+     * Sets (or reverts) the active thumb to its default shape (rectangle).
+     *
+     * @param activeThumbColor Color for the default shape.
+     */
+    fun setActiveThumbToNormalShape(@ColorInt activeThumbColor: Int) {
+        val newDrawnComponent = DrawnComponent.Default(activeThumbColor)
+        if (config.activeThumb != newDrawnComponent) {
+            config = config.copy(activeThumb = newDrawnComponent)
+            updatePaintColors()
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
+        }
+    }
+
+    /**
+     * Sets the active thumb to null.
+     */
+    fun clearActiveThumb() {
+        if (config.activeThumb != null) {
+            config = config.copy(activeThumb = null)
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
+        }
+    }
+
+    /**
+     * Sets the active thumb to be a user specified drawable.
+     *
+     * @param activeThumbDrawable The drawable to set on the active thumb.
+     * @param alpha Alpha for the drawable.
+     */
+    fun setActiveThumbToCustomDrawable(activeThumbDrawable: Drawable, alpha: Float = 1f) {
+        val newDrawnComponent = DrawnComponent.UserProvided(activeThumbDrawable, alpha)
+        if (config.activeThumb != newDrawnComponent) {
+            config = config.copy(activeThumb = newDrawnComponent)
+            if (!isCurrentlyAnimating()) {
+                redraw()
+            }
         }
     }
 
@@ -535,6 +590,7 @@ class StageStepBar @JvmOverloads constructor(
                     Orientation.Horizontal -> {
                         if (drawReverse) width - config.thumbSize / 2f else config.thumbSize / 2f
                     }
+
                     Orientation.Vertical -> {
                         if (drawReverse) height - config.thumbSize / 2f else config.thumbSize / 2f
                     }
@@ -589,6 +645,7 @@ class StageStepBar @JvmOverloads constructor(
                 }
                 bottom = (canvas.height / 2f + config.crossAxisSizeUnfilledTrack / 2f).toInt()
             }
+
             Orientation.Vertical -> {
                 left = (canvas.width / 2f - config.crossAxisSizeUnfilledTrack / 2f).toInt()
                 top = if (drawReverse) {
@@ -611,6 +668,7 @@ class StageStepBar @JvmOverloads constructor(
                 canvas.drawRect(unfilledTrackRect, clearPaint)
                 canvas.drawRect(unfilledTrackRect, unfilledTrackPaint)
             }
+
             is DrawnComponent.UserProvided -> {
                 val (drawable, alpha) = with(config.unfilledTrack as DrawnComponent.UserProvided) {
                     drawable to round(255 * alpha).toInt()
@@ -651,6 +709,7 @@ class StageStepBar @JvmOverloads constructor(
                 }
                 progressBarEnd = if (drawReverse) left else right
             }
+
             Orientation.Vertical -> {
                 left = (canvas.width / 2f - config.crossAxisSizeFilledTrack / 2f).toInt()
                 right = (canvas.width / 2f + config.crossAxisSizeFilledTrack / 2f).toInt()
@@ -673,6 +732,7 @@ class StageStepBar @JvmOverloads constructor(
                 canvas.drawRect(filledTrackRect, clearPaint)
                 canvas.drawRect(filledTrackRect, filledTrackPaint)
             }
+
             is DrawnComponent.UserProvided -> {
                 val (drawable, alpha) = with(config.filledTrack as DrawnComponent.UserProvided) {
                     drawable to round(255 * alpha).toInt()
@@ -714,10 +774,44 @@ class StageStepBar @JvmOverloads constructor(
                 else -> progressBarEnd >= centerOfThisThumb
             }
 
-            val paint = if (shouldFillThumb) filledThumbPaint else unfilledThumbPaint
+            val isActiveThumb = if (config.activeThumb != null && config.currentState != null) {
+                if (drawReverse) {
+                    val reverseStage = numOfStages - stage - 1
+                    val centerOfLeftThumb = if (reverseStage > 0) {
+                        ceil((reverseStage - 1) * (canvasLimit - config.thumbSize) / (numOfStages - 1).toFloat() + config.thumbSize / 2f)
+                    } else {
+                        null
+                    }
 
-            when (val drawnComponent =
-                if (shouldFillThumb) config.filledThumb else config.unfilledThumb) {
+                    centerOfLeftThumb == null && progressBarEnd <= centerOfThisThumb ||
+                            centerOfLeftThumb != null && progressBarEnd > centerOfLeftThumb && progressBarEnd <= centerOfThisThumb
+                } else {
+                    val centerOfRightThumb = if (stage <= numOfStages - 2) {
+                        ((stage + 1) * (canvasLimit - config.thumbSize) / (numOfStages - 1).toFloat() + config.thumbSize / 2f).toInt()
+                    } else {
+                        null
+                    }
+
+                    centerOfRightThumb == null && progressBarEnd >= centerOfThisThumb ||
+                            centerOfRightThumb != null && progressBarEnd < centerOfRightThumb && progressBarEnd >= centerOfThisThumb
+                }
+            } else {
+                false
+            }
+
+            val paint = when {
+                isActiveThumb -> activeThumbPaint
+                shouldFillThumb -> filledThumbPaint
+                else -> unfilledThumbPaint
+            }
+
+            val drawnComponent = when {
+                isActiveThumb -> config.activeThumb!!
+                shouldFillThumb -> config.filledThumb
+                else -> config.unfilledThumb
+            }
+
+            when (drawnComponent) {
                 is DrawnComponent.Default -> {
                     when (config.orientation) {
                         Orientation.Horizontal -> {
@@ -736,6 +830,7 @@ class StageStepBar @JvmOverloads constructor(
                                 paint
                             )
                         }
+
                         Orientation.Vertical -> {
                             if (!config.drawTracksBehindThumbs) {
                                 canvas.drawCircle(
@@ -754,6 +849,7 @@ class StageStepBar @JvmOverloads constructor(
                         }
                     }
                 }
+
                 is DrawnComponent.UserProvided -> {
                     val alpha = round(255 * drawnComponent.alpha).toInt()
                     val left: Int
@@ -783,6 +879,7 @@ class StageStepBar @JvmOverloads constructor(
                             drawnComponent.drawable.alpha = alpha
                             drawnComponent.drawable.draw(canvas)
                         }
+
                         Orientation.Vertical -> {
                             left = (canvas.width / 2f).toInt() - (config.thumbSize / 2f).toInt()
                             top = centerOfThisThumb - (config.thumbSize / 2f).toInt()
@@ -832,6 +929,7 @@ class StageStepBar @JvmOverloads constructor(
             unfilledTrack = DrawnComponent.Default(
                 color = ContextCompat.getColor(context, R.color.default_track_unfilled_color)
             ),
+            activeThumb = null,
             filledThumb = DrawnComponent.Default(
                 color = ContextCompat.getColor(context, R.color.default_thumb_filled_color)
             ),
@@ -856,6 +954,7 @@ class StageStepBar @JvmOverloads constructor(
         val verticalDirection: VerticalDirection,
         val filledTrack: DrawnComponent,
         val unfilledTrack: DrawnComponent,
+        val activeThumb: DrawnComponent?,
         val filledThumb: DrawnComponent,
         val unfilledThumb: DrawnComponent,
         val thumbSize: Int,
