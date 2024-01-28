@@ -1,27 +1,12 @@
-buildscript {
-    repositories {
-        google()
-        maven("https://plugins.gradle.org/m2/")
-    }
-
-    dependencies {
-        classpath(Config.BuildPlugins.buildGradlePlugin)
-        classpath(Config.BuildPlugins.kotlinGradlePlugin)
-        classpath(Config.BuildPlugins.ktlintGradlePlugin)
-        classpath(Config.BuildPlugins.paparazziPlugin)
-    }
+// Lists all plugins used throughout the project without applying them.
+plugins {
+    id("com.android.application") version libs.versions.agp apply false
+    id("com.android.library") version libs.versions.agp apply false
+    id("org.jetbrains.kotlin.android") version libs.versions.kotlin.version apply false
+    id("org.jlleitschuh.gradle.ktlint") version libs.versions.ktlint apply false
+    id("app.cash.paparazzi") version libs.versions.paparazzi apply false
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://jitpack.io")
-    }
-
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
-}
-
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
 }

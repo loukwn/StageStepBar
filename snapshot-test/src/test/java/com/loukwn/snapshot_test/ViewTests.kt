@@ -48,6 +48,7 @@ class ViewTests {
         stageStepBar.setStageStepConfig(listOf(5, 5, 5))
         stageStepBar.setCurrentState(StageStepBar.State(1, 3))
         stageStepBar.setThumbsVisible(true)
+        stageStepBar.clearActiveThumb()
         stageStepBar.setThumbSize(defaultThumbSize)
         stageStepBar.setCrossAxisFilledTrackSize(defaultTrackSize)
         stageStepBar.setCrossAxisUnfilledTrackSize(defaultTrackSize)
@@ -233,6 +234,21 @@ class ViewTests {
     }
 
     @Test
+    fun `Alpha on filled thumb and active thumb with normal shape`() {
+        // General setup
+        prepareViewDefaults()
+
+        // Things that are tested
+        stageStepBar.setActiveThumbToNormalShape(Color.parseColor("#9988fefe"))
+        stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#55ff00ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
+        stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#0000ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#00ff00"))
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
     fun `Alpha on filled thumb and filled track with normal shape`() {
         // General setup
         prepareViewDefaults()
@@ -247,7 +263,28 @@ class ViewTests {
     }
 
     @Test
-    fun `Custom drawables random state`() {
+    fun `Custom drawables random state with active thumb`() {
+        // General setup
+        prepareViewDefaults()
+
+        // Things that are tested
+        val activeThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable_3)!!
+        val filledThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable)!!
+        val unfilledThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable_2)!!
+        val filledTrack = paparazzi.context.getDrawable(R.drawable.gradient_drawable)!!
+        val unfilledTrack = paparazzi.context.getDrawable(R.drawable.gradient_drawable_2)!!
+
+        stageStepBar.setActiveThumbToCustomDrawable(activeThumb)
+        stageStepBar.setFilledThumbToCustomDrawable(filledThumb)
+        stageStepBar.setUnfilledThumbToCustomDrawable(unfilledThumb)
+        stageStepBar.setFilledTrackToCustomDrawable(filledTrack)
+        stageStepBar.setUnfilledTrackToCustomDrawable(unfilledTrack)
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Custom drawables random state without active thumb`() {
         // General setup
         prepareViewDefaults()
 
@@ -257,6 +294,7 @@ class ViewTests {
         val filledTrack = paparazzi.context.getDrawable(R.drawable.gradient_drawable)!!
         val unfilledTrack = paparazzi.context.getDrawable(R.drawable.gradient_drawable_2)!!
 
+        stageStepBar.clearActiveThumb()
         stageStepBar.setFilledThumbToCustomDrawable(filledThumb)
         stageStepBar.setUnfilledThumbToCustomDrawable(unfilledThumb)
         stageStepBar.setFilledTrackToCustomDrawable(filledTrack)
@@ -271,11 +309,13 @@ class ViewTests {
         prepareViewDefaults()
 
         // Things that are tested
+        val activeThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable_3)!!
         val filledThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable)!!
         val unfilledThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable_2)!!
         val filledTrack = paparazzi.context.getDrawable(R.drawable.gradient_drawable)!!
         val unfilledTrack = paparazzi.context.getDrawable(R.drawable.gradient_drawable_2)!!
 
+        stageStepBar.setActiveThumbToCustomDrawable(activeThumb, .4f)
         stageStepBar.setFilledThumbToCustomDrawable(filledThumb, .5f)
         stageStepBar.setUnfilledThumbToCustomDrawable(unfilledThumb, .3f)
         stageStepBar.setFilledTrackToCustomDrawable(filledTrack, .7f)
@@ -291,11 +331,13 @@ class ViewTests {
         prepareViewDefaults()
 
         // Things that are tested
+        val activeThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable_3)!!
         val filledThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable)!!
         val unfilledThumb = paparazzi.context.getDrawable(R.drawable.custom_shape_drawable_2)!!
         val filledTrack = paparazzi.context.getDrawable(R.drawable.gradient_drawable)!!
         val unfilledTrack = paparazzi.context.getDrawable(R.drawable.gradient_drawable_2)!!
 
+        stageStepBar.setActiveThumbToCustomDrawable(activeThumb, .4f)
         stageStepBar.setFilledThumbToCustomDrawable(filledThumb, .5f)
         stageStepBar.setUnfilledThumbToCustomDrawable(unfilledThumb, .3f)
         stageStepBar.setFilledTrackToCustomDrawable(filledTrack, .7f)

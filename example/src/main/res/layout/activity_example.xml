@@ -394,6 +394,60 @@
                 app:layout_constraintTop_toBottomOf="@id/unfilledTrackTextInputLayout" />
 
             <TextView
+                android:id="@+id/activeThumbTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Active Thumb"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/unfilledTrackDefaultColorView" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/activeThumbTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Drawable"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/activeThumbTitle">
+
+                <AutoCompleteTextView
+                    android:id="@+id/activeThumbDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="Color of default"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@id/activeThumbDefaultColorView"
+                app:layout_constraintEnd_toStartOf="@id/activeThumbDefaultColorView"
+                app:layout_constraintTop_toTopOf="@id/activeThumbDefaultColorView" />
+
+            <View
+                android:id="@+id/activeThumbDefaultColorView"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/activeThumbTextInputLayout" />
+
+            <TextView
                 android:id="@+id/filledThumbTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -403,7 +457,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/unfilledTrackDefaultColorView" />
+                app:layout_constraintTop_toBottomOf="@id/activeThumbDefaultColorView" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/filledThumbTextInputLayout"
