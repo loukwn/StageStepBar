@@ -5,7 +5,7 @@ minSdkView = "16"
 minSdkCompose = "21"
 minSdkSnapshotTesting = "25"
 targetSdk = "33"
-libraryRelease = "1.0.1"
+libraryRelease = "1.2.0"
 javaTarget = "1.8"
 
 agp = "8.2.1"
