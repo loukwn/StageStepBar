@@ -117,6 +117,7 @@ internal class ConfigBuilder {
         newConfig = newConfig.copy(
             filledTrack = getFilledTrackDrawnComponent(context, attrArray),
             unfilledTrack = getUnfilledTrackDrawnComponent(context, attrArray),
+            activeThumb = getActiveThumbDrawnComponent(context, attrArray),
             filledThumb = getFilledThumbDrawnComponent(context, attrArray),
             unfilledThumb = getUnfilledThumbDrawnComponent(context, attrArray),
         )
@@ -126,7 +127,7 @@ internal class ConfigBuilder {
             attrArray.getBoolean(R.styleable.StageStepBar_ssb_showThumbs, oldConfig.showThumbs)
         newConfig = newConfig.copy(showThumbs = showThumbs)
 
-        // Set ShowThumbs
+        // Set DrawTracksBehindThumbs
         val drawTracksBehindThumbs =
             attrArray.getBoolean(R.styleable.StageStepBar_ssb_drawTracksBehindThumbs, oldConfig.drawTracksBehindThumbs)
         newConfig = newConfig.copy(drawTracksBehindThumbs = drawTracksBehindThumbs)
@@ -161,6 +162,24 @@ internal class ConfigBuilder {
         val color = attrArray.getColor(
             R.styleable.StageStepBar_ssb_unfilledTrackColor,
             ResourceProvider.provideColor(context, R.color.default_track_unfilled_color)
+        )
+
+        return if (drawable == null) {
+            StageStepBar.DrawnComponent.Default(color)
+        } else {
+            StageStepBar.DrawnComponent.UserProvided(drawable, alpha)
+        }
+    }
+
+    private fun getActiveThumbDrawnComponent(
+        context: Context,
+        attrArray: TypedArray
+    ): StageStepBar.DrawnComponent {
+        val drawable = attrArray.getDrawable(R.styleable.StageStepBar_ssb_activeThumbDrawable)
+        val alpha = attrArray.getFloat(R.styleable.StageStepBar_ssb_activeThumbDrawableAlpha, 1f)
+        val color = attrArray.getColor(
+            R.styleable.StageStepBar_ssb_activeThumbColor,
+            ResourceProvider.provideColor(context, R.color.default_thumb_filled_color)
         )
 
         return if (drawable == null) {

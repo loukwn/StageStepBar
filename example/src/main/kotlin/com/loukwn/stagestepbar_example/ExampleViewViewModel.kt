@@ -30,11 +30,13 @@ internal class ExampleViewViewModel(application: Application) : AndroidViewModel
     }
     private var filledTrackDefaultColorSelectionIndex = 0
     private var unfilledTrackDefaultColorSelectionIndex = 2
+    private var activeThumbDefaultColorSelectionIndex = 1
     private var filledThumbDefaultColorSelectionIndex = 0
     private var unfilledThumbDefaultColorSelectionIndex = 2
 
     internal val firstFilledTrackColor = availableColors[filledTrackDefaultColorSelectionIndex]
     internal val firstUnfilledTrackColor = availableColors[unfilledTrackDefaultColorSelectionIndex]
+    internal val firstActiveThumbColor = availableColors[activeThumbDefaultColorSelectionIndex]
     internal val firstFilledThumbColor = availableColors[filledThumbDefaultColorSelectionIndex]
     internal val firstUnfilledThumbColor = availableColors[unfilledThumbDefaultColorSelectionIndex]
 
@@ -135,6 +137,16 @@ internal class ExampleViewViewModel(application: Application) : AndroidViewModel
         }
     }
 
+    fun activeThumbDropdownSelected(selectionPosition: Int) {
+        when (selectionPosition) {
+            0 -> _events.value = Event.ActiveThumbSetToNull
+            1 -> _events.value =
+                Event.ActiveThumbSetToDefault(availableColors[activeThumbDefaultColorSelectionIndex])
+            2 -> _events.value =
+                Event.ActiveThumbSetToCustom(getDrawable(R.drawable.custom_shape_drawable))
+        }
+    }
+
     fun filledThumbDropdownSelected(selectionPosition: Int) {
         when (selectionPosition) {
             0 -> _events.value =
@@ -165,6 +177,13 @@ internal class ExampleViewViewModel(application: Application) : AndroidViewModel
             (unfilledTrackDefaultColorSelectionIndex + 1) % availableColors.size
         _events.value =
             Event.UnfilledTrackSetToDefault(availableColors[unfilledTrackDefaultColorSelectionIndex])
+    }
+
+    fun activeThumbColorViewClicked() {
+        activeThumbDefaultColorSelectionIndex =
+            (activeThumbDefaultColorSelectionIndex + 1) % availableColors.size
+        _events.value =
+            Event.ActiveThumbSetToDefault(availableColors[activeThumbDefaultColorSelectionIndex])
     }
 
     fun filledThumbColorViewClicked() {
@@ -242,6 +261,9 @@ internal sealed class Event {
     data class FilledTrackSetToCustom(val drawable: Drawable) : Event()
     data class UnfilledTrackSetToDefault(@ColorInt val color: Int) : Event()
     data class UnfilledTrackSetToCustom(val drawable: Drawable) : Event()
+    data class ActiveThumbSetToCustom(val drawable: Drawable) : Event()
+    data object ActiveThumbSetToNull : Event()
+    data class ActiveThumbSetToDefault(@ColorInt val color: Int) : Event()
     data class FilledThumbSetToDefault(@ColorInt val color: Int) : Event()
     data class FilledThumbSetToCustom(val drawable: Drawable) : Event()
     data class UnfilledThumbSetToDefault(@ColorInt val color: Int) : Event()
