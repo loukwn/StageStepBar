@@ -182,10 +182,24 @@ class ComposeTests(private val config: StageStepBarConfig, private val testName:
                         filledTrack = DrawnComponent.Drawable(R.drawable.gradient_drawable),
                         unfilledTrack = DrawnComponent.Drawable(R.drawable.gradient_drawable_2),
                     ),
-                    "Custom drawables random state"
+                    "Custom drawables random state without active thumb"
                 ),
                 arrayOf(
                     baseTestConfig.copy(
+                        activeThumb = DrawnComponent.Drawable(R.drawable.custom_shape_drawable_3),
+                        filledThumb = DrawnComponent.Drawable(R.drawable.custom_shape_drawable),
+                        unfilledThumb = DrawnComponent.Drawable(R.drawable.custom_shape_drawable_2),
+                        filledTrack = DrawnComponent.Drawable(R.drawable.gradient_drawable),
+                        unfilledTrack = DrawnComponent.Drawable(R.drawable.gradient_drawable_2),
+                    ),
+                    "Custom drawables random state with active thumb"
+                ),
+                arrayOf(
+                    baseTestConfig.copy(
+                        activeThumb = DrawnComponent.Drawable(
+                            drawableRes = R.drawable.custom_shape_drawable_3,
+                            alpha = .4f,
+                        ),
                         filledThumb = DrawnComponent.Drawable(
                             drawableRes = R.drawable.custom_shape_drawable,
                             alpha = .5f,
@@ -208,6 +222,10 @@ class ComposeTests(private val config: StageStepBarConfig, private val testName:
                 ),
                 arrayOf(
                     baseTestConfig.copy(
+                        activeThumb = DrawnComponent.Drawable(
+                            drawableRes = R.drawable.custom_shape_drawable_3,
+                            alpha = .4f,
+                        ),
                         filledThumb = DrawnComponent.Drawable(
                             drawableRes = R.drawable.custom_shape_drawable,
                             alpha = .5f,

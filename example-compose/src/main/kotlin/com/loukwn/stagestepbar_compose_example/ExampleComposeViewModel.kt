@@ -10,6 +10,7 @@ import com.loukwn.stagestepbar_compose.data.Orientation
 import com.loukwn.stagestepbar_compose.data.State
 import com.loukwn.stagestepbar_compose.data.VerticalDirection
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 internal class ExampleComposeViewModel: ViewModel(), ViewModelContract {
     override val uiModels = MutableStateFlow(UiModel.default())
@@ -110,40 +111,51 @@ internal class ExampleComposeViewModel: ViewModel(), ViewModelContract {
         position: Int,
         color: Color
     ) {
-        val drawnComponent = if (position == 0) {
-            DrawnComponent.Default(color = color)
-        } else {
-            val drawable = when (component) {
-                ComponentType.FilledTrack,
-                ComponentType.UnfilledTrack -> {
-                    if (position == 1) {
-                        R.drawable.gradient_drawable
-                    } else {
-                        R.drawable.gradient_drawable_2
-                    }
+        val oldStepBarModel = uiModel.stageStepBarConfig
+
+        when (component) {
+            ComponentType.FilledTrack,
+            ComponentType.UnfilledTrack -> {
+                val drawnComponent = when (position) {
+                    0 -> DrawnComponent.Default(color = color)
+                    1 -> DrawnComponent.Drawable(drawableRes = R.drawable.gradient_drawable)
+                    else -> DrawnComponent.Drawable(drawableRes = R.drawable.gradient_drawable_2)
                 }
-                ComponentType.FilledThumb,
-                ComponentType.UnfilledThumb -> {
-                    if (position == 1) {
-                        R.drawable.custom_shape_drawable
+                uiModels.update {
+                    if (component == ComponentType.FilledTrack) {
+                        it.copy(stageStepBarConfig = oldStepBarModel.copy(filledTrack = drawnComponent))
                     } else {
-                        R.drawable.custom_shape_drawable_2
+                        it.copy(stageStepBarConfig = oldStepBarModel.copy(unfilledTrack = drawnComponent))
                     }
                 }
             }
+            ComponentType.FilledThumb,
+            ComponentType.UnfilledThumb -> {
+                val drawnComponent = when (position) {
+                    0 -> DrawnComponent.Default(color = color)
+                    1 -> DrawnComponent.Drawable(drawableRes = R.drawable.custom_shape_drawable)
+                    else -> DrawnComponent.Drawable(drawableRes = R.drawable.custom_shape_drawable_2)
+                }
 
-            DrawnComponent.Drawable(drawableRes = drawable)
+                uiModels.update {
+                    if (component == ComponentType.FilledThumb) {
+                        it.copy(stageStepBarConfig = oldStepBarModel.copy(filledThumb = drawnComponent))
+                    } else {
+                        it.copy(stageStepBarConfig = oldStepBarModel.copy(unfilledThumb = drawnComponent))
+                    }
+                }
+            }
+            ComponentType.ActiveThumb -> {
+                val drawnComponent = when (position) {
+                    0 -> null
+                    1 -> DrawnComponent.Default(color = color)
+                    2 -> DrawnComponent.Drawable(drawableRes = R.drawable.custom_shape_drawable)
+                    else -> DrawnComponent.Drawable(drawableRes = R.drawable.custom_shape_drawable_2)
+                }
+
+                uiModels.update { it.copy(stageStepBarConfig = oldStepBarModel.copy(activeThumb = drawnComponent)) }
+            }
         }
-        val oldStepBarModel = uiModel.stageStepBarConfig
-
-        val newStageStepBarConfig = when (component) {
-            ComponentType.FilledTrack -> oldStepBarModel.copy(filledTrack = drawnComponent)
-            ComponentType.UnfilledTrack -> oldStepBarModel.copy(unfilledTrack = drawnComponent)
-            ComponentType.FilledThumb -> oldStepBarModel.copy(filledThumb = drawnComponent)
-            ComponentType.UnfilledThumb -> oldStepBarModel.copy(unfilledThumb = drawnComponent)
-        }
-
-        uiModels.value = uiModel.copy(stageStepBarConfig = newStageStepBarConfig)
     }
 
     override fun onThumbSizeChanged(value: Float) {

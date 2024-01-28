@@ -23,6 +23,7 @@ import com.loukwn.stagestepbar_compose_example.UiModel
 import com.loukwn.stagestepbar_compose_example.presentation.list.*
 import com.loukwn.stagestepbar_compose_example.ui.theme.StageStepBarTheme
 import com.loukwn.stagestepbar_compose.StageStepBar
+import com.loukwn.stagestepbar_compose.data.DrawnComponent
 import com.loukwn.stagestepbar_compose.data.Orientation
 import com.loukwn.stagestepbar_compose.data.StageStepBarConfig
 
@@ -89,6 +90,7 @@ private fun StageStepBarArea(stageStepBarConfig: StageStepBarConfig) {
                 .height(100.dp)
                 .width(300.dp)
         }
+
         Orientation.Vertical -> {
             Modifier
                 .height(300.dp)
@@ -161,16 +163,35 @@ private fun ConfigListArea(uiModel: UiModel, interactions: Interactions) {
 
         // Tracks / Thumbs drawables
         listOf(
-            ComponentType.FilledTrack to uiModel.stageStepBarConfig.filledTrack,
-            ComponentType.UnfilledTrack to uiModel.stageStepBarConfig.unfilledTrack,
-            ComponentType.FilledThumb to uiModel.stageStepBarConfig.filledThumb,
-            ComponentType.UnfilledThumb to uiModel.stageStepBarConfig.unfilledThumb,
-        ).map { (componentType, drawnComponent) ->
+            Triple(
+                ComponentType.FilledTrack,
+                uiModel.stageStepBarConfig.filledTrack,
+                false
+            ),
+            Triple(
+                ComponentType.UnfilledTrack,
+                uiModel.stageStepBarConfig.unfilledTrack,
+                false,
+            ),
+            Triple(ComponentType.ActiveThumb, uiModel.stageStepBarConfig.activeThumb, true),
+            Triple(
+                ComponentType.FilledThumb,
+                uiModel.stageStepBarConfig.filledThumb,
+                false,
+            ),
+            Triple(
+                ComponentType.UnfilledThumb,
+                uiModel.stageStepBarConfig.unfilledThumb,
+                false,
+            ),
+        ).map { (componentType, drawnComponent, addNullOption) ->
             item {
                 ComponentDrawableSelectionListItem(
                     listOfColors = listOfColors,
                     componentType = componentType,
+                    addNullOption = addNullOption,
                     drawnComponent = drawnComponent,
+                    showColorSelection = drawnComponent is DrawnComponent.Default,
                     modifier = Modifier.fillParentMaxWidth(1f),
                     onComponentDrawableChanged = { position, color ->
                         interactions.onComponentDropdownSelectionChanged(
@@ -232,9 +253,11 @@ private fun ConfigListArea(uiModel: UiModel, interactions: Interactions) {
                     fontSize = TextUnit(18f, TextUnitType.Sp),
                     fontWeight = FontWeight.ExtraBold
                 )
-                Switch(checked = uiModel.stageStepBarConfig.drawTracksBehindThumbs, onCheckedChange = {
-                    interactions.onDrawTracksBehindThumbsChanged(it)
-                })
+                Switch(
+                    checked = uiModel.stageStepBarConfig.drawTracksBehindThumbs,
+                    onCheckedChange = {
+                        interactions.onDrawTracksBehindThumbsChanged(it)
+                    })
             }
         }
     }

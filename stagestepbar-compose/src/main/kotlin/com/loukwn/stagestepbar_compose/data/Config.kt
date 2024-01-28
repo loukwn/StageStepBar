@@ -62,6 +62,7 @@ data class StageStepBarConfig(
     val verticalDirection: VerticalDirection,
     val filledTrack: DrawnComponent,
     val unfilledTrack: DrawnComponent,
+    val activeThumb: DrawnComponent?,
     val filledThumb: DrawnComponent,
     val unfilledThumb: DrawnComponent,
     val thumbSize: Dp,
@@ -89,6 +90,7 @@ data class StageStepBarConfig(
                 unfilledTrack = DrawnComponent.Default(
                     color = Color(0xFFA9A9A9)
                 ),
+                activeThumb = null,
                 filledThumb = DrawnComponent.Default(
                     color = Color(0xFF000000)
                 ),
