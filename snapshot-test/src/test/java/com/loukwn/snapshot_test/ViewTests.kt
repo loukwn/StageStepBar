@@ -48,6 +48,7 @@ class ViewTests {
         stageStepBar.setStageStepConfig(listOf(5, 5, 5))
         stageStepBar.setCurrentState(StageStepBar.State(1, 3))
         stageStepBar.setThumbsVisible(true)
+        stageStepBar.clearActiveThumb()
         stageStepBar.setThumbSize(defaultThumbSize)
         stageStepBar.setCrossAxisFilledTrackSize(defaultTrackSize)
         stageStepBar.setCrossAxisUnfilledTrackSize(defaultTrackSize)
@@ -224,6 +225,21 @@ class ViewTests {
         prepareViewDefaults()
 
         // Things that are tested
+        stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#55ff00ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
+        stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#0000ff"))
+        stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#00ff00"))
+
+        snap(snapName = object {}.javaClass.enclosingMethod?.name)
+    }
+
+    @Test
+    fun `Alpha on filled thumb and active thumb with normal shape`() {
+        // General setup
+        prepareViewDefaults()
+
+        // Things that are tested
+        stageStepBar.setActiveThumbToNormalShape(Color.parseColor("#9988fefe"))
         stageStepBar.setFilledThumbToNormalShape(Color.parseColor("#55ff00ff"))
         stageStepBar.setUnfilledThumbToNormalShape(Color.parseColor("#ff0000"))
         stageStepBar.setFilledTrackToNormalShape(Color.parseColor("#0000ff"))
