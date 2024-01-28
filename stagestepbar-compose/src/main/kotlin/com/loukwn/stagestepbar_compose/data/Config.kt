@@ -36,7 +36,6 @@ sealed class DrawnComponent {
         val alpha: Float = 1f,
     ) : DrawnComponent()
 
-    @Immutable // ImageBitmap is an interface (does not mutate)
     data class Bitmap(
         val imageBitmap: ImageBitmap,
         val colorFilter: ColorFilter? = null,
@@ -52,12 +51,7 @@ sealed class DrawnComponent {
 data class State(val stage: Int, val step: Int)
 
 @Keep
-@Immutable // List is an interface
-data class ThumbConfig(
-    val drawnComponentList: List<DrawnComponent>,
-)
-
-@Keep
+@Immutable
 data class StageStepBarConfig(
     val stageStepConfig: List<Int>,
     val currentState: State?,
@@ -68,8 +62,8 @@ data class StageStepBarConfig(
     val verticalDirection: VerticalDirection,
     val filledTrack: DrawnComponent,
     val unfilledTrack: DrawnComponent,
-    val filledThumb: ThumbConfig,
-    val unfilledThumb: ThumbConfig,
+    val filledThumb: DrawnComponent,
+    val unfilledThumb: DrawnComponent,
     val thumbSize: Dp,
     val crossAxisSizeFilledTrack: Dp,
     val crossAxisSizeUnfilledTrack: Dp,
@@ -95,19 +89,11 @@ data class StageStepBarConfig(
                 unfilledTrack = DrawnComponent.Default(
                     color = Color(0xFFA9A9A9)
                 ),
-                filledThumb = ThumbConfig(
-                    listOf(
-                        DrawnComponent.Default(
-                            color = Color(0xFF000000)
-                        )
-                    )
+                filledThumb = DrawnComponent.Default(
+                    color = Color(0xFF000000)
                 ),
-                unfilledThumb = ThumbConfig(
-                    listOf(
-                        DrawnComponent.Default(
-                            color = Color(0xFF6F6F6F)
-                        )
-                    )
+                unfilledThumb = DrawnComponent.Default(
+                    color = Color(0xFF6F6F6F)
                 ),
                 thumbSize = 20.dp,
                 crossAxisSizeFilledTrack = 6.dp,
