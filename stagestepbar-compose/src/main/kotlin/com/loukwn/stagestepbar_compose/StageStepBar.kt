@@ -1,5 +1,6 @@
 package com.loukwn.stagestepbar_compose
 
+import android.util.Log
 import androidx.annotation.Keep
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -37,6 +38,7 @@ import com.loukwn.stagestepbar_compose.data.Orientation
 import com.loukwn.stagestepbar_compose.data.StageStepBarConfig
 import com.loukwn.stagestepbar_compose.data.State
 import com.loukwn.stagestepbar_compose.data.VerticalDirection
+import kotlin.math.ceil
 
 @Composable
 @Keep
@@ -109,6 +111,7 @@ private fun MainCanvas(modifier: Modifier, progress: Float, config: StageStepBar
 
     val internalFilledTrack = config.filledTrack.toInternal()
     val internalUnfilledTrack = config.unfilledTrack.toInternal()
+    val internalActiveThumb = config.activeThumb?.toInternal()
     val internalFilledThumb = config.filledThumb.toInternal()
     val internalUnfilledThumb = config.unfilledThumb.toInternal()
 
@@ -150,6 +153,7 @@ private fun MainCanvas(modifier: Modifier, progress: Float, config: StageStepBar
                     orientation = config.orientation,
                     drawTracksBehindThumbs = config.drawTracksBehindThumbs,
                     currentState = config.currentState,
+                    activeThumb = internalActiveThumb,
                     filledThumb = internalFilledThumb,
                     unfilledThumb = internalUnfilledThumb,
                     thumbSizePx = thumbSizePx
@@ -343,6 +347,7 @@ private fun drawThumbs(
     orientation: Orientation,
     drawTracksBehindThumbs: Boolean,
     currentState: State?,
+    activeThumb: InternalDrawnComponent?,
     filledThumb: InternalDrawnComponent,
     unfilledThumb: InternalDrawnComponent,
     thumbSizePx: Float,
@@ -370,8 +375,38 @@ private fun drawThumbs(
             else -> progressBarEnd >= centerOfThisThumb
         }
 
-        when (val drawnComponent =
-            if (shouldFillThumb) filledThumb else unfilledThumb) {
+        val isActiveThumb = if (activeThumb != null && currentState != null) {
+            if (drawReverse) {
+                val reverseStage = numOfStages - stage - 1
+                val centerOfLeftThumb = if (reverseStage > 0) {
+                    ceil((reverseStage - 1) * (canvasLimit - thumbSizePx) / (numOfStages - 1).toFloat() + thumbSizePx / 2f)
+                } else {
+                    null
+                }
+
+                centerOfLeftThumb == null && progressBarEnd <= centerOfThisThumb ||
+                        centerOfLeftThumb != null && progressBarEnd > centerOfLeftThumb && progressBarEnd <= centerOfThisThumb
+            } else {
+                val centerOfRightThumb = if (stage <= numOfStages - 2) {
+                    ((stage + 1) * (canvasLimit - thumbSizePx) / (numOfStages - 1).toFloat() + thumbSizePx / 2f).toInt()
+                } else {
+                    null
+                }
+
+                centerOfRightThumb == null && progressBarEnd >= centerOfThisThumb ||
+                        centerOfRightThumb != null && progressBarEnd < centerOfRightThumb && progressBarEnd >= centerOfThisThumb
+            }
+        } else {
+            false
+        }
+
+        val drawnComponent = when {
+            isActiveThumb -> activeThumb!!
+            shouldFillThumb -> filledThumb
+            else -> unfilledThumb
+        }
+
+        when (drawnComponent) {
             is InternalDrawnComponent.Default -> {
                 when (orientation) {
                     Orientation.Horizontal -> {

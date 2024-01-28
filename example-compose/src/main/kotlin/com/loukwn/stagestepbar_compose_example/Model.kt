@@ -26,6 +26,7 @@ internal sealed class Event {
 internal enum class ComponentType(val title: String) {
     FilledTrack("Filled Track"),
     UnfilledTrack("Unfilled Track"),
+    ActiveThumb("Active Thumb"),
     FilledThumb("Filled Thumb"),
     UnfilledThumb("Unfilled Thumb"),
 }
