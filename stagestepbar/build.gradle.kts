@@ -1,3 +1,5 @@
+import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
+
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -51,7 +53,7 @@ afterEvaluate {
                 from(components.findByName("release"))
 
                 group = "com.loukwn"
-                version = libs.versions.libraryRelease.get()
+                version = libs.versions.viewLibraryRelease.get()
             }
         }
     }
