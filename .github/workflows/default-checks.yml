@@ -10,12 +10,12 @@ jobs:
     name: Default branch checks
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           lfs: true
 
       - name: Set up Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -25,7 +25,7 @@ jobs:
 
       - name: Upload snapshot failure deltas
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: snapshot-failure-deltas
           path: snapshot-test/build/paparazzi/failures/delta-*.png
